@@ -135,6 +135,33 @@ export default function Survey() {
       : countries.filter((country) =>
           country.name.toLowerCase().includes(queryCountry.toLowerCase())
         );
+
+  const onSubmitSurvey = async (event) => {
+    event.preventDefault();
+
+    console.log(event);
+
+    let factors = document.querySelectorAll("input");
+    input.checked
+    console.log(factors);
+    // let factors_checked = factors.map((factor) => {
+    //   return factor;
+    // });
+
+    // const res = await fetch("/api/survey", {
+    //   body: JSON.stringify({
+    //     name: event.target.name.value,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "POST",
+    // });
+
+    // const result = await res.json();
+    // console.log(result);
+  };
+
   return (
     <Layout survey>
       <div className="container">
@@ -176,8 +203,9 @@ export default function Survey() {
           </div>
           <input
             className="btn btn-primary btn-survey"
-            type="submit"
+            type="button"
             value="Next"
+            onClick={onSubmitSurvey}
           ></input>
         </form>
       </div>
