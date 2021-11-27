@@ -60,12 +60,9 @@ export default function Survey() {
     event.preventDefault();
     // Update params
     let paramsSelected = {
-      diversity_cultural: ON,
-      environment_water: ON,
-      service_internet: ON,
+      community_language_spanish: ON,
+      affordability_rent: ON,
     };
-
-    data.param = paramsSelected;
 
     // Update factors
     data.factors.forEach((factor) => {
@@ -73,7 +70,7 @@ export default function Survey() {
     });
 
     setData(data);
-    router.push("/results");
+    router.push({ pathname: "/results", query: paramsSelected });
   };
 
   const nextButton = () => {

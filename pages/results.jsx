@@ -15,10 +15,12 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
 const base_url = "https://reroot-data-app.herokuapp.com/";
 
-function Results({ scores }) {
+function Results({ scores, query }) {
   const { data, useData } = useContext(AppContext);
   const [pageIsMounted, setPageIsMounted] = useState(false);
   const [favCounties, setFavCounties] = useState([]);
+
+  // console.log(scores);
 
   const LNG_LAT_DC = [-77.02, 38.887];
 
@@ -49,7 +51,6 @@ function Results({ scores }) {
     }
   });
 
-  console.log(counties[0]);
   const myMap = useRef();
 
   // Map configurations
@@ -89,7 +90,7 @@ function Results({ scores }) {
     <Layout results>
       <Head>
         <link
-          href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+          href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css"
           rel="stylesheet"
         />
         <title>Results</title>
@@ -243,15 +244,9 @@ function Results({ scores }) {
   );
 }
 
-export async function getStaticProps(context) {
-  
-  const ON = 3;
-  const params = {
-    diversity_cultural: ON,
-    environment_water: ON,
-    service_internet: ON,
-  };
-  const sample_params = new URLSearchParams(params);
+export async function getServerSideProps(context) {
+  let query = context.query;
+  const sample_params = new URLSearchParams(context.query);
 
   const res_scores = await fetch(base_url + "scores?" + sample_params);
   const scores = await res_scores.json();
@@ -263,7 +258,7 @@ export async function getStaticProps(context) {
   }
 
   return {
-    props: { scores }, // will be passed to the page component as props
+    props: { scores, query }, // will be passed to the page component as props
   };
 }
 
