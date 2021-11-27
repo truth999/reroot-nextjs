@@ -1,5 +1,6 @@
 import Layout from "../components/layout";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 const factors = [
   {
@@ -110,16 +111,54 @@ const countries = [
   { id: 7, name: "Vietnam" },
 ];
 
-export default function Survey() {
-  // Declare states
+class Step1 extends React.Component {
+  render() {
+    if (this.props.currentStep !== 1) {
+      // Prop: The current step
+      return null;
+    }
+    // The markup for the Step 1 UI
+    return (
+      <section className="select-factors">
+        <div className="question-title">What&apos;s important to you?</div>
+        <div className="question-subtitle">
+          Click as many as you like.
+          <br />
+          You can edit and fine-tune your preferences later.
+        </div>
+        <div className="option-group">
+          {factors.map((factor) => (
+            <div key={factor.name} className="row">
+              <div className="col-2">{factor.name.toUpperCase()}</div>
+              {factor.sub_factors.map((sub) => {
+                const id = `toggle-${sub.name}`;
+                return (
+                  <div key={id} className="col-xs-4 col-md-3 col-lg-2">
+                    <input
+                      type="checkbox"
+                      className="btn-check"
+                      name="factor"
+                      id={id}
+                      value={sub.name}
+                    />
+                    <label htmlFor={id} className="btn btn-toggle">
+                      {sub.name.toUpperCase()}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+}
+function Step2(props) {
+  // Language
   const [queryLanguage, setQueryLanguage] = useState("");
-  const [queryCountry, setQueryCountry] = useState("");
   const updateQueryLanguage = (query) => {
     setQueryLanguage(query);
-  };
-
-  const updateQueryCountry = (query) => {
-    setQueryCountry(query);
   };
 
   const showingLanguages =
@@ -129,6 +168,13 @@ export default function Survey() {
           lang.name.toLowerCase().includes(queryLanguage.toLowerCase())
         );
 
+  // Country
+  const [queryCountry, setQueryCountry] = useState("");
+
+  const updateQueryCountry = (query) => {
+    setQueryCountry(query);
+  };
+
   const showingCountries =
     queryCountry === ""
       ? countries
@@ -136,82 +182,15 @@ export default function Survey() {
           country.name.toLowerCase().includes(queryCountry.toLowerCase())
         );
 
-  const onSubmitSurvey = async (event) => {
-    event.preventDefault();
-
-    console.log(event);
-
-    let factors = document.querySelectorAll("input");
-    input.checked
-    console.log(factors);
-    // let factors_checked = factors.map((factor) => {
-    //   return factor;
-    // });
-
-    // const res = await fetch("/api/survey", {
-    //   body: JSON.stringify({
-    //     name: event.target.name.value,
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   method: "POST",
-    // });
-
-    // const result = await res.json();
-    // console.log(result);
-  };
+  if (props.currentStep !== 2) {
+    // Prop: The current step
+    return null;
+  }
 
   return (
-    <Layout survey>
-      <div className="container">
-        {/* Question Title */}
-        <div className="question-title">What&apos;s important to you?</div>
-
-        {/* Question Text */}
-        <div className="question-subtitle">
-          Click as many as you like.
-          <br />
-          You can edit and fine-tune your preferences later.
-        </div>
-
-        {/* Buttons */}
-        <form className="factors">
-          <div className="option-group">
-            {factors.map((factor) => (
-              <div key={factor.name} className="row">
-                <div className="col-2">{factor.name.toUpperCase()}</div>
-                {factor.sub_factors.map((sub) => {
-                  const id = `toggle-${sub.name}`;
-                  return (
-                    <div key={id} className="col-xs-4 col-md-3 col-lg-2">
-                      <input
-                        type="checkbox"
-                        className="btn-check"
-                        name="checkbox"
-                        id={id}
-                        value={sub.name}
-                      />
-                      <label htmlFor={id} className="btn btn-toggle">
-                        {sub.name.toUpperCase()}
-                      </label>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          <input
-            className="btn btn-primary btn-survey"
-            type="button"
-            value="Next"
-            onClick={onSubmitSurvey}
-          ></input>
-        </form>
-      </div>
-
-      <section className="select-language">
-        <form>
+    <section className="step-2">
+      {props.language && (
+        <section className="select-language">
           <div className="search-title">
             Great! You said language. Which languages?
           </div>
@@ -233,7 +212,8 @@ export default function Survey() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="flexRadioDefault"
+                    name="language"
+                    value={lang.name}
                     id={id}
                   />
                   <label className="form-check-label" htmlFor={id}>
@@ -242,13 +222,11 @@ export default function Survey() {
                 </div>
               );
             })}
-            <button className="language-select">Submit</button>
           </div>
-        </form>
-      </section>
-
-      <section className="select-country">
-        <form>
+        </section>
+      )}
+      {props.country && (
+        <section className="select-country">
           <div className="search-title">
             You also said nativeland. What countries?
           </div>
@@ -270,7 +248,8 @@ export default function Survey() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="flexRadioDefault"
+                    name="country"
+                    value={country.name}
                     id={id}
                   />
                   <label className="form-check-label" htmlFor={id}>
@@ -279,10 +258,114 @@ export default function Survey() {
                 </div>
               );
             })}
-            <button className="language-select">Submit</button>
           </div>
+        </section>
+      )}
+    </section>
+  );
+}
+
+export default function Survey() {
+  // States
+  const [currentStep, setCurrentStep] = useState(1);
+  const [params, setParams] = useState({
+    factors: [],
+    language: "",
+    country: "",
+  });
+  const [isLastStep, setIsLastStep] = useState(false);
+  const router = useRouter();
+
+  const handleStep1 = (event) => {
+    console.log("handleStep1 called");
+    // Set Factors State
+  };
+  const handleStep2 = (event) => {
+    console.log("handleStep2 called");
+    // Set Factors State
+  };
+
+  const _next = () => {
+    if (currentStep === 1) {
+      params.factors = Array.from(
+        document.querySelectorAll("input[name=factor]:checked")
+      ).map((e) => e.value);
+    } else {
+      params.language =
+        document.querySelector("input[name=language]:checked")?.value ?? "";
+      params.country =
+        document.querySelector("input[name=country]:checked")?.value ?? "";
+    }
+    setParams(params);
+
+    let max_steps = params.factors.some((f) => f == "language" || f == "origin")
+      ? 2
+      : 1;
+    if (currentStep === max_steps) {
+      setIsLastStep(true);
+    } else {
+      let nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+    }
+    console.log(params);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    router.push("/results");
+    // let factors_checked = factors.map((factor) => {
+    //   return factor;
+    // });
+
+    // const res = await fetch("/api/survey", {
+    //   body: JSON.stringify({
+    //     name: event.target.name.value,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "POST",
+    // });
+
+    // const result = await res.json();
+    // console.log(result);
+  };
+
+  const nextButton = () => {
+    return (
+      <input
+        className="btn btn-secondary btn-survey"
+        type="button"
+        value="Next"
+        onClick={_next}
+      />
+    );
+  };
+
+  return (
+    <Layout survey>
+      <div className="container">
+        Step {currentStep}
+        <form onSubmit={handleSubmit}>
+          <Step1
+            currentStep={currentStep}
+            handleChange={handleStep1}
+            factors={params.factors}
+          />
+          <Step2
+            currentStep={currentStep}
+            handleChange={handleStep2}
+            language={params.factors.includes("language")}
+            country={params.factors.includes("origin")}
+          />
+          {nextButton()}
+          {isLastStep && (
+            <button className="btn btn-primary" type="submit">
+              Submit
+            </button>
+          )}
         </form>
-      </section>
+      </div>
     </Layout>
   );
 }
