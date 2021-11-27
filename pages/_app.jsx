@@ -1,18 +1,29 @@
-import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/scss/bootstrap.scss";
 import "../styles/globals.scss";
 
 import { useEffect, useState } from "react";
+import AppContext from "../contexts/AppContext";
+import factors from "../data/factors";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap");
   }, []);
 
-  return <Component {...pageProps} />;
+  const [data, setData] = useState({
+    factors: factors,
+    params: {},
+  });
+
+  return (
+    <AppContext.Provider value={{ data, setData }}>
+      <Component {...pageProps} />
+    </AppContext.Provider>
+  );
 }
 
 // Hook
-function useLocalStorage(key, initialValue) {
+export function useLocalStorage(key, initialValue) {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {

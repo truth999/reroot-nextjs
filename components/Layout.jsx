@@ -1,4 +1,4 @@
-// import styles from "./layout.module.scss";
+// import styles from "./Layout.module.scss";
 import utilStyles from "../styles/utils.module.scss";
 
 import Head from "next/head";
