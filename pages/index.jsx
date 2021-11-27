@@ -16,7 +16,9 @@ export default function Landing() {
             <h1 className={styles.title}>reROOT</h1>
             <p className={styles.description}>finding home</p>
             <Link href="/survey">
-              <button>Start</button>
+              <a>
+                <button>Start</button>
+              </a>
             </Link>
           </section>
 
