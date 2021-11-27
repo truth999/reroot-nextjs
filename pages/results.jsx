@@ -244,6 +244,7 @@ function Results({ scores }) {
 }
 
 export async function getStaticProps(context) {
+  
   const ON = 3;
   const params = {
     diversity_cultural: ON,
