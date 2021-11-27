@@ -243,9 +243,14 @@ function Results({ scores }) {
   );
 }
 
-export async function getServerProps(context) {
-  const { data, useData } = useContext(AppContext);
-  const sample_params = new URLSearchParams(data.params);
+export async function getStaticProps(context) {
+  const ON = 3;
+  const params = {
+    diversity_cultural: ON,
+    environment_water: ON,
+    service_internet: ON,
+  };
+  const sample_params = new URLSearchParams(params);
 
   const res_scores = await fetch(base_url + "scores?" + sample_params);
   const scores = await res_scores.json();
