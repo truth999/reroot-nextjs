@@ -22,7 +22,6 @@ function Results({ scores }) {
   const [favCounties, setFavCounties] = useState([]);
   const router = useRouter();
 
-  console.log(scores);
   const PER_PAGE = 10;
 
   const counties = scores.scores;
