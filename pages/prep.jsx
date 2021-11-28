@@ -5,9 +5,6 @@ import StartButton from "../components/StartButton";
 import styles from "../styles/Prep.module.scss";
 
 export default function Prep({ parameters }) {
-  const { data, setData } = useContext(AppContext);
-  data.factors = parameters.factors;
-  setData(data);
 
   return (
     <Layout>
@@ -28,17 +25,3 @@ export default function Prep({ parameters }) {
   );
 }
 
-export async function getStaticProps(context) {
-  const res = await fetch(`https://reroot-data-app.herokuapp.com/parameters`);
-  const parameters = await res.json();
-
-  if (!parameters) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: { parameters }, // will be passed to the page component as props
-  };
-}

@@ -10,6 +10,9 @@ import styles from "../styles/Survey.module.scss";
 export default function Survey() {
   const { data, setData } = useContext(AppContext);
 
+  data.factors = parameters.factors;
+  setData(data);
+
   // States
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFactors, setFactors] = useState([]);
@@ -141,4 +144,19 @@ export default function Survey() {
       </div>
     </Layout>
   );
+}
+
+export async function getStaticProps(context) {
+  const res = await fetch(`https://reroot-data-app.herokuapp.com/parameters`);
+  const parameters = await res.json();
+
+  if (!parameters) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { parameters }, // will be passed to the page component as props
+  };
 }
