@@ -4,6 +4,7 @@ import { URLSearchParams } from "url";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 import Accordion from "../components/Accordion";
+import Progress from "../components/progress";
 
 // Third Party
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -82,7 +83,7 @@ function Results({ scores }) {
         />
         <title>Results</title>
       </Head>
-
+      <Progress />
       <div className="row flex-nowrap">
         {/* Sidebar */}
         <div className="col-auto px-0">
@@ -207,6 +208,10 @@ export async function getServerSideProps(context) {
 
   if (!scores) {
     return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
       scoreNotFound: true,
     };
   }

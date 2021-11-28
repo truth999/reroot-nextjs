@@ -152,6 +152,10 @@ export async function getStaticProps(context) {
 
   if (!parameters) {
     return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
       notFound: true,
     };
   }
