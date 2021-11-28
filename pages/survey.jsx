@@ -7,7 +7,7 @@ import Step2 from "../components/Step2";
 import NextButton from "../components/NextButton";
 import styles from "../styles/Survey.module.scss";
 
-export default function Survey() {
+export default function Survey({ parameters }) {
   const { data, setData } = useContext(AppContext);
 
   data.factors = parameters.factors;
