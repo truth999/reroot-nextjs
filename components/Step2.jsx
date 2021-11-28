@@ -77,7 +77,7 @@ export default function Step2(props) {
                 const id = `language-${lang.id}`;
                 return (
                   <div className="col-lg-2 py-2 me-2" key={id}>
-                    <SubFactor id={id} value={lang.name} name="country">
+                    <SubFactor id={id} value={lang.name} name="language">
                       {lang.native}
                     </SubFactor>
                   </div>
@@ -104,7 +104,7 @@ export default function Step2(props) {
           <div className="search-results">
             <div className="row pt-3">
               {showingCountries.map((country) => {
-                const id = `language-${country.id}`;
+                const id = `country-${country.id}`;
                 return (
                   <div className="col-lg-2 col-xl-1 py-2 me-2" key={id}>
                     <SubFactor id={id} value={country.name} name="country">
