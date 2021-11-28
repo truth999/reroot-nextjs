@@ -17,6 +17,10 @@ export default function Step2(props) {
   const languages = community.sub.filter((s) => s.name == "language")[0].sub;
   const countries = community.sub.filter((s) => s.name == "origin")[0].sub;
 
+  data.languages = languages;
+  data.countries = countries;
+  setData(data);
+
   if (props.currentStep !== 2) {
     // Prop: The current step
     return null;

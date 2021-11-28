@@ -29,7 +29,7 @@ export const siteTitle = "ReRoot";
 
 export default function Layout({ children, survey }) {
   return (
-    <div className="container">
+    <section>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="ReRoot" />
@@ -45,7 +45,7 @@ export default function Layout({ children, survey }) {
 
       <Header></Header>
 
-      <main>{children}</main>
+      <div className="container-fluid">{children}</div>
 
       {!survey && (
         <footer className={`${styles.footer}`}>
@@ -96,6 +96,6 @@ export default function Layout({ children, survey }) {
           </nav>
         </footer>
       )}
-    </div>
+    </section>
   );
 }

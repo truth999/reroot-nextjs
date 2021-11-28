@@ -13,6 +13,8 @@ function MyApp({ Component, pageProps }) {
   const [data, setData] = useState({
     factors: [],
     params: {},
+    countries: [],
+    languages: [],
   });
 
   return (
@@ -21,8 +23,6 @@ function MyApp({ Component, pageProps }) {
     </AppContext.Provider>
   );
 }
-
-
 
 // Hook
 export function useLocalStorage(key, initialValue) {

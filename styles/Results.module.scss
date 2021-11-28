@@ -4,10 +4,12 @@ $width-full: 100%;
 
 .map {
   width: $width-full;
-  min-height: 300px;
-  height: calc($width-full * 0.5);
+  min-height: 25vh;
+  height: calc($width-full * 0.6);
 }
 
+.counties {
+}
 // .container {
 //   padding: 0 2rem;
 // }
