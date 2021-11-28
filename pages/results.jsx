@@ -17,26 +17,50 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
 const base_url = "https://reroot-data-app.herokuapp.com/";
 
-function Results({ scores }) {
+function Results({ scores, initParams }) {
   const { data, useData } = useContext(AppContext);
   const [pageIsMounted, setPageIsMounted] = useState(false);
   const [favCounties, setFavCounties] = useState([]);
+  const [params, setParams] = useState(initParams);
   const router = useRouter();
 
   const PER_PAGE = 10;
+  const top = (counties) => (n) => counties.slice(0, n);
 
-  const counties = scores.scores;
-  counties.forEach((county) => {
+  const counties_raw = scores.scores;
+  counties_raw.forEach((county) => {
     county.lngLat = [
       county.coordinates.county_long,
       county.coordinates.county_lat,
     ];
   });
 
-  const myMap = useRef();
-  counties.top = (n) => {
-    return counties.slice(0, n);
+  const [counties, setCounties] = useState(counties_raw);
+
+  const updateScores = async (newParams) => {
+    setParams(params.concat(newParams));
+    const query = new URLSearchParams(params);
+    const req = await fetch(`${base_url}?query`);
+    const newScores = await req.json();
+    counties = newScores.scores;
+    counties.forEach((county) => {
+      county.lngLat = [
+        county.coordinates.county_long,
+        county.coordinates.county_lat,
+      ];
+    });
+    setCounties(newScores.scores);
+    return true;
   };
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    // TODO
+    let newParams = [];
+    fetchData(newParams);
+  };
+
+  const myMap = useRef();
 
   // Map configurations
   useEffect(() => {
@@ -62,7 +86,7 @@ function Results({ scores }) {
     );
 
     // Populate markers
-    counties.top(PER_PAGE).forEach((county) => {
+    top(counties)(PER_PAGE).forEach((county) => {
       new mapboxgl.Marker({
         color: "red",
       })
@@ -83,7 +107,9 @@ function Results({ scores }) {
         />
         <title>Results</title>
       </Head>
+
       <Progress />
+
       <div className="row flex-nowrap">
         {/* Sidebar */}
         <div className="col-auto px-0">
@@ -203,13 +229,14 @@ function Results({ scores }) {
 
 export async function getServerSideProps(context) {
   const params = new URLSearchParams(context.query);
+  const initParams = context.query;
   const res_scores = await fetch(base_url + "scores?" + params);
   const scores = await res_scores.json();
 
   if (!scores) {
     return {
       redirect: {
-        destination: '/',
+        destination: "/",
         permanent: false,
       },
       scoreNotFound: true,
@@ -217,7 +244,7 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { scores }, // will be passed to the page component as props
+    props: { scores, initParams }, // will be passed to the page component as props
   };
 }
 
