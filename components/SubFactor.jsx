@@ -9,6 +9,8 @@ export default function SubFactor(props) {
         name={props.name}
         id={props.id}
         value={props.value}
+        param={props.param}
+        onClick={props.onClick}
         autoComplete="off"
       />
       <label className={`btn btn-outline-dark`} htmlFor={props.id}>

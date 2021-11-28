@@ -3,7 +3,7 @@ import "../styles/globals.scss";
 
 import { useEffect, useState } from "react";
 import AppContext from "../contexts/AppContext";
-import factors from "../data/factors";
+// import factors from "../data/factors";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   const [data, setData] = useState({
-    factors: factors,
+    factors: [],
     params: {},
   });
 
@@ -21,6 +21,8 @@ function MyApp({ Component, pageProps }) {
     </AppContext.Provider>
   );
 }
+
+
 
 // Hook
 export function useLocalStorage(key, initialValue) {

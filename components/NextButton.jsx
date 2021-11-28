@@ -5,7 +5,7 @@ export default function nextButton(props) {
     <input
       className={`${styles.button} btn btn-dark`}
       type="button"
-      value="Next"
+      value={props.value}
       name="next"
       onClick={props.handleClick}
     />

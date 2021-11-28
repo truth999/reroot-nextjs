@@ -1,8 +1,14 @@
 import Layout, { siteTitle } from "../components/Layout";
+import { useState, useContext } from "react";
+import AppContext from "../contexts/AppContext";
 import StartButton from "../components/StartButton";
 import styles from "../styles/Prep.module.scss";
 
-export default function Prep(props) {
+export default function Prep({ parameters }) {
+  const { data, setData } = useContext(AppContext);
+  data.factors = parameters.factors;
+  setData(data);
+
   return (
     <Layout>
       <div className={`${styles.container} container-fluid text-center`}>
@@ -20,4 +26,19 @@ export default function Prep(props) {
       </div>
     </Layout>
   );
+}
+
+export async function getStaticProps(context) {
+  const res = await fetch(`https://reroot-data-app.herokuapp.com/parameters`);
+  const parameters = await res.json();
+
+  if (!parameters) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { parameters }, // will be passed to the page component as props
+  };
 }

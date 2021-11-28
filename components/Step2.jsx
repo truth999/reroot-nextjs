@@ -1,32 +1,21 @@
 import { useState, useContext } from "react";
 import styles from "./Step.module.scss";
 import SubFactor from "../components/SubFactor";
-
-const languages = [
-  { id: 1, name: "Spanish", native: "Español" },
-  { id: 2, name: "Chinese", native: "中文" },
-  { id: 3, name: "Russian", native: "Русский" },
-  { id: 4, name: "French", native: "Français" },
-  { id: 5, name: "Korean", native: "한국어" },
-  { id: 6, name: "Italian", native: "Italiano" },
-  { id: 7, name: "Vietnamese", native: "Tiếng Việt" },
-];
-
-const countries = [
-  { id: 1, name: "Mexico" },
-  { id: 2, name: "China" },
-  { id: 3, name: "Russia" },
-  { id: 4, name: "France" },
-  { id: 5, name: "Korea" },
-  { id: 6, name: "Italy" },
-  { id: 7, name: "Vietnam" },
-];
+import AppContext from "../contexts/AppContext";
 
 export default function Step2(props) {
   // Language
   const [queryLanguage, setQueryLanguage] = useState("");
   // Country
   const [queryCountry, setQueryCountry] = useState("");
+
+  const { data, setData } = useContext(AppContext);
+
+  const community = data.factors.filter(
+    (factor) => factor.name == "community"
+  )[0];
+  const languages = community.sub.filter((s) => s.name == "language")[0].sub;
+  const countries = community.sub.filter((s) => s.name == "origin")[0].sub;
 
   if (props.currentStep !== 2) {
     // Prop: The current step
@@ -73,12 +62,17 @@ export default function Step2(props) {
           </div>
           <div className="search-results">
             <div className="row pt-3">
-              {showingLanguages.map((lang) => {
-                const id = `language-${lang.id}`;
+              {showingLanguages.slice(0, 6).map((lang) => {
+                const id = `language-${lang.name}`;
                 return (
-                  <div className="col-lg-2 py-2 me-2" key={id}>
-                    <SubFactor id={id} value={lang.name} name="language">
-                      {lang.native}
+                  <div className="col-lg-2 col-xl-1 py-2 me-2" key={id}>
+                    <SubFactor
+                      id={id}
+                      value={lang.name}
+                      param={lang.param}
+                      name="language"
+                    >
+                      {lang.text}
                     </SubFactor>
                   </div>
                 );
@@ -103,12 +97,18 @@ export default function Step2(props) {
           </div>
           <div className="search-results">
             <div className="row pt-3">
-              {showingCountries.map((country) => {
-                const id = `country-${country.id}`;
+              {showingCountries.slice(0, 6).map((country) => {
+                const id = `country-${country.name}`;
                 return (
                   <div className="col-lg-2 col-xl-1 py-2 me-2" key={id}>
-                    <SubFactor id={id} value={country.name} name="country">
-                      {country.name}
+                    <SubFactor
+                      id={id}
+                      value={country.name}
+                      param={country.param}
+                      name="country"
+                      onClick={props.handleClick}
+                    >
+                      {country.text}
                     </SubFactor>
                   </div>
                 );
