@@ -1,3 +1,5 @@
+@import "../styles/variables";
+
 .container {
   max-width: 36rem;
   padding: 0 1rem;
@@ -12,4 +14,26 @@
 
 .backToHome {
   margin: 3rem 0 0;
+}
+
+.footer {
+  background-color: $primary;
+  color: white;
+  nav {
+    margin: 0 5vw;
+  }
+}
+
+.footerTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.footerContent {
+  ul {
+    list-style-type: none;
+  }
+  font-size: 1rem;
+  font-family: "Karla", sans-serif;
 }

@@ -3,6 +3,7 @@ import Head from "next/head";
 import { URLSearchParams } from "url";
 import counties_10 from "../data/counties";
 import AppContext from "../contexts/AppContext";
+import { useRouter } from "next/router";
 
 // Third Party
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -19,6 +20,10 @@ function Results({ scores, query }) {
   const { data, useData } = useContext(AppContext);
   const [pageIsMounted, setPageIsMounted] = useState(false);
   const [favCounties, setFavCounties] = useState([]);
+  const router = useRouter();
+
+  console.log(Object.keys(query));
+  console.log(scores);
 
   // console.log(scores);
 

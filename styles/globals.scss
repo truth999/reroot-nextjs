@@ -1,8 +1,10 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Nunito+Sans:wght@700&family=Open+Sans&family=Playfair+Display:wght@400;700&family=Roboto&display=swap");
+@import "./variables";
+@import "./fonts.scss";
 
 html,
 body {
+  background-color: $theme-light;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
