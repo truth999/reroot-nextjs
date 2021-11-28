@@ -1,0 +1,24 @@
+@import "../styles/variables";
+
+.container {
+  height: 80vh;
+}
+
+.title {
+  padding-top: 25vh;
+  font-weight: bold;
+  font-size: 4rem;
+  font-family: "Playfair Display", serif;
+}
+
+.subtitle {
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.text {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 1.5rem;
+  padding: 0 20%;
+}

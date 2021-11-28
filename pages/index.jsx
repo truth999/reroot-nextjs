@@ -1,80 +1,126 @@
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/Landing.module.scss";
 import Layout, { siteTitle } from "../components/Layout";
 import StartButton from "../components/StartButton";
+import Card from "../components/Card";
 
 export default function Landing() {
   return (
     <Layout landing>
-      <div className="container">
-        <Head>
-          <title>{siteTitle}</title>
-        </Head>
+      <Head>
+        <title>{siteTitle}</title>
+      </Head>
 
-        <section className={styles.cover}>
-          <div className={styles.bgWrap}>
-            <Image
-              className={styles.bgImage}
-              src="/img/landing_cover.png"
-              alt="cover image"
-              height={300}
-              width={300}
-            />
-          </div>
-          <div className={styles.bgText}>
-            <h1>reRoot</h1>
-            <p>Find your home</p>
-          </div>
-          <div className={styles.btnTop}>
-            <StartButton></StartButton>
-          </div>
-        </section>
+      <section className={`${styles.cover}`}>
+        <div className={`${styles.sec1Text}`}>
+          <div className={styles.sec1Title}>reRoot</div>
+          <div className={styles.sec1Subtitle}>Find your home</div>
+        </div>
+        <div className={`${styles.sec1Button} text-center pb-5`}>
+          <StartButton to="/prep">Start Survey</StartButton>
+        </div>
+      </section>
 
-        <section className={`${styles.cover2} row`}>
+      <section className={`${styles.sec2Cover}`}>
+        <div className="row">
           <div className="col-8">
-            <div className={`${styles.title2} row`}>
+            <div className={`${styles.sec2Title} row`}>
               <p>Where you choose to live is an important decision.</p>
             </div>
-            <div className={`${styles.subtitle2} row`}>
+            <div className={`${styles.sec2Subtitle} row`}>
               <p>
                 We want to make sure families are finding communities that are
-                <span className={styles.special2}> welcoming</span> and
-                <span className={styles.special2}> prosperous</span>.
+                <span className={styles.sec2Special}> welcoming</span> and
+                <span className={styles.sec2Special}> prosperous</span>.
               </p>
             </div>
           </div>
-          <div className="col-4">
+          <div className={`${styles.sec2Image} col-4`}>
             <Image
               src="/img/landing_person.png"
               alt="person"
+              layout="responsive"
               height={750}
               width={450}
             />
           </div>
-        </section>
+        </div>
 
-        <section className={styles.cover3}>
-          <h1>Fast, simple, free</h1>
-          <p>1 Answer 30-second questionnaire. Tell us what matters to you.</p>
-          <p>
-            2 We’ll use data and math to find places that matches your
-            preferences.
-          </p>
-          <p>3 You get your results.</p>
-        </section>
-        <section className={styles.action}>
-          <h1>Make the right move!</h1>
-          <StartButton></StartButton>
+        <div
+          className={`${styles.sec2Banner} row text-center align-items-center`}
+        >
+          <div className="col-3">
+            <Image
+              src="/img/org_census.png"
+              alt="census"
+              layout="responsive"
+              height={100}
+              width={300}
+            />
+          </div>
+          <div className="col-6">
+            <Image
+              src="/img/org_top.png"
+              alt="census"
+              layout="responsive"
+              height={100}
+              width={570}
+            />
+          </div>
+          <div className="col-3">
+            <Image
+              src="/img/org_harvard.png"
+              alt="census"
+              layout="fixed"
+              height={100}
+              width={100}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sec3Cover}>
+        <div className={`${styles.sec3Title} my-5`}>Fast, simple, free</div>
+        <div className="row my-3">
+          <div className="col-4">
+            <Card src="/img/landing_step1.png">
+              <p>Take a 3-minute survey</p>
+              <p>Select what matters to you</p>
+            </Card>
+          </div>
+          <div className="col-4">
+            <Card src="/img/landing_step2.png">
+              <p>
+                {" "}
+                2 We’ll use data and math to find places that matches your
+                preferences.
+              </p>
+            </Card>
+          </div>
+          <div className="col-4">
+            <Card src="/img/landing_step3.png">
+              <p>3 You get your results.</p>
+            </Card>
+          </div>
+        </div>
+      </section>
+      <section className={styles.secAction}>
+        <div className={styles.actionImage}>
           <Image
-            src="/img/left_arrow.png"
-            alt="left arrow"
-            width={30}
-            height={30}
+            src="/img/landing_illustration.png"
+            alt="illustration"
+            layout="fill"
+            objectFit="cover"
           />
-        </section>
-      </div>
+        </div>
+        <div className={`${styles.actionSpecial} mt-5`}>
+          Make the right move!
+        </div>
+        <div className="my-5 text-center">
+          <StartButton to="/prep">Start Survey</StartButton>
+        </div>
+      </section>
     </Layout>
   );
 }

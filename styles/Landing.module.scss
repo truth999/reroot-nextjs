@@ -2,46 +2,51 @@
 
 .cover {
   z-index: 0;
-  height: 100%;
+  width: 100%;
+  height: auto;
+  min-height: 65vh;
+  background-image: url("/img/landing_cover.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.sec1Text {
+  padding-top: 10vh;
+  text-align: right;
+  z-index: 1;
+}
+
+.sec1Title {
+  padding-right: 23%;
+  color: $title;
+  font-size: 9rem;
+  text-shadow: 1px 1px 1px #3c5c5e;
+  font-family: "Macondo Swash Caps", cursive;
+  line-height: 8rem;
+}
+
+.sec1Subtitle {
+  padding-right: 7%;
+  color: $subtitle;
+  font-size: 2.5rem;
+  font-family: "Lemonada", cursive;
+}
+
+.sec1Button {
+  margin-top: 25%;
   width: 100%;
 }
 
-.bgImage {
-  z-index: 0;
+// Section 2
+.sec2Cover {
 }
 
-.bgText {
-  text-align: right;
-  z-index: 1;
-  h1 {
-    padding-top: 0;
-    padding-right: 25vw;
-    color: $title;
-    font-size: 9rem;
-    text-shadow: 1px 1px 1px #3c5c5e;
-    font-family: "Macondo Swash Caps", cursive;
-  }
-  p {
-    padding-right: 15vw;
-    font-size: 2.5rem;
-    font-family: "Lemonada", cursive;
-    color: $subtitle;
-  }
-}
-
-.btnTop {
-  text-align: right;
-  height: 500px;
-  width: 300px;
-  z-index: 2;
-}
-
-.cover2 {
-}
-
-.title2 {
+.sec2Title {
   height: 50%;
   p {
+    padding-top: 2rem;
+    line-height: 3rem;
     margin-top: 15%;
     margin-left: 20%;
     height: 50%;
@@ -57,7 +62,7 @@
   }
 }
 
-.subtitle2 {
+.sec2Subtitle {
   height: 50%;
   margin-left: 25%;
   width: 100%;
@@ -70,8 +75,44 @@
   }
 }
 
-.special2 {
+.sec2Special {
   font-size: 2rem;
   font-family: "Lemonada", cursive;
   color: $text-special;
+}
+
+.sec2Image {
+  height: 100%;
+}
+
+.sec2Banner {
+  height: 15vh;
+  min-height: 150px;
+  background-color: $primary;
+}
+
+// Section 3
+.sec3Title {
+  color: $title-dark;
+  font-family: "Lemonada", cursive;
+  font-size: 4rem;
+  text-align: center;
+}
+
+// Action Section
+.secAction {
+  width: 100%;
+}
+
+.actionImage {
+  position: relative;
+  min-height: 600px;
+  width: 100%;
+}
+
+.actionSpecial {
+  font-size: 5rem;
+  font-family: "Lemonada", cursive;
+  color: $text-special;
+  text-align: center;
 }

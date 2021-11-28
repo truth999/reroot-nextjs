@@ -3,6 +3,8 @@ import styles from "./Layout.module.scss";
 import Head from "next/head";
 import Image from "next/image";
 
+import Header from "../components/Header";
+
 const contributors = [
   "Mier Chen",
   "Lily Huang",
@@ -41,51 +43,55 @@ export default function Layout({ children, survey }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <header className="header"></header>
+      <Header></Header>
 
       <main>{children}</main>
 
       {!survey && (
-        <footer className={styles.footer}>
-          <nav className="navbar navbar-expand-lg navbar-light">
-            <div className="footer-section col-md-3 col-sm-6 col-xs-12">
-              <div className={styles.footerTitle}>Created by ...</div>
-              <div className={styles.footerContent}>
-                <ul>
-                  {contributors.map((contributor, i) => (
-                    <li key={i}>{contributor}</li>
+        <footer className={`${styles.footer}`}>
+          <nav className="navbar navbar-expand-lg">
+            <div className="row">
+              <div className="col-md-3 col-sm-6 col-xs-12">
+                <div className={styles.footerTitle}>Created by ...</div>
+                <div className={styles.footerContent}>
+                  <ul>
+                    {contributors.map((contributor, i) => (
+                      <li key={i}>{contributor}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="col-md-3 col-sm-6 col-xs-12">
+                <div className={styles.footerTitle}>Special thanks to...</div>
+                <div className={styles.footerContent}>
+                  <ul>
+                    {advisors.map((advisor, i) => (
+                      <li key={i}>{advisor}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6 col-xs-12">
+                <div className={styles.footerTitle}>
+                  In collaboration with...
+                </div>
+                <div className={styles.footerContent}>
+                  {logos.map((logo, i) => (
+                    <Image
+                      key={i}
+                      src={"/img/" + logo}
+                      alt={logo}
+                      layout="intrinsic"
+                      width={150}
+                      height={50}
+                    />
                   ))}
-                </ul>
+                </div>
               </div>
-            </div>
-            <div className="footer-section col-md-3 col-sm-6 col-xs-12">
-              <div className={styles.footerTitle}>Special thanks to...</div>
-              <div className={styles.footerContent}>
-                <ul>
-                  {advisors.map((advisor, i) => (
-                    <li key={i}>{advisor}</li>
-                  ))}
-                </ul>
+              <div className="col-md-2 col-sm-6 col-xs-12">
+                <div className={styles.footerTitle}>Contact Us</div>
+                <div className={styles.footerContent}>inquiries@reroot.com</div>
               </div>
-            </div>
-            <div className="footer-section col-md-4 col-sm-6 col-xs-12">
-              <div className={styles.footerTitle}>In collaboration with...</div>
-              <div className={styles.footerContent}>
-                {logos.map((logo, i) => (
-                  <Image
-                    key={i}
-                    src={"/img/" + logo}
-                    alt={logo}
-                    layout="intrinsic"
-                    width={150}
-                    height={50}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="footer-section col-md-2 col-sm-6 col-xs-12">
-              <div className={styles.footerTitle}>Contact Us</div>
-              <div className={styles.footerContent}>inquiries@reroot.com</div>
             </div>
           </nav>
         </footer>

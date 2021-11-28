@@ -1,0 +1,9 @@
+@import "../styles/variables";
+
+.header {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  min-height: 5vh;
+}

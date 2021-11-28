@@ -4,6 +4,8 @@ import AppContext from "../contexts/AppContext";
 import Layout from "../components/Layout";
 import Step1 from "../components/Step1";
 import Step2 from "../components/Step2";
+import NextButton from "../components/NextButton";
+import styles from "../styles/Survey.module.scss";
 
 export default function Survey() {
   const { data, setData } = useContext(AppContext);
@@ -28,7 +30,7 @@ export default function Survey() {
     setIsLastStep = false;
   };
 
-  const _next = () => {
+  const handleNext = () => {
     console.log("clicked");
     if (currentStep === 1) {
       factors = Array.from(
@@ -73,42 +75,29 @@ export default function Survey() {
     router.push({ pathname: "/results", query: paramsSelected });
   };
 
-  const nextButton = () => {
-    return (
-      <input
-        className="btn btn-secondary"
-        type="button"
-        value="Next"
-        name="next"
-        onClick={_next}
-      />
-    );
-  };
-
   return (
     <Layout survey>
-      <div className="container">
-        Step {currentStep}
-        <form onSubmit={handleSubmit}>
-          <Step1
-            handleNext={handleStep1}
-            currentStep={currentStep}
-            factors={factors}
-          />
-          <Step2
-            handleNext={handleStep2}
-            currentStep={currentStep}
-            askLanguage={factors.includes("language")}
-            askCountry={factors.includes("origin")}
-          />
-          {nextButton()}
+      <form onSubmit={handleSubmit}>
+        <Step1
+          handleNext={handleStep1}
+          currentStep={currentStep}
+          factors={factors}
+        />
+        <Step2
+          handleNext={handleStep2}
+          currentStep={currentStep}
+          askLanguage={factors.includes("language")}
+          askCountry={factors.includes("origin")}
+        />
+        <div className="survey-button text-center pt-5">
+          <NextButton handleClick={handleNext}></NextButton>
           {isLastStep && (
             <button className="btn btn-primary" type="submit">
               Submit
             </button>
           )}
-        </form>
-      </div>
+        </div>
+      </form>
     </Layout>
   );
 }

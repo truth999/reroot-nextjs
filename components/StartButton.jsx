@@ -1,11 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./StartButton.module.scss";
 
-export default function StartButton() {
+export default function StartButton(props) {
   return (
-    <Link href="/survey">
+    <Link href={props.to}>
       <a>
-        <button className={`btn ${styles.btnStart}`}>Start Survey</button>
+        <button className={`btn ${styles.btnStart}`}>{props.children}</button>
       </a>
     </Link>
   );

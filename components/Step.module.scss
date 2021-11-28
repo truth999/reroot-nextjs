@@ -1,0 +1,32 @@
+@import "../styles/variables";
+
+.title {
+  font-family: "Playfair Display", serif;
+  font-size: 4rem;
+  font-weight: bold;
+  color: $title-light;
+}
+
+.subtitle {
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.factor {
+  font-family: "Inter", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.search {
+  width: 100%;
+  padding: 20px 20px 20px 60px;
+  background-image: url("../public/icon/search.svg");
+  background-repeat: no-repeat;
+  background-position: 20px center;
+  background-size: 1.2em;
+  font-size: 1.2em;
+  border: 0;
+  outline: none;
+}
