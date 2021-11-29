@@ -2,7 +2,7 @@ import styles from "./Factor.module.scss";
 
 export function Factor(props) {
   return (
-    <div className={`${styles.factor} col-xs-6 col-md-4 col-lg-3 pb-4`}>
+    <div className={`${styles.factor} col-xs-6 col-md-5 col-xl-3 pb-4`}>
       <input
         type="checkbox"
         className="btn-check"

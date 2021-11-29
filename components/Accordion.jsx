@@ -1,4 +1,5 @@
 import styles from "./Accordion.module.scss";
+import Progress from "../components/progress";
 
 export default function Accordion(props) {
   const top = (counties) => (n) => counties.slice(0, n);

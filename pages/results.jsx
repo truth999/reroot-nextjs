@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import Head from "next/head";
-import { URLSearchParams } from "url";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 import Accordion from "../components/Accordion";
@@ -24,6 +23,8 @@ function Results({ scores, initParams }) {
   const [params, setParams] = useState(initParams);
   const router = useRouter();
 
+  console.log(params);
+
   const PER_PAGE = 10;
   const top = (counties) => (n) => counties.slice(0, n);
 
@@ -37,10 +38,10 @@ function Results({ scores, initParams }) {
 
   const [counties, setCounties] = useState(counties_raw);
 
-  const updateScores = async (newParams) => {
-    setParams(params.concat(newParams));
+  const updateScores = async (newParam) => {
+    setParams(Object.assign(params, newParam));
     const query = new URLSearchParams(params);
-    const req = await fetch(`${base_url}?query`);
+    const req = await fetch(`${base_url}scores?${query}`);
     const newScores = await req.json();
     counties = newScores.scores;
     counties.forEach((county) => {
@@ -53,7 +54,7 @@ function Results({ scores, initParams }) {
     return true;
   };
 
-  const handleClick = (event) => {
+  const handleRangeChange = (event) => {
     event.preventDefault();
     // TODO
     let newParams = [];
@@ -65,12 +66,12 @@ function Results({ scores, initParams }) {
   // Map configurations
   useEffect(() => {
     setPageIsMounted(true);
-    const LNG_LAT_DC = [-77.02, 38.887];
+    const LNG_LAT_DC = [-99.0909, 39.8355];
     const map = new mapboxgl.Map({
       container: "my-map",
       style: "mapbox://styles/zhj0924/ckwd55u2n5fb314pc0egsi3ii",
       center: LNG_LAT_DC,
-      zoom: 12.5,
+      zoom: 4,
       pitch: 45,
     });
 
@@ -122,42 +123,66 @@ function Results({ scores, initParams }) {
               className="list-group border-0 rounded-0 text-sm-start min-vh-100 ps-5"
               style={{ width: "15vw" }}
             >
-              <a className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-decoration-none">
-                <span className="fs-5 d-none d-sm-inline">Preference</span>
-              </a>
-              <ul
-                className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
-                id="menu"
+              <div
+                className="flex-shrink-0 p-3 bg-white"
+                style={{ width: "13vw" }}
               >
-                {data.factors.map((factor) => (
-                  <li key={factor.name}>
-                    <a
-                      href={`#submenu-${factor.name}`}
-                      data-bs-toggle="collapse"
-                      className="nav-link px-0 align-middle"
-                    >
-                      <i className="fs-4 bi-speedometer2"></i>
-                      <span className="ms-1 d-none d-sm-inline">
+                <div className="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom fs-5 fw-semibold">
+                  Preference
+                </div>
+                <ul className="list-unstyled ps-0">
+                  {data.factors.map((factor) => (
+                    <li className="mb-1" key={factor.name}>
+                      <button
+                        className={`${styles.factor} btn btn-toggle align-items-center rounded collapsed pb-1`}
+                        data-bs-toggle="collapse"
+                        data-bs-target={`#${factor.name}-collapse`}
+                        aria-expanded="true"
+                      >
                         {factor.text}
-                      </span>
-                    </a>
-                    <ul
-                      className="collapse show nav flex-column ms-1"
-                      id={`submenu-${factor.name}`}
-                      data-bs-parent="#menu"
-                    >
-                      {factor.sub.map((sub) => (
-                        <li className="w-100" key={sub.name}>
-                          <a href="#" className="nav-link px-0">
-                            {sub.text}
-                            {/* <span className="d-none d-sm-inline"></span> */}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
+                        <span>▼</span>
+                      </button>
+                      <div
+                        className={`collapse ${factor.selected ? "show" : ""}`}
+                        id={`${factor.name}-collapse`}
+                      >
+                        <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          {factor.sub.map((sub) => (
+                            <li key={sub.name}>
+                              <label
+                                htmlFor={`${sub.name}-range`}
+                                className="form-label"
+                              >
+                                {sub.text}
+                              </label>
+                              <div className="range">
+                                <input
+                                  type="range"
+                                  className="form-range"
+                                  min="0"
+                                  max="4"
+                                  defaultValue={params[sub.param] || "0"}
+                                  step="1"
+                                  id={`${sub.name}-range`}
+                                  onChange={(event) => {
+                                    event.preventDefault();
+                                    let newValue = event.target.value;
+                                    if (sub.param)
+                                      updateScores({
+                                        [`${sub.param}`]: newValue,
+                                      });
+                                  }}
+                                />
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </li>
+                  ))}
+                  <li className="border-top my-3"></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -173,11 +198,9 @@ function Results({ scores, initParams }) {
             <i className="bi bi-list bi-lg py-2 p-1"></i> Menu
           </a>
           <div className="row">
-            <div className="col-12 map">
-              <div className={styles.map} id="my-map" />
-            </div>
+            <div className={`${styles.map} col-12`} id="my-map" />
             <div className="col-12 favorite">
-              <div className="fav-title">FAVORITED COUNTIES</div>
+              <div className="fav-title">FAVORITE COUNTIES</div>
               <Accordion
                 counties={favCounties}
                 per_page={PER_PAGE}
