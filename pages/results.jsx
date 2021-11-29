@@ -68,7 +68,7 @@ function Results({ scores, initParams }) {
 
   const renderStats = (stats, county) => (
     <div className="container">
-      <h1>
+      <h2>
         <a
           href={`https://en.wikipedia.org/wiki/${county.county_name}`}
           target="_blank"
@@ -76,7 +76,7 @@ function Results({ scores, initParams }) {
         >
           {county.county_name}
         </a>
-      </h1>
+      </h2>
       <ul className="list-group py-3">
         {stats.map((stat) => (
           <li
