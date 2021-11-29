@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 import Accordion from "../components/Accordion";
@@ -8,6 +9,7 @@ import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
 import LikeButton from "../components/likeButton";
 import Preference from "../components/preference";
+import SearchBar from "../components/searchBar";
 
 // Third Party
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -22,10 +24,12 @@ const base_url = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ scores, initParams }) {
   const { data, useData } = useContext(AppContext);
+  const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
   const [pageIsMounted, setPageIsMounted] = useState(false);
   const [favCounties, setFavCounties] = useState([]);
   const [params, setParams] = useState(initParams);
+  const [stats, setStats] = useState([]);
   const router = useRouter();
 
   const counties_raw = scores.scores;
@@ -62,6 +66,64 @@ function Results({ scores, initParams }) {
 
   const myMap = useRef();
 
+  const renderStats = (stats, county) => (
+    <div className="container">
+      <h1>
+        <a
+          href={`https://en.wikipedia.org/wiki/${county.county_name}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {county.county_name}
+        </a>
+      </h1>
+      <ul className="list-group py-3">
+        {stats.map((stat) => (
+          <li
+            key={stat.name}
+            className="list-group-item d-flex justify-content-between align-items-start"
+          >
+            <div className="ms-2 me-auto">
+              <div className="fw-bold">{stat.text}</div>
+              <ul className="list-group py-2">
+                {stat.sub.map((sub_stat) => {
+                  let suffixLookup = {
+                    percentage: "%",
+                    index: "",
+                    median: "",
+                    count: "",
+                    density: "",
+                  };
+                  let prefixLookup = {
+                    percentage: "",
+                    index: "",
+                    median: "$",
+                    count: "",
+                    density: "",
+                  };
+                  let prefix = prefixLookup[sub_stat.metric];
+                  let suffix = suffixLookup[sub_stat.metric];
+                  return (
+                    <li key={sub_stat.name} className="pb-1">
+                      {`${sub_stat.text}: ${prefix}${sub_stat.value}${suffix}`}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  const showingCounties =
+    queryCounty.trim() == ""
+      ? counties
+      : counties.filter((county) =>
+          county.county_name.toLowerCase().includes(queryCounty.toLowerCase())
+        );
+
   // Map configurations
   useEffect(() => {
     // Ensure user can't access the page without completing the survey
@@ -77,36 +139,53 @@ function Results({ scores, initParams }) {
       center: CENTER_US48,
       zoom: 4,
       pitch: 45,
+      attributionControl: false,
     });
 
     myMap.current = map;
 
-    map.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-      })
-    );
+    map
+      .addControl(
+        new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true,
+        })
+      )
+      .addControl(new mapboxgl.FullscreenControl())
+      .addControl(
+        new mapboxgl.AttributionControl({
+          customAttribution: "Map design by Thomas Zhang",
+        })
+      )
+      .addControl(new mapboxgl.NavigationControl());
 
     // Populate markers
     counties.forEach((county) => {
-      new mapboxgl.Marker({
-        color: "red",
-      })
-        .setLngLat([
-          county.coordinates.county_long,
-          county.coordinates.county_lat,
-        ])
-        .setPopup(
-          new mapboxgl.Popup()
-            .setHTML(`<h1>${county.county_name}</h1>`)
-            .addClassName("map-popup")
-        )
-        .addTo(map);
+      fetch(`${base_url}stats?county=${county.county_code}`)
+        .then((res) => res.json())
+        .then((stats_raw) => {
+          const stats = stats_raw.stats;
+
+          new mapboxgl.Marker({
+            color: "red",
+          })
+            .setLngLat([
+              county.coordinates.county_long,
+              county.coordinates.county_lat,
+            ])
+            .setPopup(
+              new mapboxgl.Popup()
+                .setHTML(
+                  ReactDOMServer.renderToString(renderStats(stats, county))
+                )
+                .addClassName("map-popup")
+            )
+            .addTo(map);
+        });
     });
-  }, [counties, router, data.factors.length, page]);
+  }, [counties, router, data.factors, page, stats, queryCounty]);
 
   return (
     <Layout results>
@@ -176,10 +255,19 @@ function Results({ scores, initParams }) {
               ></Accordion>
             </div>
             <div className={`${styles.counties} col-12 counties`}>
-              <div className={`${styles.mainTitle}`}>ALL COUNTIES</div>
+              <div className="d-flex">
+                <div className={`${styles.mainTitle} pe-5`}>ALL COUNTIES</div>
+                <SearchBar
+                  value={queryCounty}
+                  placeholder="Filter Counties"
+                  handleChange={(event) => {
+                    setQueryCounty(event.target.value);
+                  }}
+                />
+              </div>
               <Accordion
                 type={``}
-                counties={counties}
+                counties={showingCounties}
                 map={myMap}
                 emptyText="Loading..."
                 loadMoreButton={

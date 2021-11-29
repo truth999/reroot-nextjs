@@ -22,5 +22,15 @@ a {
 
 .map-popup {
   .mapboxgl-popup-content {
+    min-width: 25rem;
+    min-height: 10rem;
+    width: 20vw;
+    height: 20vh;
+    overflow-y: scroll;
+    ul {
+      padding: 0 1rem;
+      font-size: 1rem;
+      list-style: none;
+    }
   }
 }

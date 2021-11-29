@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import styles from "./Step.module.scss";
 import SubFactor from "../components/SubFactor";
 import AppContext from "../contexts/AppContext";
+import SearchBar from "../components/searchBar"
 
 export default function Step2(props) {
   // Language
