@@ -39,6 +39,7 @@ export default function Landing() {
             </div>
             <div className={`${styles.sec2Image} col-4`}>
               <Image
+                priority
                 src="/img/landing_person.png"
                 alt="person"
                 layout="responsive"
@@ -86,22 +87,19 @@ export default function Landing() {
           <div className="row my-3">
             <div className="col-4">
               <Card src="/img/landing_step1.png">
-                <p>Take a 3-minute survey</p>
-                <p>Select what matters to you</p>
+                Take a 3-minute survey
+                <br />
+                Select what matters to you
               </Card>
             </div>
             <div className="col-4">
               <Card src="/img/landing_step2.png">
-                <p>
-                  2 We’ll use data and math to find places that matches your
-                  preferences.
-                </p>
+                We’ll use data and math to find places that matches your
+                preferences.
               </Card>
             </div>
             <div className="col-4">
-              <Card src="/img/landing_step3.png">
-                <p>3 You get your results.</p>
-              </Card>
+              <Card src="/img/landing_step3.png">You get your results.</Card>
             </div>
           </div>
         </section>

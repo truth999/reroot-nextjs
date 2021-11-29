@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Step1 from "../components/Step1";
 import Step2 from "../components/Step2";
-import NextButton from "../components/NextButton";
+import NextButton from "../components/nextButton";
 import styles from "../styles/Survey.module.scss";
 
 export default function Survey({ parameters }) {
@@ -103,7 +103,7 @@ export default function Survey({ parameters }) {
       );
     }
 
-    const ON = "2";
+    const ON = "3";
     const params = Object.fromEntries(
       selectedParams.map((p) => [[`${p}`], ON])
     );
@@ -122,24 +122,17 @@ export default function Survey({ parameters }) {
     if (currentStep == 1) {
       if (selectedFactors.length > 0) {
         if (!isLastStep)
-          return (
-            <NextButton handleClick={handleNext} value="Next"></NextButton>
-          );
-        else
-          return (
-            <NextButton handleClick={handleSubmit} value="Submit"></NextButton>
-          );
+          return <NextButton handleClick={handleNext}>Next</NextButton>;
+        else return <NextButton handleClick={handleSubmit}>Submit</NextButton>;
       }
-      return <NextButton disabled={true} value="Next"></NextButton>;
+      return <NextButton disabled={true}>Next</NextButton>;
     }
 
     if (currentStep == 2) {
       if (isLastStep) {
-        return (
-          <NextButton handleClick={handleSubmit} value="Submit"></NextButton>
-        );
+        return <NextButton handleClick={handleSubmit}>Submit</NextButton>;
       } else {
-        return <NextButton disabled={true} value="Submit"></NextButton>;
+        return <NextButton disabled={true}>Submit</NextButton>;
       }
     }
   };

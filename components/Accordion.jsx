@@ -1,72 +1,85 @@
 import styles from "./Accordion.module.scss";
-import Progress from "../components/progress";
+import NextButton from "./nextButton";
 
 export default function Accordion(props) {
-  const top = (counties) => (n) => counties.slice(0, n);
   const to2digits = (n) => Number.parseFloat(n).toFixed(2);
   return (
     <div
-      className={`${styles.accordion} accordion overflow-auto`}
-      id="accordionCounties"
+      className={`${styles.accordion} accordion overflow-auto ms-3`}
+      id={`accordion-${props.type}-Counties`}
     >
-      {props.counties.length === 0 && props.emptyText}
-      {top(props.counties)(props.per_page).map((county) => (
+      {props.counties.length === 0 && (
+        <p className={`${styles.emptyText}`}>{props.emptyText}</p>
+      )}
+      {props.counties.map((county) => (
         // Accordion Item
-        <div className="accordion-item" key={county.county_code}>
+        <div
+          className={`${styles.item} accordion-item mb-4 pb-2`}
+          key={county.county_code}
+        >
           {/* Header */}
-          <h2 className="accordion-header" id={`heading-${county.county_code}`}>
+          <h2
+            className={`${styles.header} accordion-header`}
+            id={`heading-${props.type}-${county.county_code}`}
+          >
             <button
               className="accordion-button collapsed"
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target={`#collapse-${county.county_code}`}
+              data-bs-target={`#collapse-${props.type}-${county.county_code}`}
               aria-expanded="false"
-              aria-controls={`collapse-${county.county_code}`}
+              aria-controls={`collapse-${props.type}-${county.county_code}`}
               onClick={() => {
                 props.map.current.flyTo({
-                  center: county.lngLat,
-                  zoom: 12.5,
+                  center: [county.coordinates.county_long, county.coordinates.county_lat],
+                  zoom: 12,
                 });
               }}
             >
-              {county.county_name}
+              <p>{county.county_name}</p>
             </button>
-          </h2>
-
-          {/* Display */}
-          <div className="row">
-            <div className="col-10 progress" style={{ height: "1.5rem" }}>
+            {/* Display */}
+            <div className="row">
               <div
-                className="progress-bar bg-danger"
-                role="progressbar"
-                aria-valuenow={county.score}
-                aria-valuemin="0"
-                aria-valuemax="10"
-                aria-label={county.county_name}
-                style={{ width: `${county.score * 10}%` }}
+                className={`${styles.progress} col-10 progress`}
+                style={{ height: "2.5rem" }}
               >
-                {to2digits(county.score)}
+                <div
+                  className="progress-bar bg-danger"
+                  role="progressbar"
+                  aria-valuenow={county.score}
+                  aria-valuemin="0"
+                  aria-valuemax="10"
+                  aria-label={county.county_name}
+                  style={{ width: `${county.score * 10}%` }}
+                >
+                  {to2digits(county.score)}
+                </div>
               </div>
+              <div className="col-2">{props.rightBtn(county)}</div>
             </div>
-
-            <div className="col-2">{props.rightBtn(county)}</div>
-          </div>
+          </h2>
 
           {/* Body */}
           <div
             className="accordion-collapse collapse"
-            id={`collapse-${county.county_code}`}
-            aria-labelledby={`heading-${county.county_code}`}
-            data-bs-parent="#accordionCounties"
+            id={`collapse-${props.type}-${county.county_code}`}
+            aria-labelledby={`heading-${props.type}-${county.county_code}`}
+            data-bs-parent={`#accordion-${props.type}-Counties`}
           >
             <div className="accordion-body">
-              {Object.entries(county.breakdown).map(([factor, score]) => (
-                <div key={factor}>{`${factor}: ${score}`}</div>
+              {Object.entries(county.breakdown).map(([param, score]) => (
+                <div key={param}>{`${param}: ${to2digits(score)}`}</div>
               ))}
             </div>
           </div>
         </div>
       ))}
+      {props.counties.length !== 0 && (
+        <div className="text-center">
+          {props.loadMoreButton}
+        </div>
+      )}
     </div>
   );
 }

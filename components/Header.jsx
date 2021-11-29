@@ -20,7 +20,7 @@ const Header = () => {
       )}
       {router.pathname == "/results" && (
         <Link href="/">
-          <a>HOME</a>
+          <a className={styles.logo}>reRoot</a>
         </Link>
       )}
     </header>
