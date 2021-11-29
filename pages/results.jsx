@@ -65,6 +65,11 @@ function Results({ scores, initParams }) {
 
   // Map configurations
   useEffect(() => {
+    // Ensure user can't access the page without completing the survey
+    if (data.factors.length == 0) {
+      router.push("/");
+    }
+
     setPageIsMounted(true);
     const LNG_LAT_DC = [-99.0909, 39.8355];
     const map = new mapboxgl.Map({
@@ -97,7 +102,7 @@ function Results({ scores, initParams }) {
         )
         .addTo(map);
     });
-  }, [counties]);
+  }, [counties, router, data.factors.length]);
 
   return (
     <Layout results>
@@ -108,8 +113,6 @@ function Results({ scores, initParams }) {
         />
         <title>Results</title>
       </Head>
-
-      <Progress />
 
       <div className="row flex-nowrap">
         {/* Sidebar */}
@@ -195,7 +198,7 @@ function Results({ scores, initParams }) {
             data-bs-toggle="collapse"
             className="border rounded-3 p-1 text-decoration-none"
           >
-            <i className="bi bi-list bi-lg py-2 p-1"></i> Menu
+            Preference
           </a>
           <div className="row">
             <div className={`${styles.map} col-12`} id="my-map" />

@@ -31,7 +31,12 @@ export default function Survey({ parameters }) {
     selectedFactors = checkedFactors.map((f) => f.value);
     setFactors(selectedFactors);
 
-    if (selectedFactors.length === 0) setIsLastStep(false);
+    if (selectedFactors.length === 0) {
+      setIsLastStep(false);
+    } else
+      setIsLastStep(
+        !selectedFactors.some((f) => f == "language" || f == "origin")
+      );
 
     // Update params
     selectedParams = checkedFactors
@@ -53,8 +58,19 @@ export default function Survey({ parameters }) {
     setCountry(country);
 
     setIsLastStep(
-      (selectedFactors.includes("language") && !(language == "")) ||
-        (selectedFactors.includes("origin") && !(country == ""))
+      // Language only
+      (selectedFactors.includes("language") &&
+        !selectedFactors.includes("origin") &&
+        language != "") ||
+        // Country only
+        (selectedFactors.includes("origin") &&
+          !selectedFactors.includes("language") &&
+          country != "") ||
+        // Both
+        (selectedFactors.includes("language") &&
+          selectedFactors.includes("origin") &&
+          language != "" &&
+          country != "")
     );
   };
 
@@ -64,9 +80,7 @@ export default function Survey({ parameters }) {
     )
       ? 2
       : 1;
-    if (currentStep === max_steps) {
-      setIsLastStep(true);
-    } else {
+    if (currentStep !== max_steps) {
       setIsLastStep(false);
       let nextStep = currentStep + 1;
       setCurrentStep(nextStep);
@@ -89,7 +103,7 @@ export default function Survey({ parameters }) {
       );
     }
 
-    const ON = "3";
+    const ON = "2";
     const params = Object.fromEntries(
       selectedParams.map((p) => [[`${p}`], ON])
     );
@@ -116,11 +130,17 @@ export default function Survey({ parameters }) {
             <NextButton handleClick={handleSubmit} value="Submit"></NextButton>
           );
       }
-    } else {
-      if (isLastStep)
+      return <NextButton disabled={true} value="Next"></NextButton>;
+    }
+
+    if (currentStep == 2) {
+      if (isLastStep) {
         return (
           <NextButton handleClick={handleSubmit} value="Submit"></NextButton>
         );
+      } else {
+        return <NextButton disabled={true} value="Submit"></NextButton>;
+      }
     }
   };
 

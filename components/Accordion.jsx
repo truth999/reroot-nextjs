@@ -3,7 +3,7 @@ import Progress from "../components/progress";
 
 export default function Accordion(props) {
   const top = (counties) => (n) => counties.slice(0, n);
-
+  const to2digits = (n) => Number.parseFloat(n).toFixed(2);
   return (
     <div
       className={`${styles.accordion} accordion overflow-auto`}
@@ -35,16 +35,18 @@ export default function Accordion(props) {
 
           {/* Display */}
           <div className="row">
-            <div className="col-10 progress">
+            <div className="col-10 progress" style={{ height: "1.5rem" }}>
               <div
-                className="progress-bar"
+                className="progress-bar bg-danger"
                 role="progressbar"
                 aria-valuenow={county.score}
                 aria-valuemin="0"
-                aria-valuemax="100"
+                aria-valuemax="10"
                 aria-label={county.county_name}
                 style={{ width: `${county.score * 10}%` }}
-              ></div>
+              >
+                {to2digits(county.score)}
+              </div>
             </div>
 
             <div className="col-2">{props.rightBtn(county)}</div>

@@ -15,10 +15,10 @@ export default function Step1(props) {
   return (
     <section className="select-factors">
       <div className="question-text text-center pb-4">
-        <div className={`${styles.title} pb-2`}>
+        <div className={`${styles.title} pb-4`}>
           What&apos;s important to you?
         </div>
-        <div className={styles.subtitle}>
+        <div className={`${styles.subtitle} pb-3`}>
           Click as many as you like.
           <br />
           You can edit and fine-tune your preferences later.

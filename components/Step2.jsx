@@ -14,7 +14,7 @@ export default function Step2(props) {
   const community = data.factors.filter(
     (factor) => factor.name == "community"
   )[0];
-  const languages = community.sub.filter((s) => s.name == "language")[0].sub;
+  let languages = community.sub.filter((s) => s.name == "language")[0].sub;
   const countries = community.sub.filter((s) => s.name == "origin")[0].sub;
 
   data.languages = languages;
@@ -30,9 +30,11 @@ export default function Step2(props) {
     setQueryLanguage(query);
   };
 
+  console.log();
+
   const showingLanguages =
-    queryLanguage === ""
-      ? languages
+    queryLanguage.trim() == ""
+      ? languages.slice(0, 6)
       : languages.filter((lang) =>
           lang.name.toLowerCase().includes(queryLanguage.toLowerCase())
         );
@@ -42,8 +44,8 @@ export default function Step2(props) {
   };
 
   const showingCountries =
-    queryCountry === ""
-      ? countries
+    queryCountry.trim() === ""
+      ? countries.slice(0, 6)
       : countries.filter((country) =>
           country.name.toLowerCase().includes(queryCountry.toLowerCase())
         );
@@ -51,9 +53,10 @@ export default function Step2(props) {
   return (
     <section className="step-2">
       {props.askLanguage && (
-        <section className="select-language pb-4">
-          <div className={`${styles.title} pb-2`}>
-            Great! You said language. Which languages?
+        <section className="select-language pb-">
+          <div className={`pb-2`}>
+            <p className={`${styles.title}`}>Great! You said language.</p>
+            <p className={`${styles.subtitle}`}>Which languages?</p>
           </div>
           <div className="search-bar">
             <input
@@ -66,15 +69,16 @@ export default function Step2(props) {
           </div>
           <div className="search-results">
             <div className="row pt-3">
-              {showingLanguages.slice(0, 6).map((lang) => {
+              {showingLanguages.map((lang) => {
                 const id = `language-${lang.name}`;
                 return (
-                  <div className="col-lg-2 col-xl-1 py-2 me-2" key={id}>
+                  <div className="col-lg-2 py-2" key={id}>
                     <SubFactor
                       id={id}
                       value={lang.name}
                       param={lang.param}
                       name="language"
+                      onClick={props.handleClick}
                     >
                       {lang.text}
                     </SubFactor>
@@ -87,8 +91,9 @@ export default function Step2(props) {
       )}
       {props.askCountry && (
         <section className="select-country pb-4">
-          <div className={`${styles.title} pb-2`}>
-            You also said nativeland. What countries?
+          <div className={`pb-2`}>
+            <p className={`${styles.title}`}>You also said nativeland.</p>
+            <p className={`${styles.subtitle}`}>Which country?</p>
           </div>
           <div className="search-bar">
             <input
@@ -101,10 +106,10 @@ export default function Step2(props) {
           </div>
           <div className="search-results">
             <div className="row pt-3">
-              {showingCountries.slice(0, 6).map((country) => {
+              {showingCountries.map((country) => {
                 const id = `country-${country.name}`;
                 return (
-                  <div className="col-lg-2 col-xl-1 py-2 me-2" key={id}>
+                  <div className="col-lg-2 py-2" key={id}>
                     <SubFactor
                       id={id}
                       value={country.name}

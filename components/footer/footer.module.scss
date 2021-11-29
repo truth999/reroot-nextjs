@@ -1,0 +1,24 @@
+@import "../../styles/variables";
+
+.footer {
+  min-height: 15vh;
+  background-color: $primary;
+  color: white;
+  nav {
+    padding: 2vh 30vw;
+  }
+}
+
+.footerTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.footerContent {
+  ul {
+    list-style-type: none;
+  }
+  font-size: 1rem;
+  font-family: "Karla", sans-serif;
+}

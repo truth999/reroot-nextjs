@@ -1,11 +1,9 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
 
-$width-full: 100%;
-
 .map {
-  width: $width-full;
+  margin: 0 10%;
+  width: 80%;
   min-height: 40vh;
-  height: calc($width-full * 0.7);
 }
 
 .factor {

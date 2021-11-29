@@ -1,5 +1,6 @@
 import "bootstrap/scss/bootstrap.scss";
 import "../styles/globals.scss";
+import "tailwindcss/tailwind.css";
 
 import { useEffect, useState } from "react";
 import AppContext from "../contexts/AppContext";

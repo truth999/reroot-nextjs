@@ -7,6 +7,7 @@ export default function nextButton(props) {
       type="button"
       value={props.value}
       name="next"
+      disabled={props.disabled}
       onClick={props.handleClick}
     />
   );
