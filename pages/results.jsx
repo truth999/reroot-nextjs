@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
@@ -16,6 +15,7 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 
 // Internal
 import Layout from "../components/Layout";
+import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "../styles/Results.module.scss";
 
 mapboxgl.accessToken =
