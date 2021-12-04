@@ -1,17 +1,27 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Step1 from "../components/Step1";
 import Step2 from "../components/Step2";
 import NextButton from "../components/nextButton";
-import styles from "../styles/Survey.module.scss";
 
 export default function Survey({ parameters }) {
-  const { data, setData } = useContext(AppContext);
+  // Constants
+  const ON = "2";
 
-  data.factors = parameters.factors;
-  setData(data);
+  const { data, setData } = useContext(AppContext);
+  const router = useRouter();
+  const factors = parameters.factors;
+  const community = factors.filter((factor) => factor.name == "community")[0];
+
+  setData(
+    Object.assign(data, {
+      factors: parameters.factors,
+      languages: community.sub.filter((s) => s.name == "language")[0].sub,
+      countries: community.sub.filter((s) => s.name == "origin")[0].sub,
+    })
+  );
 
   // States
   const [currentStep, setCurrentStep] = useState(1);
@@ -20,7 +30,6 @@ export default function Survey({ parameters }) {
   const [language, setLanguage] = useState("");
   const [country, setCountry] = useState("");
   const [isLastStep, setIsLastStep] = useState(false);
-  const router = useRouter();
 
   const handleStep1 = (event) => {
     let checkedFactors = Array.from(
@@ -103,19 +112,25 @@ export default function Survey({ parameters }) {
       );
     }
 
-    const ON = "3";
-    const params = Object.fromEntries(
+    const newParams = Object.fromEntries(
       selectedParams.map((p) => [[`${p}`], ON])
     );
-    data.params = params;
 
     // Update factors
-    data.factors.forEach((factor) => {
+    const newFactors = factors.map((factor) => {
       factor.selected = selectedFactors.includes(factor.name);
+      return factor;
     });
-    setData(data);
 
-    router.push({ pathname: "/results", query: params });
+    const newData = Object.assign(data, {
+      factors: newFactors,
+      params: newParams,
+      selectedCountry: country || "",
+      selectedLanguage: language || "",
+    });
+    setData(newData);
+
+    router.push({ pathname: "/results", query: newParams });
   };
 
   const showButton = () => {
@@ -142,13 +157,15 @@ export default function Survey({ parameters }) {
       <div className="container">
         <form onSubmit={handleSubmit}>
           <Step1
+            factors={data.factors}
             handleClick={handleStep1}
             currentStep={currentStep}
-            selectedFactors={selectedFactors}
           />
           <Step2
             handleClick={handleStep2}
             currentStep={currentStep}
+            languages={data.languages}
+            countries={data.countries}
             askLanguage={selectedFactors.includes("language")}
             askCountry={selectedFactors.includes("origin")}
           />
@@ -158,7 +175,6 @@ export default function Survey({ parameters }) {
     </Layout>
   );
 }
-
 export async function getStaticProps(context) {
   const res = await fetch(`https://reroot-data-app.herokuapp.com/parameters`);
   const parameters = await res.json();

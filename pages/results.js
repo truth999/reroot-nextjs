@@ -211,7 +211,7 @@ function Results({ scores, initParams }) {
           >
             <div
               id="sidebar-nav"
-              className={`${styles.sidebar} list-group border-0 rounded-0 text-sm-start min-vh-100 px-4`}
+              className={`${styles.sidebar} list-group border-0 rounded-0 min-vh-100 px-4`}
             >
               <Preference
                 factors={data.factors}

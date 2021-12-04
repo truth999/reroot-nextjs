@@ -1,12 +1,8 @@
 import { Factor } from "./Factor";
-import AppContext from "../contexts/AppContext";
-import { useContext } from "react";
 import styles from "./Step.module.scss";
 
-export default function Step1(props) {
-  const { data } = useContext(AppContext);
-
-  if (props.currentStep !== 1) {
+export default function Step1({ factors, currentStep, handleClick }) {
+  if (currentStep !== 1) {
     // Prop: The current step
     return null;
   }
@@ -26,7 +22,7 @@ export default function Step1(props) {
       </div>
 
       <div className="option-group">
-        {data.factors.map((factor) => (
+        {factors.map((factor) => (
           <div key={factor.name} className="row">
             <div className={`${styles.factor} col-lg-3 pb-2`}>
               {factor.text}
@@ -42,7 +38,7 @@ export default function Step1(props) {
                       key={id}
                       id={id}
                       text={sub.text}
-                      onClick={props.handleClick}
+                      onClick={handleClick}
                     ></Factor>
                   );
                 })}

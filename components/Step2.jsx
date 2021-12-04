@@ -1,28 +1,23 @@
-import { useState, useContext } from "react";
-import styles from "./Step.module.scss";
-import SubFactor from "../components/SubFactor";
-import AppContext from "../contexts/AppContext";
-import SearchBar from "../components/searchBar"
+import React, { useState } from "react";
 
-export default function Step2(props) {
+import SubFactor from "./SubFactor";
+import SearchBar from "./searchBar";
+import styles from "./Step.module.scss";
+
+export default function Step2({
+  handleClick,
+  currentStep,
+  languages,
+  countries,
+  askLanguage,
+  askCountry,
+}) {
   // Language
   const [queryLanguage, setQueryLanguage] = useState("");
   // Country
   const [queryCountry, setQueryCountry] = useState("");
 
-  const { data, setData } = useContext(AppContext);
-
-  const community = data.factors.filter(
-    (factor) => factor.name == "community"
-  )[0];
-  let languages = community.sub.filter((s) => s.name == "language")[0].sub;
-  const countries = community.sub.filter((s) => s.name == "origin")[0].sub;
-
-  data.languages = languages;
-  data.countries = countries;
-  setData(data);
-
-  if (props.currentStep !== 2) {
+  if (currentStep !== 2) {
     // Prop: The current step
     return null;
   }
@@ -53,8 +48,8 @@ export default function Step2(props) {
 
   return (
     <section className="step-2">
-      {props.askLanguage && (
-        <section className="select-language pb-">
+      {askLanguage && (
+        <section className="select-language pb-4">
           <div className={`pb-2`}>
             <p className={`${styles.title}`}>Great! You said language.</p>
             <p className={`${styles.subtitle}`}>Which languages?</p>
@@ -79,7 +74,7 @@ export default function Step2(props) {
                       value={lang.name}
                       param={lang.param}
                       name="language"
-                      onClick={props.handleClick}
+                      onClick={handleClick}
                     >
                       {lang.text}
                     </SubFactor>
@@ -90,7 +85,7 @@ export default function Step2(props) {
           </div>
         </section>
       )}
-      {props.askCountry && (
+      {askCountry && (
         <section className="select-country pb-4">
           <div className={`pb-2`}>
             <p className={`${styles.title}`}>You also said nativeland.</p>
@@ -116,7 +111,7 @@ export default function Step2(props) {
                       value={country.name}
                       param={country.param}
                       name="country"
-                      onClick={props.handleClick}
+                      onClick={handleClick}
                     >
                       {country.text}
                     </SubFactor>
