@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Landing.module.scss";
 import Layout, { siteTitle } from "../components/Layout";
-import StartButton from "../components/StartButton";
+import StartButton from "../components/startButton";
 import Card from "../components/Card";
 
 export default function Landing() {

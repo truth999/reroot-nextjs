@@ -1,7 +1,7 @@
 import Layout, { siteTitle } from "../components/Layout";
 import { useState, useContext } from "react";
 import AppContext from "../contexts/AppContext";
-import StartButton from "../components/StartButton";
+import StartButton from "../components/startButton";
 import styles from "../styles/Prep.module.scss";
 
 export default function Prep({ parameters }) {

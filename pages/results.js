@@ -10,7 +10,7 @@ import LikeButton from "../components/likeButton";
 import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
-import CountyList from "../components/countyList";
+import CountyAccordion from "../components/countyAccordion";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -248,7 +248,7 @@ function Results({ scores, initParams }) {
             <div className={`${styles.map} col-12`} id="my-map" />
             <div className="col-12 favorite">
               <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
-              <CountyList
+              <CountyAccordion
                 type={`fav`}
                 counties={favCounties}
                 map={myMap}
@@ -266,7 +266,7 @@ function Results({ scores, initParams }) {
                     }}
                   />
                 )}
-              ></CountyList>
+              ></CountyAccordion>
             </div>
             <div className={`${styles.counties} col-12`}>
               <div className="d-flex">
@@ -282,7 +282,7 @@ function Results({ scores, initParams }) {
               {loading ? (
                 <Loading />
               ) : (
-                <CountyList
+                <CountyAccordion
                   type={``}
                   counties={showingCounties}
                   map={myMap}
@@ -306,7 +306,7 @@ function Results({ scores, initParams }) {
                       }}
                     />
                   )}
-                ></CountyList>
+                ></CountyAccordion>
               )}
             </div>
           </div>

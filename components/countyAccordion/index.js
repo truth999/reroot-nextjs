@@ -1,5 +1,15 @@
-import styles from "./countyAccordion.module.scss";
+import React, { useState } from "react";
 
+import Accordion from "react-bootstrap/Accordion";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+import PrimaryButton from "../primaryButton";
+import Breakdown from "../breakdown";
+import DetailsModal from "../detailsModal";
+import to2digits from "../../utils";
+
+import styles from "./countyAccordion.module.scss";
 export default function CountyAccordion({
   type,
   counties,
@@ -8,85 +18,80 @@ export default function CountyAccordion({
   actionBtn,
   loadMoreBtn,
 }) {
-  const to2digits = (n) => Number.parseFloat(n).toFixed(2);
+  const [displayCounty, setDisplayCounty] = useState({});
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleDetailClick = (event, county) => {
+    event.preventDefault();
+    map.current.flyTo({
+      center: [county.coordinates.county_long, county.coordinates.county_lat],
+      zoom: 12,
+    });
+    handleOpen();
+    setDisplayCounty(county);
+  };
+
   return (
-    <div
-      className={`${styles.accordion} accordion overflow-auto ms-3`}
-      id={`accordion-${type}-Counties`}
-    >
+    <div>
       {counties.length === 0 && (
         <p className={`${styles.emptyText}`}>{emptyText}</p>
       )}
-      {counties.map((county) => (
-        // Accordion Item
-        <div
-          className={`${styles.item} accordion-item mb-4 pb-2`}
-          key={county.county_code}
-        >
-          {/* Header */}
-          <h2
-            className={`${styles.header} accordion-header`}
-            id={`heading-${type}-${county.county_code}`}
+      <Accordion
+        bsPrefix={`${styles.accordion} overflow-auto`}
+        defaultActiveKey="0"
+      >
+        {counties.map((county, index) => (
+          <Accordion.Item
+            key={index}
+            eventKey={index}
+            bsPrefix={`${styles.item} px-3 mb-5`}
           >
-            <button
-              className="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target={`#collapse-${type}-${county.county_code}`}
-              aria-expanded="false"
-              aria-controls={`collapse-${type}-${county.county_code}`}
-              onClick={() => {
-                map.current.flyTo({
-                  center: [
-                    county.coordinates.county_long,
-                    county.coordinates.county_lat,
-                  ],
-                  zoom: 12,
-                });
-              }}
-            >
-              <p>{county.county_name}</p>
-            </button>
-            {/* Display */}
-            <div className="row">
-              <div
-                className={`${styles.progress} col-10 progress`}
-                style={{ height: "2.5rem" }}
-              >
-                <div
-                  className="progress-bar bg-danger"
-                  role="progressbar"
-                  aria-valuenow={county.score}
-                  aria-valuemin="0"
-                  aria-valuemax="10"
-                  aria-label={county.county_name}
-                  style={{ width: `${county.score * 10}%` }}
-                >
-                  {to2digits(county.score)}
-                </div>
-              </div>
-              <div className="col-2">{actionBtn(county)}</div>
+            <div className={`${styles.top}`}>
+              <Row>
+                <Col md={6}>
+                  <a
+                    href={`https://en.wikipedia.org/wiki/${county.county_name}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {`#${index + 1} ${county.county_name}`}
+                  </a>
+                </Col>
+                <Col md={3}>{`Overall Score: ${to2digits(county.score)}`}</Col>
+                <Col md={2}>
+                  <PrimaryButton
+                    onClick={(event) => handleDetailClick(event, county)}
+                  >
+                    View details
+                  </PrimaryButton>
+                </Col>
+                <Col md={1}>{actionBtn(county)}</Col>
+              </Row>
+              <Row bsPrefix={`${styles.bar}`}>
+                <hr />
+              </Row>
             </div>
-          </h2>
+            <Accordion.Header bsPrefix={`${styles.header}`}>
+              <Col md={11}>
+                <Breakdown breakdown={county.breakdown} />
+              </Col>
+              <Col md={1}>Key rank</Col>
+            </Accordion.Header>
+            <Accordion.Body>{JSON.stringify(county)}</Accordion.Body>
+          </Accordion.Item>
+        ))}
+      </Accordion>
 
-          {/* Body */}
-          <div
-            className="accordion-collapse collapse"
-            id={`collapse-${type}-${county.county_code}`}
-            aria-labelledby={`heading-${type}-${county.county_code}`}
-            data-bs-parent={`#accordion-${type}-Counties`}
-          >
-            <div className="accordion-body">
-              {Object.entries(county.breakdown).map(([param, score]) => (
-                <div key={param}>{`${param}: ${to2digits(score)}`}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
       {counties.length !== 0 && (
-        <div className="text-center">{loadMoreBtn}</div>
+        <div className="text-center pt-4">{loadMoreBtn}</div>
       )}
+      <DetailsModal
+        open={open}
+        handleClose={handleClose}
+        county={displayCounty}
+      />
     </div>
   );
 }

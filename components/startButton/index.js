@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import styles from "./StartButton.module.scss";
+import styles from "./startButton.module.scss";
 
 export default function StartButton(props) {
   return (

@@ -1,8 +1,9 @@
-@import "../styles/variables";
+@import "../../styles/variables";
 
 .btnStart {
-  background-color: $title;
-  color: white;
+  background-color: white;
+  color: $title;
+  border-color: $title;
   font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
   min-height: 5rem;
