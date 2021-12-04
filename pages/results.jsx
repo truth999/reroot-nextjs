@@ -4,8 +4,6 @@ import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 
-import Image from "next/image";
-
 import Accordion from "../components/Accordion";
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
@@ -41,12 +39,13 @@ function Results({ scores, initParams }) {
   const [counties, setCounties] = useState(counties_raw);
 
   const updateScores = async (newParam) => {
+    setLoading(true);
     setParams(Object.assign(params, newParam));
     const query = new URLSearchParams(params);
     const req = await fetch(`${base_url}scores?${query}&page=1`);
     const newScores = await req.json();
+    setLoading(false);
     counties = newScores.scores;
-
     setCounties(newScores.scores);
     setPage(2);
     console.log("updateScores called");
@@ -190,6 +189,7 @@ function Results({ scores, initParams }) {
             .addTo(map);
         });
     });
+    setLoading(false);
   }, [counties, router, data.factors, page, stats, queryCounty]);
 
   return (
@@ -295,7 +295,7 @@ function Results({ scores, initParams }) {
                           setFavCounties([...favCounties, county]);
                         }
                       }}
-                    ></LikeButton>
+                    />
                   )}
                 ></Accordion>
               )}
