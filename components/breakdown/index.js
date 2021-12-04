@@ -7,15 +7,16 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Typography from "@mui/material/Typography";
 import styles from "./breakdown.module.scss";
 import to2digits from "../../utils";
-
+import { contrastColor } from "contrast-color";
 import colorSteps from "color-steps";
 
 export default function Breakdown({ breakdown }) {
   const lightest = "#F2E4E2";
   const darkest = "#BA4D3A";
   const scores = Object.entries(breakdown);
-  const colors = colorSteps(lightest, darkest, scores.length);
-
+  const bgColors = colorSteps(lightest, darkest, scores.length);
+  const fgColors = bgColors.map((color) => contrastColor({ bgColor: color }));
+  console.log(fgColors);
   return (
     <Stack
       direction="row"
@@ -38,7 +39,7 @@ export default function Breakdown({ breakdown }) {
             <Box
               sx={{
                 width: `${parseFloat(score) * 10}%`,
-                backgroundColor: colors[index],
+                backgroundColor: bgColors[index],
                 borderWidth: "0",
                 textAlign: "center",
                 lineHeight: "1rem",
@@ -49,7 +50,14 @@ export default function Breakdown({ breakdown }) {
                 },
               }}
             >
-              {factor}
+              <p
+                sx={{
+                  text: fgColors[index],
+                  fontFamily: "Karla, serif",
+                }}
+              >
+                {factor}
+              </p>
             </Box>
           </OverlayTrigger>
         );

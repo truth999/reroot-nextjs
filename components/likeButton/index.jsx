@@ -16,6 +16,7 @@ export default function LikeButton({ handleClick, county }) {
       onClick={handleClick}
       value="favorite"
       color="primary"
+      size="large"
     />
   );
 }

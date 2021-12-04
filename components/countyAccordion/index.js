@@ -39,18 +39,18 @@ export default function CountyAccordion({
         <p className={`${styles.emptyText}`}>{emptyText}</p>
       )}
       <Accordion
-        bsPrefix={`${styles.accordion} overflow-auto`}
+        bsPrefix={`${styles.accordion} overflow-auto `}
         defaultActiveKey="0"
       >
         {counties.map((county, index) => (
           <Accordion.Item
             key={index}
             eventKey={index}
-            bsPrefix={`${styles.item} px-3 mb-5`}
+            bsPrefix={`${styles.item} px-3 mb-5 `}
           >
             <div className={`${styles.top}`}>
               <Row>
-                <Col md={6}>
+                <Col md={5}>
                   <a
                     href={`https://en.wikipedia.org/wiki/${county.county_name}`}
                     target="_blank"
@@ -59,7 +59,7 @@ export default function CountyAccordion({
                     {`#${index + 1} ${county.county_name}`}
                   </a>
                 </Col>
-                <Col md={3}>{`Overall Score: ${to2digits(county.score)}`}</Col>
+                <Col md={4}>{`Overall Score: ${to2digits(county.score)}`}</Col>
                 <Col md={2}>
                   <PrimaryButton
                     onClick={(event) => handleDetailClick(event, county)}
@@ -73,13 +73,21 @@ export default function CountyAccordion({
                 <hr />
               </Row>
             </div>
-            <Accordion.Header bsPrefix={`${styles.header}`}>
-              <Col md={11}>
+            <Accordion.Header bsPrefix={`${styles.header} `}>
+              <Col md={10}>
                 <Breakdown breakdown={county.breakdown} />
               </Col>
-              <Col md={1}>Key rank</Col>
+              <Col md={2} bsPrefix={`${styles.toggle} `}>
+                Key rank
+              </Col>
             </Accordion.Header>
-            <Accordion.Body>{JSON.stringify(county)}</Accordion.Body>
+            <Accordion.Body>
+              {Object.entries(county).map(([key, value], index) => (
+                <p key={index}>
+                  {`${JSON.stringify(key)} : ${JSON.stringify(value)}`}
+                </p>
+              ))}
+            </Accordion.Body>
           </Accordion.Item>
         ))}
       </Accordion>
