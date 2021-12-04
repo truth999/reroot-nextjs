@@ -3,12 +3,16 @@ import Head from "next/head";
 import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
+
+import Image from "next/image";
+
 import Accordion from "../components/Accordion";
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
 import LikeButton from "../components/likeButton";
 import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
+import Loading from "../components/loading";
 
 // Third Party
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -30,6 +34,7 @@ function Results({ scores, initParams }) {
   const [favCounties, setFavCounties] = useState([]);
   const [params, setParams] = useState(initParams);
   const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const counties_raw = scores.scores;
@@ -265,31 +270,35 @@ function Results({ scores, initParams }) {
                   }}
                 />
               </div>
-              <Accordion
-                type={``}
-                counties={showingCounties}
-                map={myMap}
-                emptyText="Loading..."
-                loadMoreButton={
-                  <NextButton handleClick={handleLoadMore}>
-                    Load More
-                  </NextButton>
-                }
-                rightBtn={(county) => (
-                  <LikeButton
-                    county={county}
-                    handleClick={() => {
-                      if (
-                        !favCounties.some(
-                          (c) => c.county_code == county.county_code
-                        )
-                      ) {
-                        setFavCounties([...favCounties, county]);
-                      }
-                    }}
-                  ></LikeButton>
-                )}
-              ></Accordion>
+              {loading ? (
+                <Loading />
+              ) : (
+                <Accordion
+                  type={``}
+                  counties={showingCounties}
+                  map={myMap}
+                  emptyText="Loading..."
+                  loadMoreButton={
+                    <NextButton handleClick={handleLoadMore}>
+                      Load More
+                    </NextButton>
+                  }
+                  rightBtn={(county) => (
+                    <LikeButton
+                      county={county}
+                      handleClick={() => {
+                        if (
+                          !favCounties.some(
+                            (c) => c.county_code == county.county_code
+                          )
+                        ) {
+                          setFavCounties([...favCounties, county]);
+                        }
+                      }}
+                    ></LikeButton>
+                  )}
+                ></Accordion>
+              )}
             </div>
           </div>
         </main>

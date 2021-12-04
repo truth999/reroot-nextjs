@@ -1,7 +1,8 @@
-import AdjustButton from "../../components/adjustButton";
 import styles from "./preference.module.scss";
+import AdjustButton from "../../components/adjustButton";
+import Slider from "../../components/slider";
 
-export default function Preference(props) {
+export default function Preference({ factors, params, updateScores }) {
   return (
     <div className="flex-shrink-0 p-3" style={{ width: "13vw" }}>
       <div className="d-flex flex-column align-items-center pb-2 link-dark text-decoration-none fs-5">
@@ -13,7 +14,7 @@ export default function Preference(props) {
         </div>
       </div>
       <ul className="list-unstyled ps-0">
-        {props.factors.map((factor) => (
+        {factors.map((factor) => (
           <li className="mb-1" key={factor.name}>
             <button
               className={`${styles.factor} btn btn-toggle align-items-center border-bottom collapsed pt-4`}
@@ -30,37 +31,23 @@ export default function Preference(props) {
               className={`collapse ${factor.selected ? "show" : ""}`}
               id={`${factor.name}-collapse`}
             >
-              <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <ul className="btn-toggle-nav list-unstyled pb-1">
                 {factor.sub.map(
-                  (sub) =>
+                  (sub, i) =>
                     sub.name != "origin" &&
                     sub.name != "language" && (
-                      <li key={sub.name} className="py-2">
+                      <li key={sub.i} className="py-2">
                         <label
                           htmlFor={`${sub.name}-range`}
                           className={`${styles.sidebarParam} form-label`}
                         >
                           {sub.text}
                         </label>
-                        <div className="range">
-                          <input
-                            type="range"
-                            className="form-range"
-                            min="0"
-                            max="4"
-                            defaultValue={props.params[sub.param] || "0"}
-                            step="1"
-                            id={`${sub.name}-range`}
-                            onChange={(event) => {
-                              event.preventDefault();
-                              let newValue = event.target.value;
-                              if (sub.param)
-                                props.updateScores({
-                                  [`${sub.param}`]: newValue,
-                                });
-                            }}
-                          />
-                        </div>
+                        <Slider
+                          sub={sub}
+                          defaultValue={params[sub] || "0"}
+                          updateScores={updateScores}
+                        />
                       </li>
                     )
                 )}
