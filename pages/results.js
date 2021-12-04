@@ -4,13 +4,19 @@ import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 
-import Accordion from "../components/Accordion";
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
 import LikeButton from "../components/likeButton";
 import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
+import CountyList from "../components/countyList";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 // Third Party
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -223,28 +229,31 @@ function Results({ scores, initParams }) {
         </div>
 
         {/* Main App */}
-        <main className="col ps-md-2">
+        <main className="col px-0">
           {/* toggle sidebar */}
           <a
             href="#"
             data-bs-target="#sidebar"
             data-bs-toggle="collapse"
-            className="p-1 text-decoration-none"
+            className="p-2 text-decoration-none"
+            onClick={() => {
+              setCounties(counties.map((_) => _));
+            }}
           >
             <AdjustButton side={30} collapse={true} />
           </a>
 
           {/* main */}
-          <div className={`${styles.main} row`}>
+          <div className={`${styles.main} row mx-0`}>
             <div className={`${styles.map} col-12`} id="my-map" />
             <div className="col-12 favorite">
               <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
-              <Accordion
+              <CountyList
                 type={`fav`}
                 counties={favCounties}
                 map={myMap}
                 emptyText="Heart some places, and they will show here!"
-                rightBtn={(county) => (
+                actionBtn={(county) => (
                   <input
                     className="btn"
                     type="button"
@@ -257,11 +266,11 @@ function Results({ scores, initParams }) {
                     }}
                   />
                 )}
-              ></Accordion>
+              ></CountyList>
             </div>
-            <div className={`${styles.counties} col-12 counties`}>
+            <div className={`${styles.counties} col-12`}>
               <div className="d-flex">
-                <div className={`${styles.mainTitle} pe-5`}>ALL COUNTIES</div>
+                <div className={`${styles.mainTitle} pe-3`}>ALL COUNTIES</div>
                 <SearchBar
                   value={queryCounty}
                   placeholder="Filter Counties"
@@ -273,17 +282,17 @@ function Results({ scores, initParams }) {
               {loading ? (
                 <Loading />
               ) : (
-                <Accordion
+                <CountyList
                   type={``}
                   counties={showingCounties}
                   map={myMap}
                   emptyText="Loading..."
-                  loadMoreButton={
+                  loadMoreBtn={
                     <NextButton handleClick={handleLoadMore}>
                       Load More
                     </NextButton>
                   }
-                  rightBtn={(county) => (
+                  actionBtn={(county) => (
                     <LikeButton
                       county={county}
                       handleClick={() => {
@@ -297,7 +306,7 @@ function Results({ scores, initParams }) {
                       }}
                     />
                   )}
-                ></Accordion>
+                ></CountyList>
               )}
             </div>
           </div>

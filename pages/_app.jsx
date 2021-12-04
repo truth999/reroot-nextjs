@@ -1,7 +1,7 @@
 import Router from "next/router";
 import NProgress from "nprogress";
 
-import { createTheme } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { purple } from "@mui/material/colors";
 
 import "bootstrap/scss/bootstrap.scss";
@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
     palette: {
       primary: {
         // Purple and green play nicely together.
-        main: purple[500],
+        main: "#E7654B",
       },
       secondary: {
         // This is green.A700 as hex.
@@ -52,7 +52,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <AppContext.Provider value={{ data, setData }}>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </AppContext.Provider>
   );
 }

@@ -1,0 +1,42 @@
+@import "../../styles/variables";
+
+.accordion {
+  max-height: 35vh;
+}
+
+.item {
+  width: 100%;
+  background-color: transparent;
+  border-width: 1px 1px 5px 1px;
+  border-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0px 2px 2px $title-light;
+}
+
+.top {
+  width: 100%;
+}
+
+.bar {
+  background-color: $primary;
+  line-height: 0.15rem;
+  height: 0.15rem;
+  border-radius: 0.5rem;
+}
+
+.header {
+  button {
+    background-color: transparent;
+  }
+  p {
+    font-family: "Playfair Display", serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: $title-light;
+  }
+}
+
+.emptyText {
+  font-family: "Karla", sans-serif;
+  font-size: 1rem;
+}
