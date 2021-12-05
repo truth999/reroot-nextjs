@@ -7,6 +7,12 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
 
 import Loading from "../../components/loading";
 
@@ -94,22 +100,17 @@ export default function DetailsModal({
                   {stat.text}
                 </AccordionSummary>
                 <AccordionDetails>
-                  <ul
-                    className="list-group py-2"
-                    sx={{
-                      listStyleType: "none",
-                    }}
-                  >
+                  <List>
                     {stat.sub.map((sub_stat, j) => {
                       let prefix = prefixLookup[sub_stat.metric];
                       let suffix = suffixLookup[sub_stat.metric];
                       return (
-                        <li key={j} className="pb-1 ms-3">
+                        <ListItem key={j} className="pb-1 ms-2">
                           {`${sub_stat.text}: ${prefix}${sub_stat.value}${suffix}`}
-                        </li>
+                        </ListItem>
                       );
                     })}
-                  </ul>
+                  </List>
                 </AccordionDetails>
               </Accordion>
             ))}
