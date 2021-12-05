@@ -2,9 +2,9 @@ import styles from "./SubFactor.module.scss";
 
 export default function SubFactor(props) {
   return (
-    <div className={`${styles.subFactor}`}>
+    <div className={`${styles.subFactor} pb-4`}>
       <input
-        type="radio"
+        type="checkbox"
         className="btn-check"
         name={props.name}
         id={props.id}

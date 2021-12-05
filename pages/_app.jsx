@@ -42,11 +42,12 @@ function MyApp({ Component, pageProps }) {
 
   const [data, setData] = useState({
     factors: [],
-    params: {},
     countries: [],
     languages: [],
-    selectedCountry: "",
-    selectedLanguage: "",
+    params: {},
+    selectedCountries: [],
+    selectedLanguages: [],
+    selectedParams: {},
     theme: theme,
   });
 

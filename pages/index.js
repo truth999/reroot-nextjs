@@ -104,14 +104,6 @@ export default function Landing() {
           </div>
         </section>
         <section className={styles.secAction}>
-          <div className={styles.actionImage}>
-            <Image
-              src="/img/landing_illustration.png"
-              alt="illustration"
-              layout="fill"
-              objectFit="cover"
-            />
-          </div>
           <div className={`${styles.actionSpecial} mt-5`}>
             Make the right move!
           </div>

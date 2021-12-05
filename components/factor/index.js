@@ -1,4 +1,4 @@
-import styles from "./Factor.module.scss";
+import styles from "./factor.module.scss";
 
 export function Factor(props) {
   return (

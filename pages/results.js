@@ -7,16 +7,15 @@ import { useRouter } from "next/router";
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
 import LikeButton from "../components/likeButton";
+import RemoveButton from "../components/removeButton";
 import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
 import CountyAccordion from "../components/countyAccordion";
+import CountyPopup from "../components/countyPopup";
 
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Favorite from "@mui/icons-material/Favorite";
+import CloseButton from "react-bootstrap/CloseButton";
 
 // Third Party
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -30,19 +29,26 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
 const base_url = "https://reroot-data-app.herokuapp.com/";
 
-function Results({ scores, initParams }) {
-  const { data, useData } = useContext(AppContext);
+function Results({ scores, initParams, parameters }) {
+  const { data, setData } = useContext(AppContext);
+  setData(
+    Object.assign(data, {
+      params: parameters,
+    })
+  );
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
   const [pageIsMounted, setPageIsMounted] = useState(false);
-  const [favCounties, setFavCounties] = useState([]);
+  // const [favCounties, setFavCounties] = useState([]);
   const [params, setParams] = useState(initParams);
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const counties_raw = scores.scores;
-  const [counties, setCounties] = useState(counties_raw);
+  const initCounties = scores.scores;
+
+  const [counties, setCounties] = useState(initCounties);
+  const [favs, setFavs] = useState(counties.map((_) => false));
 
   const updateScores = async (newParam) => {
     setLoading(true);
@@ -69,70 +75,21 @@ function Results({ scores, initParams }) {
     setCounties([...counties, ...newCounties]);
     setPage(page + 1);
 
-    console.log("handleLoadMore called");
-    console.log(counties);
-    console.log(page);
+    // console.log("handleLoadMore called");
+    // console.log(counties);
+    // console.log(page);
   };
 
   const myMap = useRef();
-
-  const renderStats = (stats, county) => (
-    <div className="container">
-      <h2>
-        <a
-          href={`https://en.wikipedia.org/wiki/${county.county_name}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {county.county_name}
-        </a>
-      </h2>
-      <ul className="list-group py-3">
-        {stats.map((stat) => (
-          <li
-            key={stat.name}
-            className="list-group-item d-flex justify-content-between align-items-start"
-          >
-            <div className="ms-2 me-auto">
-              <div className="fw-bold">{stat.text}</div>
-              <ul className="list-group py-2">
-                {stat.sub.map((sub_stat) => {
-                  let suffixLookup = {
-                    percentage: "%",
-                    index: "",
-                    median: "",
-                    count: "",
-                    density: "",
-                  };
-                  let prefixLookup = {
-                    percentage: "",
-                    index: "",
-                    median: "$",
-                    count: "",
-                    density: "",
-                  };
-                  let prefix = prefixLookup[sub_stat.metric];
-                  let suffix = suffixLookup[sub_stat.metric];
-                  return (
-                    <li key={sub_stat.name} className="pb-1">
-                      {`${sub_stat.text}: ${prefix}${sub_stat.value}${suffix}`}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
 
   const showingCounties =
     queryCounty.trim() == ""
       ? counties
       : counties.filter((county) =>
-          county.county_name.toLowerCase().includes(queryCounty.toLowerCase())
+          county.name.toLowerCase().includes(queryCounty.toLowerCase())
         );
+
+  const favCounties = counties.filter((c) => favs[c.ranking - 1]);
 
   // Map configurations
   useEffect(() => {
@@ -172,31 +129,70 @@ function Results({ scores, initParams }) {
       .addControl(new mapboxgl.NavigationControl());
 
     // Populate markers
-    counties.forEach((county) => {
-      fetch(`${base_url}stats?county=${county.county_code}`)
+    showingCounties.forEach((county) => {
+      fetch(`${base_url}stats?county=${county.code}`)
         .then((res) => res.json())
         .then((stats_raw) => {
           const stats = stats_raw.stats;
 
           new mapboxgl.Marker({
-            color: "red",
+            color: "#E7654B",
           })
-            .setLngLat([
-              county.coordinates.county_long,
-              county.coordinates.county_lat,
-            ])
+            .setLngLat(county.lng_lat)
             .setPopup(
               new mapboxgl.Popup()
                 .setHTML(
-                  ReactDOMServer.renderToString(renderStats(stats, county))
+                  ReactDOMServer.renderToString(
+                    <CountyPopup stats={stats} county={county} />
+                  )
                 )
                 .addClassName("map-popup")
             )
             .addTo(map);
         });
     });
+
+    favCounties.forEach((county) => {
+      // Create a DOM element for each marker.
+      const el = document.createElement("div");
+      const width = 80;
+      const height = 80;
+      el.className = "marker";
+      el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
+      el.style.width = `${width}px`;
+      el.style.height = `${height}px`;
+      el.style.backgroundSize = "100%";
+
+      fetch(`${base_url}stats?county=${county.code}`)
+        .then((res) => res.json())
+        .then((stats_raw) => {
+          const stats = stats_raw.stats;
+
+          new mapboxgl.Marker(el)
+            .setLngLat(county.lng_lat)
+            .setPopup(
+              new mapboxgl.Popup()
+                .setHTML(
+                  ReactDOMServer.renderToString(
+                    <CountyPopup stats={stats} county={county} />
+                  )
+                )
+                .addClassName("map-popup")
+            )
+            .addTo(map);
+        });
+    });
+
     setLoading(false);
-  }, [counties, router, data.factors, page, stats, queryCounty]);
+  }, [
+    showingCounties,
+    favCounties,
+    router,
+    data.factors,
+    page,
+    stats,
+    queryCounty,
+  ]);
 
   return (
     <Layout results>
@@ -249,26 +245,21 @@ function Results({ scores, initParams }) {
             <div className="col-12 favorite">
               <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
               <CountyAccordion
-                type={`fav`}
                 counties={favCounties}
                 map={myMap}
                 emptyText="Heart some places, and they will show here!"
                 actionBtn={(county) => (
-                  <input
-                    className="btn"
-                    type="button"
-                    value="X"
-                    onClick={() => {
-                      const newFavCounties = favCounties.filter(
-                        (c) => c !== county
-                      );
-                      setFavCounties(newFavCounties);
+                  <RemoveButton
+                    county={county}
+                    handleClick={(j) => {
+                      const newFavs = favs.map((f, i) => (i === j ? false : f));
+                      setFavs(newFavs);
                     }}
                   />
                 )}
               ></CountyAccordion>
             </div>
-            <div className={`${styles.counties} col-12`}>
+            <div className={`${styles.counties} col-12 mb-3`}>
               <div className="d-flex">
                 <div className={`${styles.mainTitle} pe-3`}>ALL COUNTIES</div>
                 <SearchBar
@@ -295,15 +286,11 @@ function Results({ scores, initParams }) {
                   actionBtn={(county) => (
                     <LikeButton
                       county={county}
-                      handleClick={() => {
-                        if (
-                          !favCounties.some(
-                            (c) => c.county_code == county.county_code
-                          )
-                        ) {
-                          setFavCounties([...favCounties, county]);
-                        }
+                      handleChange={(j) => {
+                        const newFavs = favs.map((f, i) => (i === j ? !f : f));
+                        setFavs(newFavs);
                       }}
+                      checked={favs[county.ranking - 1]}
                     />
                   )}
                 ></CountyAccordion>
@@ -317,23 +304,38 @@ function Results({ scores, initParams }) {
 }
 
 export async function getServerSideProps(context) {
-  const params = new URLSearchParams(context.query);
+  const queryParams = new URLSearchParams(context.query);
   const initParams = context.query;
-  const res_scores = await fetch(base_url + "scores?" + params + "&page=1");
+  const res_scores = await fetch(
+    base_url + "scores?" + queryParams + "&page=1"
+  );
   const scores = await res_scores.json();
 
   if (!scores) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/survey",
         permanent: false,
       },
       scoreNotFound: true,
     };
   }
 
+  const res_parameters = await fetch(base_url + "parameters");
+  const parameters = await res_parameters.json();
+
+  if (!parameters) {
+    return {
+      redirect: {
+        destination: "/survey",
+        permanent: false,
+      },
+      parametersNotFound: true,
+    };
+  }
+
   return {
-    props: { scores, initParams }, // will be passed to the page component as props
+    props: { scores, initParams, parameters }, // will be passed to the page component as props
   };
 }
 

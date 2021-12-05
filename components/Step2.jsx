@@ -68,7 +68,7 @@ export default function Step2({
               {showingLanguages.map((lang) => {
                 const id = `language-${lang.name}`;
                 return (
-                  <div className="col-lg-2 py-2" key={id}>
+                  <div className="col-sm-6 col-md-4 col-lg-2 py-2" key={id}>
                     <SubFactor
                       id={id}
                       value={lang.name}
@@ -89,7 +89,7 @@ export default function Step2({
         <section className="select-country pb-4">
           <div className={`pb-2`}>
             <p className={`${styles.title}`}>You also said nativeland.</p>
-            <p className={`${styles.subtitle}`}>Which country?</p>
+            <p className={`${styles.subtitle}`}>Which countries?</p>
           </div>
           <div className="search-bar">
             <input
@@ -105,7 +105,7 @@ export default function Step2({
               {showingCountries.map((country) => {
                 const id = `country-${country.name}`;
                 return (
-                  <div className="col-lg-2 py-2" key={id}>
+                  <div className="col-sm-6 col-md-4 col-lg-2 py-2" key={id}>
                     <SubFactor
                       id={id}
                       value={country.name}

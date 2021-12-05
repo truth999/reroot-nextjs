@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Popover from "@mui/material/Popover";
@@ -6,17 +6,20 @@ import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Typography from "@mui/material/Typography";
 import styles from "./breakdown.module.scss";
-import to2digits from "../../utils";
 import { contrastColor } from "contrast-color";
 import colorSteps from "color-steps";
 
+import AppContext from "../../contexts/AppContext";
+
 export default function Breakdown({ breakdown }) {
+  const { data } = useContext(AppContext);
+  const { params } = data;
+
   const lightest = "#F2E4E2";
   const darkest = "#BA4D3A";
   const scores = Object.entries(breakdown);
   const bgColors = colorSteps(lightest, darkest, scores.length);
   const fgColors = bgColors.map((color) => contrastColor({ bgColor: color }));
-  console.log(fgColors);
   return (
     <Stack
       direction="row"
@@ -26,19 +29,23 @@ export default function Breakdown({ breakdown }) {
         backgroundColor: "#D8D8D8",
       }}
     >
-      {scores.map(([factor, score], index) => {
-        console.log(parseFloat(score) * 10);
+      {scores.map(([param, score], index) => {
+        const parameter = params[param];
         return (
           <OverlayTrigger
             key={index}
             placement="top"
             overlay={
-              <Tooltip id={`${index}-tooltip`}>{to2digits(score)}</Tooltip>
+              <Tooltip id={`${index}-tooltip`}>
+                {parameter.option
+                  ? parameter.option_name
+                  : parameter.parameter_name}
+              </Tooltip>
             }
           >
             <Box
               sx={{
-                width: `${parseFloat(score) * 10}%`,
+                width: `${parseFloat(score)}%`,
                 backgroundColor: bgColors[index],
                 borderWidth: "0",
                 textAlign: "center",
@@ -50,13 +57,8 @@ export default function Breakdown({ breakdown }) {
                 },
               }}
             >
-              <p
-                sx={{
-                  text: fgColors[index],
-                  fontFamily: "Karla, serif",
-                }}
-              >
-                {factor}
+              <p className={styles.paramText} sx={{ color: fgColors[index] }}>
+                {score}
               </p>
             </Box>
           </OverlayTrigger>

@@ -1,4 +1,4 @@
-import { Factor } from "./Factor";
+import { Factor } from "./factor";
 import styles from "./Step.module.scss";
 
 export default function Step1({ factors, currentStep, handleClick }) {

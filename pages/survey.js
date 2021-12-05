@@ -6,18 +6,18 @@ import Step1 from "../components/Step1";
 import Step2 from "../components/Step2";
 import NextButton from "../components/nextButton";
 
-export default function Survey({ parameters }) {
+export default function Survey({ factorsData }) {
   // Constants
   const ON = "2";
 
   const { data, setData } = useContext(AppContext);
   const router = useRouter();
-  const factors = parameters.factors;
+  const factors = factorsData.factors;
   const community = factors.filter((factor) => factor.name == "community")[0];
 
   setData(
     Object.assign(data, {
-      factors: parameters.factors,
+      factors,
       languages: community.sub.filter((s) => s.name == "language")[0].sub,
       countries: community.sub.filter((s) => s.name == "origin")[0].sub,
     })
@@ -27,8 +27,8 @@ export default function Survey({ parameters }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFactors, setFactors] = useState([]);
   const [selectedParams, setSelectedParams] = useState([]);
-  const [language, setLanguage] = useState("");
-  const [country, setCountry] = useState("");
+  const [languages, setLanguages] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [isLastStep, setIsLastStep] = useState(false);
 
   const handleStep1 = (event) => {
@@ -48,38 +48,41 @@ export default function Survey({ parameters }) {
       );
 
     // Update params
-    selectedParams = checkedFactors
+    const newSelectedParams = checkedFactors
       .filter((f) => f.getAttribute("param"))
       .map((f) => f.getAttribute("param"));
 
-    setSelectedParams(selectedParams);
+    setSelectedParams(newSelectedParams);
   };
 
   const handleStep2 = (event) => {
-    let checkedLanguage = document.querySelector(
-      "input[name=language]:checked"
-    );
-    language = checkedLanguage?.value ?? "";
-    setLanguage(language);
+    // console.log(event.target.value);
+    // console.log(event.target.name);
+    // console.log(event.target.checked);
+    const checkedLanguages = Array.from(
+      document.querySelectorAll("input[name=language]:checked")
+    ).map((_) => _.value);
+    setLanguages(checkedLanguages);
 
-    let checkedCountry = document.querySelector("input[name=country]:checked");
-    country = checkedCountry?.value ?? "";
-    setCountry(country);
+    const checkedCountries = Array.from(
+      document.querySelectorAll("input[name=country]:checked")
+    ).map((_) => _.value);
+    setCountries(checkedCountries);
 
     setIsLastStep(
       // Language only
       (selectedFactors.includes("language") &&
         !selectedFactors.includes("origin") &&
-        language != "") ||
+        checkedLanguages.length > 0) ||
         // Country only
         (selectedFactors.includes("origin") &&
           !selectedFactors.includes("language") &&
-          country != "") ||
+          checkedCountries.length > 0) ||
         // Both
         (selectedFactors.includes("language") &&
           selectedFactors.includes("origin") &&
-          language != "" &&
-          country != "")
+          checkedLanguages.length > 0 &&
+          checkedCountries.length > 0)
     );
   };
 
@@ -99,36 +102,36 @@ export default function Survey({ parameters }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const newSelectedParams = selectedParams.map((_) => _);
+
     // Update params
-    if (country) {
-      selectedParams.push(
+    countries.forEach((country) => {
+      newSelectedParams.push(
         data.countries.filter((c) => c.name == country).map((c) => c.param)[0]
       );
-    }
+    });
 
-    if (language) {
-      selectedParams.push(
+    languages.forEach((language) => {
+      newSelectedParams.push(
         data.languages.filter((l) => l.name == language).map((l) => l.param)[0]
       );
-    }
+    });
 
     const newParams = Object.fromEntries(
-      selectedParams.map((p) => [[`${p}`], ON])
+      newSelectedParams.map((p) => [[`${p}`], ON])
     );
 
     // Update factors
-    const newFactors = factors.map((factor) => {
-      factor.selected = selectedFactors.includes(factor.name);
-      return factor;
-    });
+    const newFactors = factors.map((_) => _);
 
     const newData = Object.assign(data, {
       factors: newFactors,
-      params: newParams,
-      selectedCountry: country || "",
-      selectedLanguage: language || "",
+      selectedParams: newParams,
+      selectedCountries: countries,
+      selectedLanguages: languages,
     });
     setData(newData);
+    console.log(newData);
 
     router.push({ pathname: "/results", query: newParams });
   };
@@ -169,17 +172,17 @@ export default function Survey({ parameters }) {
             askLanguage={selectedFactors.includes("language")}
             askCountry={selectedFactors.includes("origin")}
           />
-          <div className="survey-button text-center pt-5">{showButton()}</div>
+          <div className="survey-button text-center py-3">{showButton()}</div>
         </form>
       </div>
     </Layout>
   );
 }
 export async function getStaticProps(context) {
-  const res = await fetch(`https://reroot-data-app.herokuapp.com/parameters`);
-  const parameters = await res.json();
+  const res = await fetch(`https://reroot-data-app.herokuapp.com/factors`);
+  const factorsData = await res.json();
 
-  if (!parameters) {
+  if (!factorsData) {
     return {
       redirect: {
         destination: "/",
@@ -190,6 +193,6 @@ export async function getStaticProps(context) {
   }
 
   return {
-    props: { parameters }, // will be passed to the page component as props
+    props: { factorsData }, // will be passed to the page component as props
   };
 }

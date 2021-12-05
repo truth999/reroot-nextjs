@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import Accordion from "react-bootstrap/Accordion";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import PrimaryButton from "../primaryButton";
-import Breakdown from "../breakdown";
-import DetailsModal from "../detailsModal";
+import PrimaryButton from "../../components/primaryButton";
+import Breakdown from "../../components/breakdown";
+import DetailsModal from "../../components/detailsModal";
+import ProgressRing from "../../components/progressRing";
+
 import to2digits from "../../utils";
+import AppContext from "../../contexts/AppContext";
 
 import styles from "./countyAccordion.module.scss";
 export default function CountyAccordion({
@@ -18,6 +21,8 @@ export default function CountyAccordion({
   actionBtn,
   loadMoreBtn,
 }) {
+  const { data } = useContext(AppContext);
+  const { params } = data;
   const [displayCounty, setDisplayCounty] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -26,7 +31,7 @@ export default function CountyAccordion({
   const handleDetailClick = (event, county) => {
     event.preventDefault();
     map.current.flyTo({
-      center: [county.coordinates.county_long, county.coordinates.county_lat],
+      center: county.lng_lat,
       zoom: 12,
     });
     handleOpen();
@@ -52,11 +57,11 @@ export default function CountyAccordion({
               <Row>
                 <Col md={5}>
                   <a
-                    href={`https://en.wikipedia.org/wiki/${county.county_name}`}
+                    href={`https://en.wikipedia.org/wiki/${county.name}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {`#${index + 1} ${county.county_name}`}
+                    {`#${county.ranking} ${county.name}`}
                   </a>
                 </Col>
                 <Col md={4}>{`Overall Score: ${to2digits(county.score)}`}</Col>
@@ -82,11 +87,17 @@ export default function CountyAccordion({
               </Col>
             </Accordion.Header>
             <Accordion.Body>
-              {Object.entries(county).map(([key, value], index) => (
-                <p key={index}>
-                  {`${JSON.stringify(key)} : ${JSON.stringify(value)}`}
-                </p>
-              ))}
+              {Object.entries(county.ranks).map(([param, value], i) => {
+                const parameter = params[param];
+                const paramLabel = parameter.option
+                  ? parameter.option_name
+                  : parameter.parameter_name;
+                return (
+                  <span className="stat p-2" key={i}>
+                    <ProgressRing value={value} label={paramLabel} />
+                  </span>
+                );
+              })}
             </Accordion.Body>
           </Accordion.Item>
         ))}

@@ -7,14 +7,11 @@ import ComboBox from "../../components/comboBox";
 import AppContext from "../../contexts/AppContext";
 import styles from "./preference.module.scss";
 
-export default function Preference({ params, updateScores }) {
+export default function Preference({ updateScores }) {
   // Constants
   const ON = 2;
-
-  console.log(params);
-
   const { data, setData } = useContext(AppContext);
-  const { selectedLanguage, selectedCountry } = data;
+  const { selectedLanguage, selectedCountry, params, selectedParams } = data;
   const initialCountry = data.countries.find(
     (country) => country.name === selectedCountry
   );
@@ -29,7 +26,9 @@ export default function Preference({ params, updateScores }) {
     initialLanguage ? [initialLanguage] : []
   );
 
-  console.log(data.factors);
+  const selectedFactors = Object.entries(selectedParams).map(
+    ([param, _]) => params[param].category_name
+  );
 
   const appendCountry = (country) => {
     const newCountries = countries.map((_) => _);
@@ -62,79 +61,83 @@ export default function Preference({ params, updateScores }) {
         </div>
       </div>
       <ul className="list-unstyled ps-0">
-        {data.factors.map((factor, i) => (
-          <li className="mb-1" key={i}>
-            <button
-              className={`${styles.factor} btn btn-toggle align-items-center border-bottom collapsed pt-4`}
-              data-bs-toggle="collapse"
-              data-bs-target={`#${factor.name}-collapse`}
-              aria-expanded="true"
-            >
-              <p>
-                {factor.text}
-                <span id={`${factor.name}`}>▼</span>
-              </p>
-            </button>
-            <div
-              className={`collapse ${factor.selected ? "show" : ""}`}
-              id={`${factor.name}-collapse`}
-            >
-              <ul className="btn-toggle-nav list-unstyled pb-1">
-                {factor.sub.map((sub, i) => (
-                  <li key={`${sub.name}-${i}`} className="py-2">
-                    <ImportanceSlider
-                      sub={sub}
-                      defaultValue={params[sub.param] || 0}
-                      updateScores={updateScores}
-                    />
-                    {sub.name === "origin" && (
-                      <div className="pt-3">
-                        <ComboBox
-                          items={sub.sub}
-                          label={sub.text}
-                          appendSlider={appendCountry}
-                        />
-                        <ul className="list-unstyled pb-2">
-                          {countries.map((country, i) => (
-                            <li key={`${country.name}-${i}`}>
-                              <ImportanceSlider
-                                sub={country}
-                                defaultValue={ON}
-                                updateScores={updateScores}
-                                onRemove={removeCountry}
-                              />
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {sub.name === "language" && (
-                      <div className="pt-3">
-                        <ComboBox
-                          items={sub.sub}
-                          label={sub.text}
-                          appendSlider={appendLanguage}
-                        />
-                        <ul className="list-unstyled pb-2">
-                          {languages.map((language, i) => (
-                            <li key={`${language.name}-${i}`}>
-                              <ImportanceSlider
-                                sub={language}
-                                defaultValue={ON}
-                                updateScores={updateScores}
-                                onRemove={removeLanguage}
-                              />
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </li>
-        ))}
+        {data.factors.map((factor, i) => {
+          return (
+            <li className="mb-1" key={i}>
+              <button
+                className={`${styles.factor} btn btn-toggle align-items-center border-bottom collapsed pt-4`}
+                data-bs-toggle="collapse"
+                data-bs-target={`#${factor.name}-collapse`}
+                aria-expanded="true"
+              >
+                <p>
+                  {factor.text}
+                  <span id={`${factor.name}`}>▼</span>
+                </p>
+              </button>
+              <div
+                className={`collapse ${
+                  selectedFactors.includes(factor.text) ? "show" : ""
+                }`}
+                id={`${factor.name}-collapse`}
+              >
+                <ul className="btn-toggle-nav list-unstyled pb-1">
+                  {factor.sub.map((sub, i) => (
+                    <li key={`${sub.name}-${i}`} className="py-2">
+                      <ImportanceSlider
+                        sub={sub}
+                        defaultValue={selectedParams[sub.param] || 0}
+                        updateScores={updateScores}
+                      />
+                      {sub.name === "origin" && (
+                        <div className="pt-3">
+                          <ComboBox
+                            items={sub.sub}
+                            label={sub.text}
+                            appendSlider={appendCountry}
+                          />
+                          <ul className="list-unstyled pb-2">
+                            {countries.map((country, i) => (
+                              <li key={`${country.name}-${i}`}>
+                                <ImportanceSlider
+                                  sub={country}
+                                  defaultValue={ON}
+                                  updateScores={updateScores}
+                                  onRemove={removeCountry}
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {sub.name === "language" && (
+                        <div className="pt-3">
+                          <ComboBox
+                            items={sub.sub}
+                            label={sub.text}
+                            appendSlider={appendLanguage}
+                          />
+                          <ul className="list-unstyled pb-2">
+                            {languages.map((language, i) => (
+                              <li key={`${language.name}-${i}`}>
+                                <ImportanceSlider
+                                  sub={language}
+                                  defaultValue={ON}
+                                  updateScores={updateScores}
+                                  onRemove={removeLanguage}
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -30,7 +30,7 @@ export default function DetailsModal({ county, open, handleClose }) {
 
   const getStats = async (county) => {
     setLoading(true);
-    fetch(`${base_url}stats?county=${county.county_code}`)
+    fetch(`${base_url}stats?county=${county.code}`)
       .then((res) => res.json())
       .then((stats_raw) => {
         setStats(stats_raw.stats);
@@ -56,11 +56,11 @@ export default function DetailsModal({ county, open, handleClose }) {
         <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <a
-              href={`https://en.wikipedia.org/wiki/${county.county_name}`}
+              href={`https://en.wikipedia.org/wiki/${county.name}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h2>{county.county_name}</h2>
+              <h2>{county.name}</h2>
               <p>More on Wiki</p>
             </a>
           </Typography>

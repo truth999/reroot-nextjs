@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import Checkbox from "@mui/material/Checkbox";
 import styles from "./likeButton.module.scss";
 
-export default function LikeButton({ handleClick, county }) {
+export default function LikeButton({ county, handleChange, checked }) {
+  // const [checked, setChecked] = useState(false);
   const label = { inputProps: { "aria-label": "favorite" } };
 
   return (
@@ -12,9 +13,10 @@ export default function LikeButton({ handleClick, county }) {
       {...label}
       icon={<FavoriteBorder />}
       checkedIcon={<Favorite />}
-      name={`favorite-${county.county_code}`}
-      onClick={handleClick}
-      value="favorite"
+      name={`favorite-${county.code}`}
+      onChange={() => handleChange(county.ranking - 1)}
+      value="like"
+      checked={checked}
       color="primary"
       size="large"
     />
