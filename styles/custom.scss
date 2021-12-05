@@ -1,0 +1,9 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
+@import "~bootstrap/scss/bootstrap";
+
+.btn-test {
+  @include button-outline-variant(black, red, black, red, black);
+}
+
+/* import bootstrap to set changes */
+@import "~bootstrap/scss/bootstrap";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -6,12 +6,16 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import Loading from "../../components/loading";
 
-export default function DetailsModal({ county, open, handleClose }) {
+export default function DetailsModal({
+  county,
+  open,
+  handleClose,
+  forwardRef,
+}) {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState([]);
   const base_url = "https://reroot-data-app.herokuapp.com/";
@@ -42,6 +46,21 @@ export default function DetailsModal({ county, open, handleClose }) {
   useEffect(() => {
     getStats(county);
   }, [county]);
+
+  const suffixLookup = {
+    percentage: "%",
+    index: "",
+    median: "",
+    count: "",
+    density: "",
+  };
+  const prefixLookup = {
+    percentage: "",
+    index: "",
+    median: "$",
+    count: "",
+    density: "",
+  };
 
   return (
     <Modal
@@ -82,20 +101,6 @@ export default function DetailsModal({ county, open, handleClose }) {
                     }}
                   >
                     {stat.sub.map((sub_stat, j) => {
-                      let suffixLookup = {
-                        percentage: "%",
-                        index: "",
-                        median: "",
-                        count: "",
-                        density: "",
-                      };
-                      let prefixLookup = {
-                        percentage: "",
-                        index: "",
-                        median: "$",
-                        count: "",
-                        density: "",
-                      };
                       let prefix = prefixLookup[sub_stat.metric];
                       let suffix = suffixLookup[sub_stat.metric];
                       return (

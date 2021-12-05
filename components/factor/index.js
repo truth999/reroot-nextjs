@@ -13,10 +13,7 @@ export function Factor(props) {
         param={props.param}
         onClick={props.onClick}
       />
-      <label
-        className={`btn btn-outline-dark ${styles.factor}`}
-        htmlFor={props.id}
-      >
+      <label className={`btn btn-outline-dark ${styles.factor}`} htmlFor={props.id}>
         {props.text}
       </label>
     </div>
