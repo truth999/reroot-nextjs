@@ -11,43 +11,61 @@ export default function Preference({ updateScores }) {
   // Constants
   const ON = 2;
   const { data, setData } = useContext(AppContext);
-  const { selectedLanguage, selectedCountry, params, selectedParams } = data;
-  const initialCountry = data.countries.find(
-    (country) => country.name === selectedCountry
+  const {
+    factors,
+    selectedLanguages,
+    selectedCountries,
+    params,
+    selectedParams,
+    countries,
+    languages,
+  } = data;
+
+  const initialCountries = countries.filter((country) =>
+    selectedCountries.find((c) => c.name === country)
   );
-  const initialLanguage = data.languages.find(
-    (language) => language.name === selectedLanguage
+  const initialLanguages = languages.filter((language) =>
+    selectedLanguages.find((l) => l.name === language)
   );
 
-  const [countries, setCountries] = useState(
-    initialCountry ? [initialCountry] : []
-  );
-  const [languages, setLanguages] = useState(
-    initialLanguage ? [initialLanguage] : []
-  );
+  const [countriesPref, setCountriesPref] = useState(initialCountries);
+  const [languagesPref, setLanguagesPref] = useState(initialLanguages);
 
   const selectedFactors = Object.entries(selectedParams).map(
     ([param, _]) => params[param].category_name
   );
 
-  const appendCountry = (country) => {
-    const newCountries = countries.map((_) => _);
+  const appendCountry = async (country) => {
+    console.log("append country called");
+    // Update Scores
+    await updateScores(country.param, ON);
+    const newCountries = countriesPref.map((_) => _);
     if (!newCountries.includes(country)) newCountries.push(country);
-    setCountries(newCountries);
+    setCountriesPref(newCountries);
+    console.log(country);
   };
 
-  const removeCountry = (country) => {
-    setCountries(countries.filter((c) => c !== country));
+  const removeCountry = async (country) => {
+    console.log("remove country called");
+    // Update Scores
+    await updateScores(country.param, 0);
+    setCountriesPref(countriesPref.filter((c) => c !== country));
   };
 
-  const removeLanguage = (language) => {
-    setLanguages(languages.filter((l) => l !== language));
-  };
-
-  const appendLanguage = (language) => {
-    const newLanguages = languages.map((_) => _);
+  const appendLanguage = async (language) => {
+    // Update Scores
+    console.log("append language called");
+    await updateScores(language.param, ON);
+    const newLanguages = languagesPref.map((_) => _);
     if (!newLanguages.includes(language)) newLanguages.push(language);
-    setLanguages(newLanguages);
+    setLanguagesPref(newLanguages);
+  };
+
+  const removeLanguage = async (language) => {
+    console.log("remove language called");
+    // Update Scores
+    await updateScores(language.param, 0);
+    setLanguagesPref(languagesPref.filter((l) => l !== language));
   };
 
   return (
@@ -61,7 +79,7 @@ export default function Preference({ updateScores }) {
         </div>
       </div>
       <ul className="list-unstyled ps-0">
-        {data.factors.map((factor, i) => {
+        {factors.map((factor, i) => {
           return (
             <li className="mb-1" key={i}>
               <button
@@ -84,11 +102,16 @@ export default function Preference({ updateScores }) {
                 <ul className="btn-toggle-nav list-unstyled pb-1">
                   {factor.sub.map((sub, i) => (
                     <li key={`${sub.name}-${i}`} className="py-2">
-                      <ImportanceSlider
-                        sub={sub}
-                        defaultValue={selectedParams[sub.param] || 0}
-                        updateScores={updateScores}
-                      />
+                      {!["origin", "language"].includes(sub.name) && (
+                        <ImportanceSlider
+                          key={`${sub.name}-${i}-slider`}
+                          sub={sub}
+                          defaultValue={
+                            parseInt(selectedParams[sub.param]) || 0
+                          }
+                          updateScores={updateScores}
+                        />
+                      )}
                       {sub.name === "origin" && (
                         <div className="pt-3">
                           <ComboBox
@@ -97,9 +120,10 @@ export default function Preference({ updateScores }) {
                             appendSlider={appendCountry}
                           />
                           <ul className="list-unstyled pb-2">
-                            {countries.map((country, i) => (
+                            {countriesPref.map((country, i) => (
                               <li key={`${country.name}-${i}`}>
                                 <ImportanceSlider
+                                  key={`${sub.name}-${i}-slider`}
                                   sub={country}
                                   defaultValue={ON}
                                   updateScores={updateScores}
@@ -118,9 +142,10 @@ export default function Preference({ updateScores }) {
                             appendSlider={appendLanguage}
                           />
                           <ul className="list-unstyled pb-2">
-                            {languages.map((language, i) => (
+                            {languagesPref.map((language, i) => (
                               <li key={`${language.name}-${i}`}>
                                 <ImportanceSlider
+                                  key={`${sub.name}-${i}-slider`}
                                   sub={language}
                                   defaultValue={ON}
                                   updateScores={updateScores}

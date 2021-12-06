@@ -16,17 +16,18 @@ import CountyPopup from "../components/countyPopup";
 
 import Favorite from "@mui/icons-material/Favorite";
 import CloseButton from "react-bootstrap/CloseButton";
+import Map from "../components/map";
 
 // Third Party
-import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+// import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 
 // Internal
 import Layout from "../components/Layout";
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "../styles/Results.module.scss";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
+// mapboxgl.accessToken =
+//   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
 const base_url = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ scores, initParams, parameters }) {
@@ -50,26 +51,39 @@ function Results({ scores, initParams, parameters }) {
   const [counties, setCounties] = useState(initCounties);
   const [favs, setFavs] = useState(counties.map((_) => false));
 
-  const updateScores = async (newParam) => {
-    setLoading(true);
-    setParams(Object.assign(params, newParam));
-    const query = new URLSearchParams(params);
+  const updateScores = async (newParam, newValue) => {
+    console.log(`Setting ${newParam} to ${newValue}`);
+    const newParams = { ...params };
+    if (newValue == 0) {
+      delete newParams[newParam];
+    } else {
+      newParams[newParam] = newValue;
+    }
+
+    setParams(newParams);
+
+    console.log("Updating ");
+    console.log(params);
+
+    // setLoading(true);
+    const query = new URLSearchParams(newParams);
     const req = await fetch(`${base_url}scores?${query}&page=1`);
     const newScores = await req.json();
-    setLoading(false);
-    counties = newScores.scores;
+    // setLoading(false);
     setCounties(newScores.scores);
     setPage(2);
-    console.log("updateScores called");
-    console.log(counties);
-    console.log(page);
+    // console.log("updateScores called");
+    console.log(newScores.scores);
+    // console.log(page);
   };
 
   const handleLoadMore = async () => {
+    // setLoading(true);
     const query = new URLSearchParams(params);
     const req = await fetch(`${base_url}scores?${query}&page=${page}`);
     const newScores = await req.json();
-    let newCounties = newScores.scores;
+    // setLoading(false);
+    const newCounties = newScores.scores;
 
     // Update states
     setCounties([...counties, ...newCounties]);
@@ -80,7 +94,9 @@ function Results({ scores, initParams, parameters }) {
     // console.log(page);
   };
 
-  const myMap = useRef();
+  // Map states
+  const mapContainer = useRef(null);
+  const map = useRef(null);
 
   const showingCounties =
     queryCounty.trim() == ""
@@ -90,109 +106,6 @@ function Results({ scores, initParams, parameters }) {
         );
 
   const favCounties = counties.filter((c) => favs[c.ranking - 1]);
-
-  // Map configurations
-  useEffect(() => {
-    // Ensure user can't access the page without completing the survey
-    if (data.factors.length == 0) {
-      router.push("/");
-    }
-
-    setPageIsMounted(true);
-    const CENTER_US48 = [-99.0909, 39.8355];
-    const map = new mapboxgl.Map({
-      container: "my-map",
-      style: "mapbox://styles/zhj0924/ckwd55u2n5fb314pc0egsi3ii",
-      center: CENTER_US48,
-      zoom: 4,
-      pitch: 45,
-      attributionControl: false,
-    });
-
-    myMap.current = map;
-
-    map
-      .addControl(
-        new mapboxgl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true,
-          },
-          trackUserLocation: true,
-        })
-      )
-      .addControl(new mapboxgl.FullscreenControl())
-      .addControl(
-        new mapboxgl.AttributionControl({
-          customAttribution: "Map design by Thomas Zhang",
-        })
-      )
-      .addControl(new mapboxgl.NavigationControl());
-
-    // Populate markers
-    showingCounties.forEach((county) => {
-      fetch(`${base_url}stats?county=${county.code}`)
-        .then((res) => res.json())
-        .then((stats_raw) => {
-          const stats = stats_raw.stats;
-
-          new mapboxgl.Marker({
-            color: "#E7654B",
-          })
-            .setLngLat(county.lng_lat)
-            .setPopup(
-              new mapboxgl.Popup()
-                .setHTML(
-                  ReactDOMServer.renderToString(
-                    <CountyPopup stats={stats} county={county} />
-                  )
-                )
-                .addClassName("map-popup")
-            )
-            .addTo(map);
-        });
-    });
-
-    favCounties.forEach((county) => {
-      // Create a DOM element for each marker.
-      const el = document.createElement("div");
-      const width = 80;
-      const height = 80;
-      el.className = "marker";
-      el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
-      el.style.width = `${width}px`;
-      el.style.height = `${height}px`;
-      el.style.backgroundSize = "100%";
-
-      fetch(`${base_url}stats?county=${county.code}`)
-        .then((res) => res.json())
-        .then((stats_raw) => {
-          const stats = stats_raw.stats;
-
-          new mapboxgl.Marker(el)
-            .setLngLat(county.lng_lat)
-            .setPopup(
-              new mapboxgl.Popup()
-                .setHTML(
-                  ReactDOMServer.renderToString(
-                    <CountyPopup stats={stats} county={county} />
-                  )
-                )
-                .addClassName("map-popup")
-            )
-            .addTo(map);
-        });
-    });
-
-    setLoading(false);
-  }, [
-    showingCounties,
-    favCounties,
-    router,
-    data.factors,
-    page,
-    stats,
-    queryCounty,
-  ]);
 
   return (
     <Layout results>
@@ -241,12 +154,15 @@ function Results({ scores, initParams, parameters }) {
 
           {/* main */}
           <div className={`${styles.main} row mx-0`}>
-            <div className={`${styles.map} col-12`} id="my-map" />
+            <div className={`${styles.map} col-12`} ref={mapContainer}>
+              <Map ref={map} counties={showingCounties} />
+            </div>
+
             <div className="col-12 favorite">
               <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
               <CountyAccordion
                 counties={favCounties}
-                map={myMap}
+                map={map}
                 emptyText="Heart some places, and they will show here!"
                 actionBtn={(county) => (
                   <RemoveButton
@@ -276,7 +192,7 @@ function Results({ scores, initParams, parameters }) {
                 <CountyAccordion
                   type={``}
                   counties={showingCounties}
-                  map={myMap}
+                  map={map}
                   emptyText="Loading..."
                   loadMoreBtn={
                     <NextButton handleClick={handleLoadMore}>
@@ -314,7 +230,7 @@ export async function getServerSideProps(context) {
   if (!scores) {
     return {
       redirect: {
-        destination: "/survey",
+        destination: "/",
         permanent: false,
       },
       scoreNotFound: true,
@@ -327,7 +243,7 @@ export async function getServerSideProps(context) {
   if (!parameters) {
     return {
       redirect: {
-        destination: "/survey",
+        destination: "/",
         permanent: false,
       },
       parametersNotFound: true,

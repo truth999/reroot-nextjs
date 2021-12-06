@@ -2,12 +2,9 @@ import styles from "./Layout.module.scss";
 
 import Head from "next/head";
 import Image from "next/image";
-import Footer from "../components/footer";
+import Footer from "./footer";
 
-import Header from "../components/Header";
-
-
-
+import Header from "./Header";
 
 export const siteTitle = "ReRoot";
 

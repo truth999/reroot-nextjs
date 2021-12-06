@@ -13,11 +13,12 @@ export default function ImportanceSlider({
 }) {
   const handleSliderChange = (event) => {
     event.preventDefault();
-    let newValue = event.target.value;
-    if (sub.param)
-      updateScores({
-        [`${sub.param}`]: newValue,
-      });
+    const newValue = event.target.value;
+
+    console.log("Param on change is");
+    console.log(sub.param);
+
+    if (sub.param) updateScores(sub.param, newValue);
   };
 
   const getValueText = (value) => {
@@ -41,14 +42,19 @@ export default function ImportanceSlider({
         htmlFor={`${sub.name}-slider`}
         className={`${styles.sidebarParam} form-label`}
       >
-        <p className={styles.title}>
+        <div className={styles.title}>
           {sub.text}
           {onRemove && (
-            <div className="float-end" onClick={() => onRemove(sub)}>
+            <div
+              className="float-end"
+              onClick={() => {
+                onRemove(sub);
+              }}
+            >
               X
             </div>
           )}
-        </p>
+        </div>
       </label>
       <div className={`${styles.slider} text-center`}>
         <ThemeProvider theme={theme}>
