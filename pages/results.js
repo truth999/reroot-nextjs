@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useContext } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+} from "react";
 import Head from "next/head";
 import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
@@ -13,7 +19,13 @@ import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
 import CountyAccordion from "../components/countyAccordion";
 import CountyPopup from "../components/countyPopup";
-
+import ReactMapGL, {
+  AttributionControl,
+  FullscreenControl,
+  GeolocateControl,
+  NavigationControl,
+  FlyToInterpolator,
+} from "react-map-gl";
 import Favorite from "@mui/icons-material/Favorite";
 import CloseButton from "react-bootstrap/CloseButton";
 import Map from "../components/map";
@@ -39,12 +51,9 @@ function Results({ scores, initParams, parameters }) {
   );
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
-  const [pageIsMounted, setPageIsMounted] = useState(false);
   // const [favCounties, setFavCounties] = useState([]);
   const [params, setParams] = useState(initParams);
-  const [stats, setStats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const initCounties = scores.scores;
 
@@ -65,11 +74,11 @@ function Results({ scores, initParams, parameters }) {
     console.log("Updating ");
     console.log(params);
 
-    // setLoading(true);
+    setLoading(true);
     const query = new URLSearchParams(newParams);
     const req = await fetch(`${base_url}scores?${query}&page=1`);
     const newScores = await req.json();
-    // setLoading(false);
+    setLoading(false);
     setCounties(newScores.scores);
     setPage(2);
     // console.log("updateScores called");
@@ -97,6 +106,31 @@ function Results({ scores, initParams, parameters }) {
   // Map states
   const mapContainer = useRef(null);
   const map = useRef(null);
+
+  const CENTER_US48 = [-99.0909, 39.8355];
+  const [initLng, initLat] = CENTER_US48;
+  const [viewport, setViewport] = useState({
+    longitude: initLng,
+    latitude: initLat,
+    zoom: 3,
+    bearing: 0,
+    pitch: 45,
+  });
+
+  const onSelectCounty = useCallback(
+    (county) => {
+      const [longitude, latitude] = county.lng_lat;
+      setViewport({
+        ...viewport,
+        longitude,
+        latitude,
+        zoom: 11,
+        transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
+        transitionDuration: "auto",
+      });
+    },
+    [viewport]
+  );
 
   const showingCounties =
     queryCounty.trim() == ""
@@ -155,15 +189,20 @@ function Results({ scores, initParams, parameters }) {
           {/* main */}
           <div className={`${styles.main} row mx-0`}>
             <div className={`${styles.map} col-12`} ref={mapContainer}>
-              <Map ref={map} counties={showingCounties} />
+              <Map
+                counties={showingCounties}
+                onViewportChange={setViewport}
+                viewport={viewport}
+                favs={favs}
+              />
             </div>
 
             <div className="col-12 favorite">
               <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
               <CountyAccordion
                 counties={favCounties}
-                map={map}
                 emptyText="Heart some places, and they will show here!"
+                onSelectCounty={onSelectCounty}
                 actionBtn={(county) => (
                   <RemoveButton
                     county={county}
@@ -190,7 +229,7 @@ function Results({ scores, initParams, parameters }) {
                 <Loading />
               ) : (
                 <CountyAccordion
-                  type={``}
+                  onSelectCounty={onSelectCounty}
                   counties={showingCounties}
                   map={map}
                   emptyText="Loading..."

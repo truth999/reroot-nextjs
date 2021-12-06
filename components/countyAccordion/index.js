@@ -17,9 +17,9 @@ export default function CountyAccordion({
   type,
   counties,
   emptyText,
-  map,
   actionBtn,
   loadMoreBtn,
+  onSelectCounty,
 }) {
   const { data } = useContext(AppContext);
   const { params } = data;
@@ -30,10 +30,7 @@ export default function CountyAccordion({
 
   const handleDetailClick = (event, county) => {
     event.preventDefault();
-    map.current.flyTo({
-      center: county.lng_lat,
-      zoom: 12,
-    });
+    onSelectCounty(county);
     handleOpen();
     setDisplayCounty(county);
   };
@@ -78,7 +75,13 @@ export default function CountyAccordion({
                 <hr />
               </Row>
             </div>
-            <Accordion.Header bsPrefix={`${styles.header} `}>
+            <Accordion.Header
+              bsPrefix={`${styles.header} `}
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectCounty(county);
+              }}
+            >
               <Col md={10}>
                 <Breakdown breakdown={county.breakdown} />
               </Col>
@@ -102,7 +105,6 @@ export default function CountyAccordion({
           </Accordion.Item>
         ))}
       </Accordion>
-
       {counties.length !== 0 && (
         <div className="text-center pt-4">{loadMoreBtn}</div>
       )}

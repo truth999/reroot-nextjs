@@ -11,17 +11,9 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 
 import Loading from "../../components/loading";
+import CountyStats from "../../components/countyStats";
 
-export default function DetailsModal({
-  county,
-  open,
-  handleClose,
-  forwardRef,
-}) {
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState([]);
-  const base_url = "https://reroot-data-app.herokuapp.com/";
-
+export default function DetailsModal({ county, open, handleClose }) {
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -34,36 +26,6 @@ export default function DetailsModal({
     p: 4,
   };
 
-  const getStats = async (county) => {
-    setLoading(true);
-    fetch(`${base_url}stats?county=${county.code}`)
-      .then((res) => res.json())
-      .then((stats_raw) => {
-        setStats(stats_raw.stats);
-        setLoading(false);
-      })
-      .catch((_) => setLoading(true));
-  };
-
-  useEffect(() => {
-    getStats(county);
-  }, [county]);
-
-  const suffixLookup = {
-    percentage: "%",
-    index: "",
-    median: "",
-    count: "",
-    density: "",
-  };
-  const prefixLookup = {
-    percentage: "",
-    index: "",
-    median: "$",
-    count: "",
-    density: "",
-  };
-
   return (
     <Modal
       open={open}
@@ -71,48 +33,9 @@ export default function DetailsModal({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            <a
-              href={`https://en.wikipedia.org/wiki/${county.name}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <h2>{county.name}</h2>
-              <p>More on Wiki</p>
-            </a>
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {stats.map((stat, i) => (
-              <Accordion key={i}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${i}-content`}
-                  id={`panel${i}-header`}
-                >
-                  {stat.text}
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List>
-                    {stat.sub.map((sub_stat, j) => {
-                      let prefix = prefixLookup[sub_stat.metric];
-                      let suffix = suffixLookup[sub_stat.metric];
-                      return (
-                        <ListItem key={j} className="pb-1 ms-2">
-                          {`${sub_stat.text}: ${prefix}${sub_stat.value}${suffix}`}
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Typography>
-        </Box>
-      )}
+      <Box sx={modalStyle}>
+        <CountyStats county={county} />
+      </Box>
     </Modal>
   );
 }

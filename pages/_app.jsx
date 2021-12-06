@@ -33,6 +33,7 @@ function MyApp({ Component, pageProps }) {
     selectedLanguages: [],
     selectedParams: {},
     theme: theme,
+    flyTo: null,
   });
 
   return (
