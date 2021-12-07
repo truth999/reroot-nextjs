@@ -23,23 +23,20 @@ a {
   transform: none !important;
   top: 0;
   left: 1rem;
-}
 
-.map-popup {
   .mapboxgl-popup-content {
-    min-width: 30rem;
-    min-height: 10rem;
-    height: 30vh;
-    width: 20vw;
+    min-width: 20rem;
+    min-height: 20rem;
+    height: 100%;
+    max-height: 33vh;
+    width: 15vw;
     overflow-y: scroll;
+    // background-color: black;
     ul {
-      padding: 0 1rem;
-      font-size: 1rem;
       list-style: none;
     }
   }
 }
-
 .accordion-button:not(.collapsed) {
   color: black !important;
   background-color: transparent !important;
