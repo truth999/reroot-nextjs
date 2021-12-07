@@ -6,28 +6,16 @@ import React, {
   useCallback,
 } from "react";
 import Head from "next/head";
-import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
-import { useRouter } from "next/router";
 
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
-import LikeButton from "../components/likeButton";
 import RemoveButton from "../components/removeButton";
 import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
 import CountyAccordion from "../components/countyAccordion";
-import CountyPopup from "../components/countyPopup";
-import ReactMapGL, {
-  AttributionControl,
-  FullscreenControl,
-  GeolocateControl,
-  NavigationControl,
-  FlyToInterpolator,
-} from "react-map-gl";
-import Favorite from "@mui/icons-material/Favorite";
-import CloseButton from "react-bootstrap/CloseButton";
+import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
 import Map from "../components/map";
 
 // Third Party
@@ -36,11 +24,8 @@ import Map from "../components/map";
 // Internal
 import Layout from "../components/Layout";
 import "mapbox-gl/dist/mapbox-gl.css";
-import styles from "../styles/Results.module.scss";
-import CountyGrid from "../components/countyGrid";
+import styles from "../styles/Favorite.module.scss";
 
-// mapboxgl.accessToken =
-//   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
 const base_url = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ scores, initParams, parameters }) {
@@ -198,25 +183,8 @@ function Results({ scores, initParams, parameters }) {
               />
             </div>
 
-            <div className="col-12 favorite">
-              <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
-              <CountyGrid
-                counties={favCounties}
-                emptyText="Heart some places, and they will show here!"
-                onSelectCounty={onSelectCounty}
-                actionBtn={(county) => (
-                  <RemoveButton
-                    county={county}
-                    handleClick={(j) => {
-                      const newFavs = favs.map((f, i) => (i === j ? false : f));
-                      setFavs(newFavs);
-                    }}
-                  />
-                )}
-              ></CountyGrid>
-            </div>
             <div className={`${styles.counties} col-12 mb-3`}>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex">
                 <div className={`${styles.mainTitle} pe-3`}>ALL COUNTIES</div>
                 <SearchBar
                   value={queryCounty}
@@ -233,20 +201,21 @@ function Results({ scores, initParams, parameters }) {
                   onSelectCounty={onSelectCounty}
                   counties={showingCounties}
                   map={map}
-                  emptyText="No county found."
+                  emptyText="Loading..."
                   loadMoreBtn={
-                    <NextButton handleClick={handleLoadMore}>
+                    <NextButton handleClick={() => console.log("TODO: Load more")}>
                       Load More
                     </NextButton>
                   }
                   actionBtn={(county) => (
-                    <LikeButton
+                    <RemoveButton
                       county={county}
-                      handleChange={(j) => {
-                        const newFavs = favs.map((f, i) => (i === j ? !f : f));
+                      handleClick={(j) => {
+                        const newFavs = favs.map((f, i) =>
+                          i === j ? false : f
+                        );
                         setFavs(newFavs);
                       }}
-                      checked={favs[county.ranking - 1]}
                     />
                   )}
                 ></CountyAccordion>

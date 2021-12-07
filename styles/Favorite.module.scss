@@ -1,0 +1,53 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
+
+.main {
+  width: 100%;
+  padding: 0 8%;
+  min-height: 90vh;
+}
+
+.map {
+  width: 100%;
+  min-height: 35vh;
+}
+
+.factor {
+  text-align: left;
+  font-family: "Karla", sans-serif;
+  width: 100%;
+  font-weight: 600;
+  span {
+    float: right;
+    color: lightgray;
+  }
+}
+
+.sidebar {
+  min-width: 20rem;
+  width: 100%;
+}
+
+.sidebarTitle {
+  font-size: 1.5rem;
+  font-family: "Marmelad", sans-serif;
+}
+
+.sidebarParam {
+  font-family: "Karla", sans-serif;
+  font-size: 1rem;
+}
+
+// Main
+.toggleSidebar {
+  position: absolute;
+  line-height: 0;
+  padding: 1rem;
+  // background-color: red;
+}
+
+.mainTitle {
+  font-weight: bold;
+  font-size: 1.6rem;
+  font-family: "Playfair Display", serif;
+  padding: 1rem 0;
+}
