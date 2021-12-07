@@ -13,7 +13,7 @@ import AppContext from "../../contexts/AppContext";
 
 export default function Breakdown({ breakdown }) {
   const { data } = useContext(AppContext);
-  const { params } = data;
+  const { parameters } = data;
 
   const lightest = "#F2E4E2";
   const darkest = "#BA4D3A";
@@ -30,7 +30,7 @@ export default function Breakdown({ breakdown }) {
       }}
     >
       {scores.map(([param, score], index) => {
-        const parameter = params[param];
+        const parameter = parameters[param];
         return (
           <OverlayTrigger
             key={index}

@@ -7,16 +7,14 @@ import ComboBox from "../../components/comboBox";
 import AppContext from "../../contexts/AppContext";
 import styles from "./preference.module.scss";
 
-export default function Preference({ updateScores }) {
-  // Constants
+export default function Preference({ updateScores, selectedParams }) {
   const ON = 2;
   const { data } = useContext(AppContext);
   const {
     factors,
     selectedLanguages,
     selectedCountries,
-    params,
-    selectedParams,
+    parameters,
     countries,
     languages,
   } = data;
@@ -32,7 +30,7 @@ export default function Preference({ updateScores }) {
   const [languagesPref, setLanguagesPref] = useState(initialLanguages);
 
   const selectedFactors = Object.entries(selectedParams).map(
-    ([param, _]) => params[param].category_name
+    ([param, _]) => parameters[param].category_name
   );
 
   const appendCountry = async (country) => {

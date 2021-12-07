@@ -21,7 +21,7 @@ export default function CountyAccordion({
   onSelectCounty,
 }) {
   const { data } = useContext(AppContext);
-  const { params } = data;
+  const { parameters } = data;
   const [displayCounty, setDisplayCounty] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -90,7 +90,7 @@ export default function CountyAccordion({
             </Accordion.Header>
             <Accordion.Body>
               {Object.entries(county.ranks).map(([param, value], i) => {
-                const parameter = params[param];
+                const parameter = parameters[param];
                 const paramLabel = parameter.option
                   ? parameter.option_name
                   : parameter.parameter_name;

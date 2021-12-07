@@ -126,7 +126,6 @@ export default function Survey({ factorsData }) {
 
     const newData = Object.assign(data, {
       factors: newFactors,
-      selectedParams: newParams,
       selectedCountries: countries,
       selectedLanguages: languages,
     });

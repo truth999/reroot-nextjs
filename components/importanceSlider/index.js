@@ -1,3 +1,5 @@
+import React, { useState, useContext } from "react";
+
 import Slider from "@mui/material/Slider";
 import { ThemeProvider } from "@mui/material/styles";
 
@@ -11,13 +13,10 @@ export default function ImportanceSlider({
   updateScores,
   onRemove,
 }) {
-  const handleSliderChange = (event) => {
+  const [value, setValue] = useState(defaultValue);
+  const handleSliderChange = (event, newValue) => {
     event.preventDefault();
-    const newValue = event.target.value;
-
-    console.log("Param on change is");
-    console.log(sub.param);
-
+    setValue(newValue);
     if (sub.param) updateScores(sub.param, newValue);
   };
 
@@ -60,7 +59,7 @@ export default function ImportanceSlider({
         <ThemeProvider theme={theme}>
           <Slider
             aria-label="Importance"
-            defaultValue={defaultValue}
+            value={value}
             getAriaValueText={getValueText}
             valueLabelFormat={getValueText}
             valueLabelDisplay="auto"

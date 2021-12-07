@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import Head from "next/head";
 import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
@@ -38,54 +32,58 @@ const baseURL = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ parameters, factorsData }) {
   const { data, setData } = useContext(AppContext);
-  const { initParams } = data;
-  console.log(initParams);
-  const [params, setParams] = useState(initParams);
+  const [params, setParams] = useState({});
+  const [queryCounty, setQueryCounty] = useState("");
+  const [page, setPage] = useState(2);
+  const [loading, setLoading] = useState(false);
+  const [counties, setCounties] = useState([]);
+
+  // Handle Favorited Counties
+  const [favCounties, setFavCounties] = useState({});
 
   const newFactors =
     data.factors.length === 0 ? factorsData.factors : data.factors;
 
   setData(
     Object.assign(data, {
-      params: parameters,
+      parameters: parameters,
       factors: newFactors,
     })
   );
+
   const router = useRouter();
+  const getScores = async (newParams) => {
+    if (Object.keys(newParams).length === 0) {
+      setCounties([]);
+      return;
+    }
+
+    const queryParams = new URLSearchParams(newParams);
+    setLoading(true);
+    try {
+      const resScores = await fetch(
+        baseURL + "scores?" + queryParams + "&page=1"
+      );
+      const scoresData = await resScores.json();
+
+      setCounties(scoresData.scores);
+      setParams(newParams);
+      setPage(2);
+      setLoading(false);
+    } catch (err) {
+      alert("Invalid parameters. Please try again.");
+    }
+  };
 
   // Handle direct GET requests
   useEffect(() => {
-    const getScores = async () => {
-      const queryParams = new URLSearchParams(router.query);
-      setLoading(true);
-      try {
-        const resScores = await fetch(
-          baseURL + "scores?" + queryParams + "&page=1"
-        );
-        const scoresData = await resScores.json();
-        setCounties(scoresData.scores);
-        setLoading(false);
-      } catch (err) {
-        alert("Invalid parameters. Please try again.");
-      }
+    getScores(router.query);
+    return () => {
+      setCounties([]);
     };
-
-    getScores();
-
-    return () => {};
   }, [router]);
 
-  const [queryCounty, setQueryCounty] = useState("");
-  const [page, setPage] = useState(2);
-  const [loading, setLoading] = useState(false);
-
-  const [counties, setCounties] = useState([]);
-
-  // Handle Favorited Counties
-  const [favCounties, setFavCounties] = useState({});
-
   const updateScores = async (newParam, newValue) => {
-    console.log(`Setting ${newParam} to ${newValue}`);
     const newParams = { ...params };
     if (newValue == 0) {
       delete newParams[newParam];
@@ -93,24 +91,15 @@ function Results({ parameters, factorsData }) {
       newParams[newParam] = newValue;
     }
 
-    setParams(newParams);
-
-    console.log("Updating ");
-    console.log(params);
-
-    setLoading(true);
-    const query = new URLSearchParams(newParams);
-    const req = await fetch(`${baseURL}scores?${query}&page=1`);
-    const newScores = await req.json();
-    setLoading(false);
-    setCounties(newScores.scores);
-    setPage(2);
-    // console.log("updateScores called");
-    console.log(newScores.scores);
-    // console.log(page);
+    getScores(newParams);
   };
 
   const handleLoadMore = async () => {
+    if (page > 6) {
+      alert("Too many markers on the map.");
+      return;
+    }
+
     // setLoading(true);
     const query = new URLSearchParams(params);
     const req = await fetch(`${baseURL}scores?${query}&page=${page}`);
@@ -183,7 +172,7 @@ function Results({ parameters, factorsData }) {
             >
               <Preference
                 factors={data.factors}
-                params={params}
+                selectedParams={params}
                 updateScores={updateScores}
               ></Preference>
             </div>
@@ -199,7 +188,7 @@ function Results({ parameters, factorsData }) {
             data-bs-toggle="collapse"
             className={`${styles.toggleSidebar}`}
             onClick={() => {
-              setCounties(counties.map((_) => _));
+              setViewport({ ...viewport });
             }}
           >
             <AdjustButton side="30" collapse={true} />

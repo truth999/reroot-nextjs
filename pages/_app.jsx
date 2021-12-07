@@ -28,10 +28,9 @@ function MyApp({ Component, pageProps }) {
     factors: [],
     countries: [],
     languages: [],
-    params: {},
+    parameters: {},
     selectedCountries: [],
     selectedLanguages: [],
-    selectedParams: {},
     theme: theme,
   });
 
