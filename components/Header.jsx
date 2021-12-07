@@ -107,16 +107,20 @@ const Header = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                      <MenuItem key={"profile"} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">
-                          <a href="/profile">Profile</a>
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem key={"logout"} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">
+                    <MenuItem key={"profile"} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">
+                        <Link href="/profile">
+                          <a>Profile</a>
+                        </Link>
+                      </Typography>
+                    </MenuItem>
+                    <MenuItem key={"logout"} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">
+                        <Link href="/api/auth/logout">
                           <a href="/api/auth/logout">Logout</a>
-                        </Typography>
-                      </MenuItem>
+                        </Link>
+                      </Typography>
+                    </MenuItem>
                   </Menu>
                 </Box>
               ) : (
