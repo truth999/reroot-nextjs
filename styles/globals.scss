@@ -20,6 +20,7 @@ a {
 }
 
 .mapboxgl-popup {
+  z-index: 100;
   transform: none !important;
   top: 0;
   left: 1rem;

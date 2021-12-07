@@ -14,7 +14,7 @@ export default function LikeButton({ county, handleChange, checked }) {
       icon={<FavoriteBorder />}
       checkedIcon={<Favorite />}
       name={`favorite-${county.code}`}
-      onChange={() => handleChange(county.ranking - 1)}
+      onChange={() => handleChange(county)}
       value="like"
       checked={checked}
       color="primary"

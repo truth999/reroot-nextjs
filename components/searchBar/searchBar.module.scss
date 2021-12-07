@@ -1,4 +1,7 @@
 .search {
+  min-height: 2rem;
+  height: 100%;
+  max-height: 3rem;
   min-width: 33.33vw;
   width: 100%;
   padding: 1rem 1rem 1rem 3rem;
@@ -9,4 +12,9 @@
   font-size: 1.2em;
   border: 0;
   outline: none;
+}
+
+.searchContainer {
+  height: 100%;
+  padding: 0.66rem 0rem;
 }

@@ -52,14 +52,15 @@ function Results({ scores, initParams, parameters }) {
   );
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
-  // const [favCounties, setFavCounties] = useState([]);
   const [params, setParams] = useState(initParams);
   const [loading, setLoading] = useState(false);
 
   const initCounties = scores.scores;
 
   const [counties, setCounties] = useState(initCounties);
-  const [favs, setFavs] = useState(counties.map((_) => false));
+
+  // Handle Favorited Counties
+  const [favCounties, setFavCounties] = useState({});
 
   const updateScores = async (newParam, newValue) => {
     console.log(`Setting ${newParam} to ${newValue}`);
@@ -140,8 +141,6 @@ function Results({ scores, initParams, parameters }) {
           county.name.toLowerCase().includes(queryCounty.toLowerCase())
         );
 
-  const favCounties = counties.filter((c) => favs[c.ranking - 1]);
-
   return (
     <Layout results>
       <Head>
@@ -194,22 +193,24 @@ function Results({ scores, initParams, parameters }) {
                 counties={showingCounties}
                 onViewportChange={setViewport}
                 viewport={viewport}
-                favs={favs}
+                favs={Object.values(favCounties)}
               />
             </div>
 
-            <div className="col-12 favorite">
+            <div className="col-12 favorite mb-4">
               <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
               <CountyGrid
-                counties={favCounties}
+                counties={Object.values(favCounties)}
                 emptyText="Heart some places, and they will show here!"
                 onSelectCounty={onSelectCounty}
                 actionBtn={(county) => (
                   <RemoveButton
                     county={county}
-                    handleClick={(j) => {
-                      const newFavs = favs.map((f, i) => (i === j ? false : f));
-                      setFavs(newFavs);
+                    handleClick={(county) => {
+                      const newFavCounties = { ...favCounties };
+                      newFavCounties[county.index].faved = false;
+                      delete newFavCounties[county.index];
+                      setFavCounties(newFavCounties);
                     }}
                   />
                 )}
@@ -217,7 +218,9 @@ function Results({ scores, initParams, parameters }) {
             </div>
             <div className={`${styles.counties} col-12 mb-3`}>
               <div className="d-flex justify-content-between">
-                <div className={`${styles.mainTitle} pe-3`}>ALL COUNTIES</div>
+                <div className={`${styles.mainTitle} pe-3`}>
+                  ALL COUNTIES <span>{"(BY SCORE)"}</span>
+                </div>
                 <SearchBar
                   value={queryCounty}
                   placeholder="Filter Counties"
@@ -232,7 +235,6 @@ function Results({ scores, initParams, parameters }) {
                 <CountyAccordion
                   onSelectCounty={onSelectCounty}
                   counties={showingCounties}
-                  map={map}
                   emptyText="No county found."
                   loadMoreBtn={
                     <NextButton handleClick={handleLoadMore}>
@@ -242,11 +244,18 @@ function Results({ scores, initParams, parameters }) {
                   actionBtn={(county) => (
                     <LikeButton
                       county={county}
-                      handleChange={(j) => {
-                        const newFavs = favs.map((f, i) => (i === j ? !f : f));
-                        setFavs(newFavs);
+                      handleChange={(county) => {
+                        const newFavCounties = { ...favCounties };
+                        if (county.index in newFavCounties) {
+                          county.faved = false;
+                          delete newFavCounties[county.index];
+                        } else {
+                          county.faved = true;
+                          newFavCounties[county.index] = county;
+                        }
+                        setFavCounties(newFavCounties);
                       }}
-                      checked={favs[county.ranking - 1]}
+                      checked={county.index in favCounties}
                     />
                   )}
                 ></CountyAccordion>

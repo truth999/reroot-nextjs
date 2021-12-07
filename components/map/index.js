@@ -5,15 +5,16 @@ import ReactMapGL, {
   FullscreenControl,
   GeolocateControl,
   NavigationControl,
+  FlyToInterpolator,
 } from "react-map-gl";
 import CountyMarkers from "../../components/countyMarkers";
 import CountyPopup from "../../components/countyPopup";
 
 export default function Map({
   children,
-  counties,
   viewport,
   onViewportChange,
+  counties,
   favs,
 }) {
   const accessToken =
@@ -39,6 +40,14 @@ export default function Map({
     right: 10,
     top: 100,
   };
+
+  const all = [
+    ...favs.map((county) => {
+      county.faved = true;
+      return county;
+    }),
+    ...counties.filter((county) => !favs.some((c) => c.index === county.index)),
+  ];
 
   return (
     <ReactMapGL
@@ -67,7 +76,7 @@ export default function Map({
         trackUserLocation={true}
       />
       <NavigationControl style={navControlStyle} />
-      <CountyMarkers counties={counties} onClick={setSelectedCounty} favs={favs}/>
+      <CountyMarkers counties={all} onClick={setSelectedCounty} />
       {children}
     </ReactMapGL>
   );

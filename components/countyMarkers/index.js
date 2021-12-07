@@ -5,36 +5,30 @@ const ICON = `M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,
   C20.1,15.8,20.2,15.8,20.2,15.7z`;
 
 const SIZE = 20;
-export default function CountyMarkers({ counties, onClick, favs }) {
+export default function CountyMarkers({ counties, onClick }) {
   // Only rerender markers if props.data has changed
-  const markers = useMemo(
-    () =>
-      counties.map((county) => {
-        const [lng, lat] = county.lng_lat;
-        return (
-          <Marker
-            key={`marker-${county.ranking}`}
-            longitude={lng}
-            latitude={lat}
+  const markers = useMemo(() => {
+    return counties.map((county) => {
+      const [lng, lat] = county.lng_lat;
+      return (
+        <Marker key={`marker-${county.index}`} longitude={lng} latitude={lat}>
+          <svg
+            height={SIZE}
+            viewBox="0 0 24 24"
+            style={{
+              cursor: "pointer",
+              fill: `${county.faved ? "#e7654b" : "#8b7171"}`,
+              stroke: "black",
+              transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
+            }}
+            onClick={() => onClick(county)}
           >
-            <svg
-              height={SIZE}
-              viewBox="0 0 24 24"
-              style={{
-                cursor: "pointer",
-                fill: `${favs[county.ranking - 1] ? "#e7654b" : "#8b7171"}`,
-                stroke: "black",
-                transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
-              }}
-              onClick={() => onClick(county)}
-            >
-              <path d={ICON} />
-            </svg>
-          </Marker>
-        );
-      }),
-    [counties, onClick, favs]
-  );
+            <path d={ICON} />
+          </svg>
+        </Marker>
+      );
+    });
+  }, [onClick, counties]);
 
   return markers;
 }

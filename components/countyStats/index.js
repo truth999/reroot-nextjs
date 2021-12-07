@@ -55,6 +55,7 @@ export default function CountyStats({ county }) {
     };
 
     getStats();
+    return () => setStats([]);
   }, [county.code]);
 
   return loading ? (

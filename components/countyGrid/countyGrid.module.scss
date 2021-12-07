@@ -1,8 +1,15 @@
 @import "../../styles/variables";
 
 .grid {
-  max-height: 10vh;
+  min-height: 4rem;
+  max-height: 6vh;
   overflow: auto;
+}
+
+.emptyText {
+  font-family: "Karla", sans-serif;
+  font-size: 1rem;
+  line-height: 2rem;
 }
 
 .item {
@@ -35,11 +42,6 @@
   button {
     background-color: transparent;
   }
-}
-
-.emptyText {
-  font-family: "Karla", sans-serif;
-  font-size: 1rem;
 }
 
 .toggle {

@@ -9,6 +9,10 @@ import Breakdown from "../breakdown";
 import DetailsModal from "../detailsModal";
 import ProgressRing from "../progressRing";
 import Grid from "@mui/material/Grid";
+import Popover from "@mui/material/Popover";
+import Tooltip from "react-bootstrap/Tooltip";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Typography from "@mui/material/Typography";
 
 import to2digits from "../../utils";
 import AppContext from "../../contexts/AppContext";
@@ -36,7 +40,7 @@ export default function CountyGrid({
   };
 
   return (
-    <div className={styles.grid}>
+    <div className={`${styles.grid}`}>
       {counties.length === 0 && (
         <p className={`${styles.emptyText}`}>{emptyText}</p>
       )}
@@ -47,9 +51,23 @@ export default function CountyGrid({
       >
         {counties.map((county, index) => (
           <Grid item xs={2} sm={4} md={4} lg={4} xl={4} key={index}>
-            <div className="text-center">
-              {`#${county.ranking} ${county.name}`} {actionBtn(county)}
-            </div>
+            <OverlayTrigger
+              key={index}
+              placement="top"
+              overlay={
+                <Tooltip id={`${index}-tooltip`}>Click to view details</Tooltip>
+              }
+            >
+              <div className="text-center">
+                <span
+                  className="btn"
+                  onClick={(event) => handleDetailClick(event, county)}
+                >
+                  {`${county.name} `}
+                </span>
+                {actionBtn(county)}
+              </div>
+            </OverlayTrigger>
           </Grid>
         ))}
       </Grid>
