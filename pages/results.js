@@ -19,15 +19,8 @@ import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
 import CountyAccordion from "../components/countyAccordion";
 import CountyPopup from "../components/countyPopup";
-import ReactMapGL, {
-  AttributionControl,
-  FullscreenControl,
-  GeolocateControl,
-  NavigationControl,
-  FlyToInterpolator,
-} from "react-map-gl";
-import Favorite from "@mui/icons-material/Favorite";
-import CloseButton from "react-bootstrap/CloseButton";
+import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
+import Link from "next/link";
 import Map from "../components/map";
 
 // Third Party
@@ -41,23 +34,52 @@ import CountyGrid from "../components/countyGrid";
 
 // mapboxgl.accessToken =
 //   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
-const base_url = "https://reroot-data-app.herokuapp.com/";
+const baseURL = "https://reroot-data-app.herokuapp.com/";
 
-function Results({ scores, initParams, parameters }) {
+function Results({ parameters, factorsData }) {
   const { data, setData } = useContext(AppContext);
+  const { initParams } = data;
+  console.log(initParams);
+  const [params, setParams] = useState(initParams);
+
+  const newFactors =
+    data.factors.length === 0 ? factorsData.factors : data.factors;
+
   setData(
     Object.assign(data, {
       params: parameters,
+      factors: newFactors,
     })
   );
+  const router = useRouter();
+
+  // Handle direct GET requests
+  useEffect(() => {
+    const getScores = async () => {
+      const queryParams = new URLSearchParams(router.query);
+      setLoading(true);
+      try {
+        const resScores = await fetch(
+          baseURL + "scores?" + queryParams + "&page=1"
+        );
+        const scoresData = await resScores.json();
+        setCounties(scoresData.scores);
+        setLoading(false);
+      } catch (err) {
+        alert("Invalid parameters. Please try again.");
+      }
+    };
+
+    getScores();
+
+    return () => {};
+  }, [router]);
+
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
-  const [params, setParams] = useState(initParams);
   const [loading, setLoading] = useState(false);
 
-  const initCounties = scores.scores;
-
-  const [counties, setCounties] = useState(initCounties);
+  const [counties, setCounties] = useState([]);
 
   // Handle Favorited Counties
   const [favCounties, setFavCounties] = useState({});
@@ -78,7 +100,7 @@ function Results({ scores, initParams, parameters }) {
 
     setLoading(true);
     const query = new URLSearchParams(newParams);
-    const req = await fetch(`${base_url}scores?${query}&page=1`);
+    const req = await fetch(`${baseURL}scores?${query}&page=1`);
     const newScores = await req.json();
     setLoading(false);
     setCounties(newScores.scores);
@@ -91,7 +113,7 @@ function Results({ scores, initParams, parameters }) {
   const handleLoadMore = async () => {
     // setLoading(true);
     const query = new URLSearchParams(params);
-    const req = await fetch(`${base_url}scores?${query}&page=${page}`);
+    const req = await fetch(`${baseURL}scores?${query}&page=${page}`);
     const newScores = await req.json();
     // setLoading(false);
     const newCounties = newScores.scores;
@@ -106,9 +128,6 @@ function Results({ scores, initParams, parameters }) {
   };
 
   // Map states
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-
   const CENTER_US48 = [-99.0909, 39.8355];
   const [initLng, initLat] = CENTER_US48;
   const [viewport, setViewport] = useState({
@@ -188,7 +207,7 @@ function Results({ scores, initParams, parameters }) {
 
           {/* main */}
           <div className={`${styles.main} row mx-0`}>
-            <div className={`${styles.map} col-12`} ref={mapContainer}>
+            <div className={`${styles.map} col-12`}>
               <Map
                 counties={showingCounties}
                 onViewportChange={setViewport}
@@ -197,8 +216,10 @@ function Results({ scores, initParams, parameters }) {
               />
             </div>
 
-            <div className="col-12 favorite mb-4">
-              <div className={`${styles.mainTitle}`}>FAVORITE COUNTIES</div>
+            <div className={`${styles.favorite} col-12 mb-4`}>
+              <div className={`${styles.mainTitle}`}>
+                <Link href="/favorite">FAVORITE COUNTIES</Link>
+              </div>
               <CountyGrid
                 counties={Object.values(favCounties)}
                 emptyText="Heart some places, and they will show here!"
@@ -269,25 +290,8 @@ function Results({ scores, initParams, parameters }) {
 }
 
 export async function getServerSideProps(context) {
-  const queryParams = new URLSearchParams(context.query);
-  const initParams = context.query;
-  const res_scores = await fetch(
-    base_url + "scores?" + queryParams + "&page=1"
-  );
-  const scores = await res_scores.json();
-
-  if (!scores) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-      scoreNotFound: true,
-    };
-  }
-
-  const res_parameters = await fetch(base_url + "parameters");
-  const parameters = await res_parameters.json();
+  const resParameters = await fetch(baseURL + "parameters");
+  const parameters = await resParameters.json();
 
   if (!parameters) {
     return {
@@ -299,8 +303,23 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const resFactors = await fetch(
+    `https://reroot-data-app.herokuapp.com/factors`
+  );
+  const factorsData = await resFactors.json();
+
+  if (!factorsData) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+      notFound: true,
+    };
+  }
+
   return {
-    props: { scores, initParams, parameters }, // will be passed to the page component as props
+    props: { parameters, factorsData }, // will be passed to the page component as props
   };
 }
 

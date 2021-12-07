@@ -14,7 +14,6 @@ import AppContext from "../../contexts/AppContext";
 
 import styles from "./countyAccordion.module.scss";
 export default function CountyAccordion({
-  type,
   counties,
   emptyText,
   actionBtn,

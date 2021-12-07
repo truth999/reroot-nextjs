@@ -26,7 +26,6 @@ export default function CountyGrid({
   onSelectCounty,
 }) {
   const { data } = useContext(AppContext);
-  const { params } = data;
   const [displayCounty, setDisplayCounty] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);

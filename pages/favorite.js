@@ -28,23 +28,23 @@ import styles from "../styles/Favorite.module.scss";
 
 const base_url = "https://reroot-data-app.herokuapp.com/";
 
-function Results({ scores, initParams, parameters }) {
-  const { data, setData } = useContext(AppContext);
+export default function Favorite({ factorsData }) {
+  const { data, setData, favorites, setFavorites } = useContext(AppContext);
+
+  const newFactors =
+    data.factors.length === 0 ? factorsData.factors : data.factors;
   setData(
     Object.assign(data, {
-      params: parameters,
+      factors: newFactors,
     })
   );
+
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
-  // const [favCounties, setFavCounties] = useState([]);
-  const [params, setParams] = useState(initParams);
   const [loading, setLoading] = useState(false);
+  const [params, setParams] = useState({});
 
-  const initCounties = scores.scores;
-
-  const [counties, setCounties] = useState(initCounties);
-  const [favs, setFavs] = useState(counties.map((_) => false));
+  const [counties, setCounties] = useState(favorites);
 
   const updateScores = async (newParam, newValue) => {
     console.log(`Setting ${newParam} to ${newValue}`);
@@ -90,9 +90,6 @@ function Results({ scores, initParams, parameters }) {
   };
 
   // Map states
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-
   const CENTER_US48 = [-99.0909, 39.8355];
   const [initLng, initLat] = CENTER_US48;
   const [viewport, setViewport] = useState({
@@ -124,8 +121,6 @@ function Results({ scores, initParams, parameters }) {
       : counties.filter((county) =>
           county.name.toLowerCase().includes(queryCounty.toLowerCase())
         );
-
-  const favCounties = counties.filter((c) => favs[c.ranking - 1]);
 
   return (
     <Layout results>
@@ -174,18 +169,20 @@ function Results({ scores, initParams, parameters }) {
 
           {/* main */}
           <div className={`${styles.main} row mx-0`}>
-            <div className={`${styles.map} col-12`} ref={mapContainer}>
+            <div className={`${styles.map} col-12`}>
               <Map
                 counties={showingCounties}
                 onViewportChange={setViewport}
                 viewport={viewport}
-                favs={favs}
+                favs={[]}
               />
             </div>
 
             <div className={`${styles.counties} col-12 mb-3`}>
               <div className="d-flex">
-                <div className={`${styles.mainTitle} pe-3`}>ALL COUNTIES</div>
+                <div className={`${styles.mainTitle} pe-3`}>
+                  FAVORITE COUNTIES
+                </div>
                 <SearchBar
                   value={queryCounty}
                   placeholder="Filter Counties"
@@ -200,24 +197,7 @@ function Results({ scores, initParams, parameters }) {
                 <CountyAccordion
                   onSelectCounty={onSelectCounty}
                   counties={showingCounties}
-                  map={map}
-                  emptyText="Loading..."
-                  loadMoreBtn={
-                    <NextButton handleClick={() => console.log("TODO: Load more")}>
-                      Load More
-                    </NextButton>
-                  }
-                  actionBtn={(county) => (
-                    <RemoveButton
-                      county={county}
-                      handleClick={(j) => {
-                        const newFavs = favs.map((f, i) =>
-                          i === j ? false : f
-                        );
-                        setFavs(newFavs);
-                      }}
-                    />
-                  )}
+                  emptyText="Heart some places, and they will show here!"
                 ></CountyAccordion>
               )}
             </div>
@@ -228,40 +208,21 @@ function Results({ scores, initParams, parameters }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const queryParams = new URLSearchParams(context.query);
-  const initParams = context.query;
-  const res_scores = await fetch(
-    base_url + "scores?" + queryParams + "&page=1"
-  );
-  const scores = await res_scores.json();
+export async function getStaticProps(context) {
+  const res = await fetch(`https://reroot-data-app.herokuapp.com/factors`);
+  const factorsData = await res.json();
 
-  if (!scores) {
+  if (!factorsData) {
     return {
       redirect: {
         destination: "/",
         permanent: false,
       },
-      scoreNotFound: true,
-    };
-  }
-
-  const res_parameters = await fetch(base_url + "parameters");
-  const parameters = await res_parameters.json();
-
-  if (!parameters) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-      parametersNotFound: true,
+      notFound: true,
     };
   }
 
   return {
-    props: { scores, initParams, parameters }, // will be passed to the page component as props
+    props: { factorsData }, // will be passed to the page component as props
   };
 }
-
-export default Results;

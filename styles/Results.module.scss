@@ -1,11 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
 
-.main {
-  width: 100%;
-  padding: 0 8%;
-  min-height: 90vh;
-}
-
 .map {
   width: 100%;
   min-height: 35vh;
@@ -38,6 +32,16 @@
 }
 
 // Main
+.main {
+  width: 100%;
+  padding: 0 8%;
+  min-height: 85vh;
+}
+
+.favorite {
+  height: 100%;
+}
+
 .toggleSidebar {
   position: absolute;
   line-height: 0;

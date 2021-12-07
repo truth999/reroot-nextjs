@@ -35,8 +35,10 @@ function MyApp({ Component, pageProps }) {
     theme: theme,
   });
 
+  const [favorites, setFavorites] = useState([]);
+
   return (
-    <AppContext.Provider value={{ data, setData }}>
+    <AppContext.Provider value={{ data, setData, favorites, setFavorites }}>
       <ThemeProvider theme={theme}>
         <Component {...pageProps} />
       </ThemeProvider>

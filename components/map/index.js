@@ -53,7 +53,7 @@ export default function Map({
     <ReactMapGL
       {...viewport}
       width="100%"
-      height="35vh"
+      height="100%"
       mapStyle="mapbox://styles/zhj0924/ckwd55u2n5fb314pc0egsi3ii"
       onViewportChange={onViewportChange}
       style={attributionStyle}

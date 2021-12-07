@@ -10,7 +10,7 @@ import styles from "./preference.module.scss";
 export default function Preference({ updateScores }) {
   // Constants
   const ON = 2;
-  const { data, setData } = useContext(AppContext);
+  const { data } = useContext(AppContext);
   const {
     factors,
     selectedLanguages,
