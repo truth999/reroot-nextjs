@@ -38,6 +38,13 @@
 }
 
 // Main
+.toggleSidebar {
+  position: absolute;
+  line-height: 0;
+  padding: 1rem;
+  // background-color: red;
+}
+
 .mainTitle {
   font-weight: bold;
   font-size: 1.6rem;

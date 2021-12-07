@@ -178,12 +178,12 @@ function Results({ scores, initParams, parameters }) {
             href="#"
             data-bs-target="#sidebar"
             data-bs-toggle="collapse"
-            className="p-2 text-decoration-none"
+            className={`${styles.toggleSidebar}`}
             onClick={() => {
               setCounties(counties.map((_) => _));
             }}
           >
-            <AdjustButton side={30} collapse={true} />
+            <AdjustButton side="30" collapse={true} />
           </a>
 
           {/* main */}
