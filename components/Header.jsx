@@ -117,7 +117,7 @@ const Header = () => {
                     <MenuItem key={"logout"} onClick={handleCloseNavMenu}>
                       <Typography textAlign="center">
                         <Link href="/api/auth/logout">
-                          <a href="/api/auth/logout">Logout</a>
+                          <a>Logout</a>
                         </Link>
                       </Typography>
                     </MenuItem>
