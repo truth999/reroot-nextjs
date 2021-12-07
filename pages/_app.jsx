@@ -5,6 +5,7 @@ import "../styles/globals.scss";
 
 import { useEffect, useState } from "react";
 import AppContext from "../contexts/AppContext";
+import { UserProvider } from "@auth0/nextjs-auth0";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -35,11 +36,13 @@ function MyApp({ Component, pageProps }) {
   });
 
   return (
-    <AppContext.Provider value={{ data, setData }}>
-      <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </AppContext.Provider>
+    <UserProvider>
+      <AppContext.Provider value={{ data, setData }}>
+        <ThemeProvider theme={theme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </AppContext.Provider>
+    </UserProvider>
   );
 }
 

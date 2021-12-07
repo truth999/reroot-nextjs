@@ -3,16 +3,45 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Header.module.scss";
-
+import Avatar from "@mui/material/Avatar";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import { useUser } from "@auth0/nextjs-auth0";
 
 const Header = () => {
-  const settings = ["Profile", "Logout"];
+  const { user, error, isLoading } = useUser();
+  const settings = ["profile", "logout"];
   const pages = ["Survey", "Results", "Favorite"];
   const [loggedIn, setLoggedIn] = useState(false);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   const router = useRouter();
   return (
@@ -20,7 +49,7 @@ const Header = () => {
       <Navbar collapseOnSelect expand="lg" bg="transparent">
         <Container>
           <Navbar.Brand>
-            {["/survey"].includes(router.pathname) && (
+            {["/prep", "/survey"].includes(router.pathname) && (
               <Image
                 className="back"
                 alt="back button"
@@ -31,7 +60,7 @@ const Header = () => {
                 onClick={() => router.back()}
               />
             )}
-            {["/", "/results", "/favorite"].includes(router.pathname) && (
+            {!["/prep", "/survey"].includes(router.pathname) && (
               <Link href="/">
                 <a className={styles.logo}>reRoot</a>
               </Link>
@@ -41,31 +70,58 @@ const Header = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
-              {["/results"].includes(router.pathname) && (
+              {["/results", "/profile"].includes(router.pathname) && (
                 <Nav.Link>
                   <Link href="/favorite">
                     <a className={`${styles.link}`}>FAVORITE</a>
                   </Link>
                 </Nav.Link>
               )}
-              {["/favorite"].includes(router.pathname) && (
+              {["/favorite", "/profile"].includes(router.pathname) && (
                 <Nav.Link>
                   <Link href="/results">
                     <a className={`${styles.link}`}>RESULTS</a>
                   </Link>
                 </Nav.Link>
               )}
-              {loggedIn ? (
-                <NavDropdown
-                  title="User"
-                  id="collasible-nav-dropdown"
-                  className={`${styles.link}`}
-                >
-                  <NavDropdown.Item>Profile</NavDropdown.Item>
-                </NavDropdown>
+              {user ? (
+                <Box sx={{ flexGrow: 0 }}>
+                  <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar alt={`${user.name}`} src={`${user.picture}`} />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                      <MenuItem key={"profile"} onClick={handleCloseNavMenu}>
+                        <Typography textAlign="center">
+                          <a href="/profile">Profile</a>
+                        </Typography>
+                      </MenuItem>
+                      <MenuItem key={"logout"} onClick={handleCloseNavMenu}>
+                        <Typography textAlign="center">
+                          <a href="/api/auth/logout">Logout</a>
+                        </Typography>
+                      </MenuItem>
+                  </Menu>
+                </Box>
               ) : (
-                <Nav.Link>
-                  <a className={`${styles.link}`}>REGISTER / SIGN IN</a>
+                <Nav.Link href="/api/auth/login">
+                  <a className={`${styles.link}`}>REGISTER / LOGIN</a>
                 </Nav.Link>
               )}
             </Nav>
@@ -76,3 +132,16 @@ const Header = () => {
   );
 };
 export default Header;
+
+/* <NavDropdown
+                  title={`${user.name}`}
+                  id="collasible-nav-dropdown"
+                  bsPrefix={`${styles.dropdown} `}
+                >
+                  <NavDropdown.Item href="/profile">
+                    <a>Profile</a>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/api/auth/logout">
+                    <a>Logout</a>
+                  </NavDropdown.Item>
+                </NavDropdown> */
