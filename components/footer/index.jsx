@@ -20,7 +20,11 @@ export default function Footer() {
     "Alice Cai",
   ];
 
-  const logos = ["logo-census.png", "logo-harvard.png", "logo-top.png"];
+  const logos = [
+    { name: "logo-census.png", w: 127, h: 41 },
+    { name: "logo-harvard.png", w: 162, h: 41 },
+    { name: "logo-top.png", w: 214, h: 44 },
+  ];
 
   return (
     <footer className={`${styles.footer}`}>
@@ -49,16 +53,18 @@ export default function Footer() {
           <div className="col-md-4 col-sm-6 col-xs-12">
             <div className={styles.footerTitle}>In collaboration with...</div>
             <div className={styles.footerContent}>
-              {logos.map((logo, i) => (
-                <Image
-                  key={i}
-                  src={"/img/" + logo}
-                  alt={logo}
-                  layout="intrinsic"
-                  width={150}
-                  height={50}
-                />
-              ))}
+              {logos.map((logo, i) => {
+                return (
+                  <Image
+                    key={i}
+                    src={"/img/" + logo.name}
+                    alt={logo.name}
+                    layout="intrinsic"
+                    width={logo.w}
+                    height={logo.h}
+                  />
+                );
+              })}
             </div>
           </div>
           <div className="col-md-2 col-sm-6 col-xs-12">
