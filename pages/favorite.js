@@ -1,21 +1,20 @@
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import Head from "next/head";
+import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
+import { useRouter } from "next/router";
 
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
+import LikeButton from "../components/likeButton";
 import RemoveButton from "../components/removeButton";
 import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
 import CountyAccordion from "../components/countyAccordion";
+import CountyPopup from "../components/countyPopup";
 import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
+import Link from "next/link";
 import Map from "../components/map";
 
 // Third Party
@@ -24,30 +23,71 @@ import Map from "../components/map";
 // Internal
 import Layout from "../components/Layout";
 import "mapbox-gl/dist/mapbox-gl.css";
-import styles from "../styles/Favorite.module.scss";
+import styles from "../styles/Results.module.scss";
 
-const base_url = "https://reroot-data-app.herokuapp.com/";
+const baseURL = "https://reroot-data-app.herokuapp.com/";
 
-export default function Favorite({ factorsData }) {
-  const { data, setData, favorites, setFavorites } = useContext(AppContext);
+function Favorite({ parameters, factorsData }) {
+  const { data, setData } = useContext(AppContext);
+  const router = useRouter();
+  const [params, setParams] = useState({});
+  const [queryCounty, setQueryCounty] = useState("");
+  const [page, setPage] = useState(2);
+  const [loading, setLoading] = useState(false);
+  const [counties, setCounties] = useState([]);
 
   const newFactors =
     data.factors.length === 0 ? factorsData.factors : data.factors;
+
   setData(
     Object.assign(data, {
+      parameters: parameters,
       factors: newFactors,
     })
   );
 
-  const [queryCounty, setQueryCounty] = useState("");
-  const [page, setPage] = useState(2);
-  const [loading, setLoading] = useState(false);
-  const [params, setParams] = useState({});
+  const getScores = useCallback(
+    async (newParams) => {
+      if (Object.keys(newParams).length === 0) {
+        alert("Please select at least one factors.");
+        return;
+      }
 
-  const [counties, setCounties] = useState(favorites);
+      const queryParams = new URLSearchParams(newParams);
+      try {
+        setLoading(true);
+        const resScores = await fetch(baseURL + "scores?" + queryParams);
+        const scoresData = await resScores.json();
+
+        const newCounties = scoresData.scores.filter((c) =>
+          counties.some((county) => county.index === c.index)
+        );
+
+        setCounties(newCounties);
+        setParams(newParams);
+        setLoading(false);
+      } catch (err) {
+        alert("Invalid parameters. Please try again.");
+        setLoading(false);
+        router.push({ pathname: "/favorite" });
+      }
+    },
+    [router, counties]
+  );
+
+  // Handle direct GET requests
+  useEffect(() => {
+    if (window) {
+      const favsRaw = localStorage.getItem("favorites");
+      const favs = JSON.parse(favsRaw);
+      setCounties(favs);
+    }
+    return () => {
+      setCounties([]);
+    };
+  }, []);
 
   const updateScores = async (newParam, newValue) => {
-    console.log(`Setting ${newParam} to ${newValue}`);
     const newParams = { ...params };
     if (newValue == 0) {
       delete newParams[newParam];
@@ -55,38 +95,7 @@ export default function Favorite({ factorsData }) {
       newParams[newParam] = newValue;
     }
 
-    setParams(newParams);
-
-    console.log("Updating ");
-    console.log(params);
-
-    setLoading(true);
-    const query = new URLSearchParams(newParams);
-    const req = await fetch(`${base_url}scores?${query}&page=1`);
-    const newScores = await req.json();
-    setLoading(false);
-    setCounties(newScores.scores);
-    setPage(2);
-    // console.log("updateScores called");
-    console.log(newScores.scores);
-    // console.log(page);
-  };
-
-  const handleLoadMore = async () => {
-    // setLoading(true);
-    const query = new URLSearchParams(params);
-    const req = await fetch(`${base_url}scores?${query}&page=${page}`);
-    const newScores = await req.json();
-    // setLoading(false);
-    const newCounties = newScores.scores;
-
-    // Update states
-    setCounties([...counties, ...newCounties]);
-    setPage(page + 1);
-
-    // console.log("handleLoadMore called");
-    // console.log(counties);
-    // console.log(page);
+    getScores(newParams);
   };
 
   // Map states
@@ -129,7 +138,7 @@ export default function Favorite({ factorsData }) {
           href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css"
           rel="stylesheet"
         />
-        <title>Results</title>
+        <title>Favorite</title>
       </Head>
 
       <div className="row flex-nowrap">
@@ -145,7 +154,7 @@ export default function Favorite({ factorsData }) {
             >
               <Preference
                 factors={data.factors}
-                params={params}
+                selectedParams={params}
                 updateScores={updateScores}
               ></Preference>
             </div>
@@ -161,7 +170,7 @@ export default function Favorite({ factorsData }) {
             data-bs-toggle="collapse"
             className={`${styles.toggleSidebar}`}
             onClick={() => {
-              setCounties(counties.map((_) => _));
+              setViewport({ ...viewport });
             }}
           >
             <AdjustButton side="30" collapse={true} />
@@ -171,15 +180,15 @@ export default function Favorite({ factorsData }) {
           <div className={`${styles.main} row mx-0`}>
             <div className={`${styles.map} col-12`}>
               <Map
-                counties={showingCounties}
+                counties={[]}
                 onViewportChange={setViewport}
                 viewport={viewport}
-                favs={[]}
+                favs={showingCounties}
               />
             </div>
 
-            <div className={`${styles.counties} col-12 mb-3`}>
-              <div className="d-flex">
+            <div className={`${styles.counties} col-12 my-3`}>
+              <div className="d-flex justify-content-between">
                 <div className={`${styles.mainTitle} pe-3`}>
                   FAVORITE COUNTIES
                 </div>
@@ -209,8 +218,23 @@ export default function Favorite({ factorsData }) {
 }
 
 export async function getStaticProps(context) {
-  const res = await fetch(`https://reroot-data-app.herokuapp.com/factors`);
-  const factorsData = await res.json();
+  const resParameters = await fetch(baseURL + "parameters");
+  const parameters = await resParameters.json();
+
+  if (!parameters) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+      parametersNotFound: true,
+    };
+  }
+
+  const resFactors = await fetch(
+    `https://reroot-data-app.herokuapp.com/factors`
+  );
+  const factorsData = await resFactors.json();
 
   if (!factorsData) {
     return {
@@ -223,6 +247,8 @@ export async function getStaticProps(context) {
   }
 
   return {
-    props: { factorsData }, // will be passed to the page component as props
+    props: { parameters, factorsData }, // will be passed to the page component as props
   };
 }
+
+export default Favorite;

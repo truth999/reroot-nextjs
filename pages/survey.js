@@ -130,7 +130,7 @@ export default function Survey({ factorsData }) {
       selectedLanguages: languages,
     });
     setData(newData);
-    console.log(newData);
+    // console.log(newData);
 
     router.push({ pathname: "/results", query: newParams });
   };

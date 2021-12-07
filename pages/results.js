@@ -26,13 +26,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "../styles/Results.module.scss";
 import CountyGrid from "../components/countyGrid";
 
-// mapboxgl.accessToken =
-//   "pk.eyJ1IjoiemhqMDkyNCIsImEiOiJja3ZnangxdXljMXBlMnBtYTF0c29oN2N3In0.HsgAF-xISYEHuqdLlpJL2A";
 const baseURL = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ parameters, factorsData }) {
   const { data, setData } = useContext(AppContext);
-  const [params, setParams] = useState({});
+  const router = useRouter();
+  const [params, setParams] = useState(router.query);
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
@@ -51,29 +50,33 @@ function Results({ parameters, factorsData }) {
     })
   );
 
-  const router = useRouter();
-  const getScores = async (newParams) => {
-    if (Object.keys(newParams).length === 0) {
-      setCounties([]);
-      return;
-    }
+  const getScores = useCallback(
+    async (newParams) => {
+      if (Object.keys(newParams).length === 0) {
+        setCounties([]);
+        return;
+      }
 
-    const queryParams = new URLSearchParams(newParams);
-    setLoading(true);
-    try {
-      const resScores = await fetch(
-        baseURL + "scores?" + queryParams + "&page=1"
-      );
-      const scoresData = await resScores.json();
+      const queryParams = new URLSearchParams(newParams);
+      try {
+        setLoading(true);
+        const resScores = await fetch(
+          baseURL + "scores?" + queryParams + "&page=1"
+        );
+        const scoresData = await resScores.json();
 
-      setCounties(scoresData.scores);
-      setParams(newParams);
-      setPage(2);
-      setLoading(false);
-    } catch (err) {
-      alert("Invalid parameters. Please try again.");
-    }
-  };
+        setCounties(scoresData.scores);
+        setParams(newParams);
+        setPage(2);
+        setLoading(false);
+      } catch (err) {
+        alert("Invalid parameters. Please try again.");
+        setLoading(false);
+        router.push({ pathname: "/results" });
+      }
+    },
+    [router]
+  );
 
   // Handle direct GET requests
   useEffect(() => {
@@ -81,7 +84,7 @@ function Results({ parameters, factorsData }) {
     return () => {
       setCounties([]);
     };
-  }, [router]);
+  }, [router.query, getScores]);
 
   const updateScores = async (newParam, newValue) => {
     const newParams = { ...params };
@@ -100,20 +103,19 @@ function Results({ parameters, factorsData }) {
       return;
     }
 
-    // setLoading(true);
     const query = new URLSearchParams(params);
-    const req = await fetch(`${baseURL}scores?${query}&page=${page}`);
-    const newScores = await req.json();
-    // setLoading(false);
-    const newCounties = newScores.scores;
-
-    // Update states
-    setCounties([...counties, ...newCounties]);
-    setPage(page + 1);
-
-    // console.log("handleLoadMore called");
-    // console.log(counties);
-    // console.log(page);
+    try {
+      setLoading(true);
+      const req = await fetch(`${baseURL}scores?${query}&page=${page}`);
+      const newScores = await req.json();
+      setLoading(false);
+      const newCounties = newScores.scores;
+      setCounties([...counties, ...newCounties]);
+      setPage(page + 1);
+    } catch (err) {
+      alert("Failed to fetch from server. Please try again.");
+      setLoading(false);
+    }
   };
 
   // Map states
@@ -221,6 +223,12 @@ function Results({ parameters, factorsData }) {
                       newFavCounties[county.index].faved = false;
                       delete newFavCounties[county.index];
                       setFavCounties(newFavCounties);
+                      if (window) {
+                        localStorage.setItem(
+                          "favorites",
+                          JSON.stringify(Object.values(newFavCounties))
+                        );
+                      }
                     }}
                   />
                 )}
@@ -264,6 +272,13 @@ function Results({ parameters, factorsData }) {
                           newFavCounties[county.index] = county;
                         }
                         setFavCounties(newFavCounties);
+
+                        if (window) {
+                          localStorage.setItem(
+                            "favorites",
+                            JSON.stringify(Object.values(newFavCounties))
+                          );
+                        }
                       }}
                       checked={county.index in favCounties}
                     />
@@ -278,7 +293,7 @@ function Results({ parameters, factorsData }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const resParameters = await fetch(baseURL + "parameters");
   const parameters = await resParameters.json();
 

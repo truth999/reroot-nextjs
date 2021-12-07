@@ -68,7 +68,7 @@ export default function CountyAccordion({
                     View details
                   </PrimaryButton>
                 </Col>
-                <Col md={1}>{actionBtn(county)}</Col>
+                <Col md={1}>{actionBtn && actionBtn(county)}</Col>
               </Row>
               <Row bsPrefix={`${styles.bar}`}>
                 <hr />
@@ -105,7 +105,7 @@ export default function CountyAccordion({
         ))}
       </Accordion>
       {counties.length !== 0 && (
-        <div className="text-center pt-4">{loadMoreBtn}</div>
+        <div className="text-center pt-4">{loadMoreBtn && loadMoreBtn}</div>
       )}
       <DetailsModal
         open={open}

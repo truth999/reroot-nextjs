@@ -9,7 +9,6 @@ import styles from "./preference.module.scss";
 
 export default function Preference({ updateScores, selectedParams }) {
   const ON = 2;
-  const { data } = useContext(AppContext);
   const {
     factors,
     selectedLanguages,
@@ -17,7 +16,7 @@ export default function Preference({ updateScores, selectedParams }) {
     parameters,
     countries,
     languages,
-  } = data;
+  } = useContext(AppContext).data;
 
   const initialCountries = countries.filter((country) =>
     selectedCountries.find((c) => c.name === country)
@@ -28,10 +27,6 @@ export default function Preference({ updateScores, selectedParams }) {
 
   const [countriesPref, setCountriesPref] = useState(initialCountries);
   const [languagesPref, setLanguagesPref] = useState(initialLanguages);
-
-  const selectedFactors = Object.entries(selectedParams).map(
-    ([param, _]) => parameters[param].category_name
-  );
 
   const appendCountry = async (country) => {
     console.log("append country called");
@@ -65,6 +60,10 @@ export default function Preference({ updateScores, selectedParams }) {
     await updateScores(language.param, 0);
     setLanguagesPref(languagesPref.filter((l) => l !== language));
   };
+
+  const selectedFactors = Object.entries(selectedParams).map(
+    ([param, _]) => parameters[param].category_name
+  );
 
   return (
     <div className="flex-shrink-0 p-1" style={{ width: "100%" }}>

@@ -59,6 +59,7 @@ export default function ImportanceSlider({
         <ThemeProvider theme={theme}>
           <Slider
             aria-label="Importance"
+            defaultValue={defaultValue}
             value={value}
             getAriaValueText={getValueText}
             valueLabelFormat={getValueText}

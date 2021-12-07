@@ -9,6 +9,7 @@
 .map {
   width: 100%;
   min-height: 20vh;
+  max-height: 35vh;
 }
 
 .factor {
@@ -50,4 +51,8 @@
   font-size: 1.6rem;
   font-family: "Playfair Display", serif;
   padding: 1rem 0;
+}
+
+.counties {
+  min-height: 40vh;
 }
