@@ -3,7 +3,8 @@ import Head from "next/head";
 import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
-
+import IconButton from "@mui/material/IconButton";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
 import LikeButton from "../components/likeButton";
@@ -85,6 +86,15 @@ function Results({ parameters, factorsData }) {
       setCounties([]);
     };
   }, [router.query, getScores]);
+
+  useEffect(() => {
+    if (window) {
+      // const favCounties = localStorage.setItem(
+      //   "favorites",
+      //   JSON.stringify(Object.values(newFavCounties))
+      // );
+    }
+  }, []);
 
   const updateScores = async (newParam, newValue) => {
     const newParams = { ...params };
@@ -209,7 +219,12 @@ function Results({ parameters, factorsData }) {
 
             <div className={`${styles.favorite} col-12 mb-4`}>
               <div className={`${styles.mainTitle}`}>
-                <Link href="/favorite">FAVORITE COUNTIES</Link>
+                FAVORITE COUNTIES
+                <Link href="/favorite" passHref>
+                  <IconButton aria-label="go">
+                    <ArrowRightAltIcon />
+                  </IconButton>
+                </Link>
               </div>
               <CountyGrid
                 counties={Object.values(favCounties)}
@@ -253,7 +268,7 @@ function Results({ parameters, factorsData }) {
                 <CountyAccordion
                   onSelectCounty={onSelectCounty}
                   counties={showingCounties}
-                  emptyText="No county found."
+                  emptyText="Adjust preference bars to compare."
                   loadMoreBtn={
                     <NextButton handleClick={handleLoadMore}>
                       Load More

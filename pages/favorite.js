@@ -207,6 +207,23 @@ function Favorite({ parameters, factorsData }) {
                   onSelectCounty={onSelectCounty}
                   counties={showingCounties}
                   emptyText="Heart some places, and they will show here!"
+                  actionBtn={(county) => (
+                    <RemoveButton
+                      county={county}
+                      handleClick={(county) => {
+                        const newCounties = counties.filter(
+                          (c) => c.index != county.index
+                        );
+                        setCounties(newCounties);
+                        if (window) {
+                          localStorage.setItem(
+                            "favorites",
+                            JSON.stringify(Object.values(newCounties))
+                          );
+                        }
+                      }}
+                    />
+                  )}
                 ></CountyAccordion>
               )}
             </div>
