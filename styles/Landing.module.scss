@@ -1,102 +1,188 @@
 @import "../styles/variables";
+@import "../styles/fonts";
 
-.cover {
-  z-index: 0;
+.sec1Cover {
   width: 100%;
-  height: auto;
-  min-height: 65vh;
-  background-image: url("/img/landing_cover.png");
+  height: 75vw;
+  max-height: 810px;
+  z-index: 0;
+  background-image: url("/img/landing-cover.svg");
   background-repeat: no-repeat;
   background-size: cover;
-  position: relative;
 }
 
-.sec1Text {
-  padding-top: 10vh;
-  text-align: right;
-  z-index: 1;
+.sec1Link {
+  font-family: $nunito-sans;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2rem;
+  letter-spacing: 0em;
+  text-align: center;
+  color: $secondary;
 }
 
 .sec1Title {
-  padding-right: 23%;
-  color: $title;
-  font-size: 9rem;
+  width: 100%;
+  padding-left: 50%;
+  color: $secondary;
+  font-size: calc(5rem + 5vw);
   text-shadow: 1px 1px 1px #3c5c5e;
-  font-family: "Macondo Swash Caps", cursive;
+  font-family: $macondo-swash-caps;
   line-height: 8rem;
 }
 
 .sec1Subtitle {
-  padding-right: 7%;
+  width: 100%;
+  padding-left: 72%;
   color: $subtitle;
-  font-size: 2.5rem;
-  font-family: "Lemonada", cursive;
+  font-size: calc(1rem + 1vw);
+  font-family: $lemonada;
 }
 
 .sec1Button {
-  margin-top: 25%;
+  text-align: center;
   width: 100%;
+  padding-bottom: 5%;
 }
 
 // Section 2
 .sec2Cover {
+  height: 75vw;
+  max-height: 810px;
+  z-index: 0;
+  background-image: url("/img/map-background.svg"),
+    url("/img/landing-people.svg");
+  background-position: left top, right bottom;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 50%, 30%;
+}
+
+.sec2Content {
+  z-index: 1;
+  padding-top: 25%;
+  padding-bottom: 25%;
 }
 
 .sec2Title {
-  height: 50%;
-  p {
-    padding-top: 2rem;
-    line-height: 3rem;
-    margin-top: 15%;
-    margin-left: 20%;
-    height: 50%;
-    min-height: 10rem;
-    background-color: $background;
-    color: $text;
-    font-size: 2rem;
-    font-family: "Lemonada", cursive;
-    border-radius: 1rem;
-    text-align: center;
-    width: 100%;
-    max-width: 75%;
+  padding: 0px 13%;
+  color: $blank;
+  font-size: calc(0.8rem + 1vw);
+  font-family: $lemonada;
+  font-weight: 400;
+  b {
+    color: $secondary2;
   }
 }
 
 .sec2Subtitle {
-  height: 50%;
-  margin-left: 25%;
-  width: 100%;
-  max-width: 60%;
-  p {
-    text-align: center;
-    color: black;
-    font-family: "Karla", sans-serif;
-    font-size: 2rem;
+  color: $blank;
+  font-family: $lemonada;
+  font-size: calc(0.5rem + 0.5vw);
+}
+.sec2Text {
+  padding: 0 1rem;
+  color: $blank;
+  font-family: $roboto;
+  font-size: calc(0.5rem + 0.5vw);
+}
+.sec2BottomText {
+  padding: 10% 25% 0 25%;
+  color: $blank;
+  font-family: $lemonada;
+  font-size: calc(0.5rem + 0.5vw);
+  span {
+    font-size: calc(1rem + 0.5vw);
+    color: $secondary;
+    font-family: $macondo-swash-caps;
+    font-weight: bold;
+  }
+  b {
+    color: $secondary2;
   }
 }
 
-.sec2Special {
-  font-size: 2rem;
-  font-family: "Lemonada", cursive;
-  color: $text-special;
+// Section 3
+.sec3Cover {
+  width: 100%;
+  height: 75vw;
+  max-height: 810px;
+  z-index: 0;
 }
 
-.sec2Image {
-  height: 100%;
-}
-
-.sec2Banner {
-  height: 15vh;
+.sec3Banner {
+  width: 100%;
   min-height: 150px;
+  height: 18vh;
+  max-height: 300px;
   background-color: $primary;
 }
+.sec3Text {
+  color: white;
+  font-family: $playfair-display;
+}
 
-// Section 3
 .sec3Title {
-  color: $title-dark;
-  font-family: "Lemonada", cursive;
-  font-size: 4rem;
+  color: $blank;
+  font-family: $lemonada;
+  font-size: calc(1.5rem + 1vw);
   text-align: center;
+}
+
+.sec3SubTitle {
+  color: $blank;
+  font-family: $lemonada;
+  font-size: calc(1.8rem + 1vw);
+  text-align: center;
+}
+
+.sec3TopText {
+  color: $blank;
+  font-family: $roboto;
+  font-size: calc(1rem + 1vw);
+  font-weight: bold;
+}
+.sec3BottomText {
+  color: $blank;
+  font-size: calc(0.5rem + 0.5vw);
+  line-height: 1rem;
+  font-family: $roboto;
+  p {
+    font-weight: bold;
+  }
+}
+
+// Section 4
+.sec4Cover {
+  width: 100%;
+  height: 75vw;
+  max-height: 810px;
+  z-index: 0;
+  background-image: url("/img/landing-people-bottom.svg"),
+    url("/img/landing-diagram.svg");
+  background-position: left center, right bottom;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 33.33%, 66.66%;
+}
+
+.sec4Title {
+  padding: 10% 15% 0 15%;
+  color: $blank;
+  font-family: $lemonada;
+  font-weight: bold;
+  font-size: calc(0.7rem + 0.7vw);
+}
+.sec4Subtitle {
+  padding: 0 10%;
+  color: $blank;
+  font-family: $lemonada;
+  font-size: calc(0.7rem + 0.7vw);
+  span {
+    font-size: calc(1rem + 0.7vw);
+    color: $secondary;
+    font-family: $macondo-swash-caps;
+    font-weight: bold;
+  }
 }
 
 // Action Section
@@ -112,7 +198,7 @@
 
 .actionSpecial {
   font-size: 5rem;
-  font-family: "Lemonada", cursive;
+  font-family: $lemonada;
   color: $text-special;
   text-align: center;
 }

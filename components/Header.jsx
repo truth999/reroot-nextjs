@@ -24,9 +24,8 @@ const Header = () => {
   const { user, error, isLoading } = useUser();
   const settings = ["profile", "logout"];
   const pages = ["Survey", "Results", "Favorite"];
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

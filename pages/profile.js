@@ -6,7 +6,6 @@ import styles from "../styles/profile.module.scss";
 import Link from "next/link";
 import Image from "next/image";
 import Row from "react-bootstrap/Row";
-import { useRouter } from "next/router";
 
 export default function Profile(props) {
   const { user, error, isLoading } = useUser();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import Head from "next/head";
-import ReactDOMServer from "react-dom/server";
+import LaunchIcon from "@mui/icons-material/Launch";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 import IconButton from "@mui/material/IconButton";
@@ -221,8 +221,8 @@ function Results({ parameters, factorsData }) {
               <div className={`${styles.mainTitle}`}>
                 FAVORITE COUNTIES
                 <Link href="/favorite" passHref>
-                  <IconButton aria-label="go">
-                    <ArrowRightAltIcon />
+                  <IconButton aria-label="launch">
+                    <LaunchIcon />
                   </IconButton>
                 </Link>
               </div>

@@ -1,14 +1,15 @@
 @import "../../styles/variables";
+@import "../../styles/fonts";
 
 .btnStart {
   background-color: white;
-  color: $title;
-  border-color: $title;
-  font-family: "Roboto", sans-serif;
+  color: $secondary;
+  border-color: $secondary;
+  font-family: $roboto;
   font-size: 1.5rem;
   min-height: 5rem;
+  min-width: 8rem;
   width: 100%;
-  min-width: 10rem;
-  max-width: 15vw;
+  max-width: 15rem;
   border-radius: 1rem;
 }

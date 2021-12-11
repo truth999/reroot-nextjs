@@ -5,15 +5,14 @@ import Image from "next/image";
 import Footer from "./footer";
 
 import Header from "./Header";
+export const siteTitle = "reRoot";
 
-export const siteTitle = "ReRoot";
-
-export default function Layout({ children, survey }) {
+export default function Layout({ children, survey, landing }) {
   return (
     <section>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="description" content="ReRoot" />
+        <meta name="description" content="reRoot" />
         <meta
           property="og:image"
           content={`https://og-image.vercel.app/${encodeURI(
@@ -24,7 +23,7 @@ export default function Layout({ children, survey }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <Header></Header>
+      {!landing && <Header></Header>}
 
       <div className="container-fluid">{children}</div>
 
