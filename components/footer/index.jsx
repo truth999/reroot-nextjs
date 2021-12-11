@@ -1,4 +1,7 @@
 import Image from "next/image";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
 import styles from "./footer.module.scss";
 
 export default function Footer() {
@@ -20,17 +23,13 @@ export default function Footer() {
     "Alice Cai",
   ];
 
-  const logos = [
-    { name: "logo-census.png", w: 127, h: 41 },
-    { name: "logo-harvard.png", w: 162, h: 41 },
-    { name: "logo-top.png", w: 214, h: 44 },
-  ];
+  const additionals = ["slidesGo", "Flaticon", "Freepik"];
 
   return (
     <footer className={`${styles.footer}`}>
       <nav className="navbar navbar-expand-lg">
-        <div className="row">
-          <div className="col-md-3 col-sm-6 col-xs-12">
+        <Row>
+          <Col xs={12} sm={6} md={2}>
             <div className={styles.footerTitle}>Created by ...</div>
             <div className={styles.footerContent}>
               <ul>
@@ -39,8 +38,8 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-          </div>
-          <div className="col-md-3 col-sm-6 col-xs-12">
+          </Col>
+          <Col xs={12} sm={6} md={2}>
             <div className={styles.footerTitle}>Special thanks to...</div>
             <div className={styles.footerContent}>
               <ul>
@@ -49,29 +48,29 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-xs-12">
-            <div className={styles.footerTitle}>In collaboration with...</div>
+          </Col>
+          <Col xs={12} sm={6} md={3}>
+            <div className={styles.footerTitle}>Additional credits to...</div>
             <div className={styles.footerContent}>
-              {logos.map((logo, i) => {
-                return (
-                  <Image
-                    key={i}
-                    src={"/img/" + logo.name}
-                    alt={logo.name}
-                    layout="intrinsic"
-                    width={logo.w}
-                    height={logo.h}
-                  />
-                );
-              })}
+              <ul>
+                {additionals.map((additional, i) => (
+                  <li key={i}>{additional}</li>
+                ))}
+              </ul>
             </div>
-          </div>
-          <div className="col-md-2 col-sm-6 col-xs-12">
+          </Col>
+          <Col xs={12} sm={6} md={{ span: 3, offset: 2 }}>
             <div className={styles.footerTitle}>Contact Us</div>
-            <div className={styles.footerContent}>inquiries@reroot.com</div>
-          </div>
-        </div>
+            <div className={styles.footerContent}>
+              <p>
+                reRoot is a free, open-source project created by the people for
+                the people. Please send any feedback, suggestions, or inquiries
+                to:
+              </p>
+              <p>inquiries@reroot.com</p>
+            </div>
+          </Col>
+        </Row>
       </nav>
     </footer>
   );
