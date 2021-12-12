@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 
-import SubFactor from "./SubFactor";
 import Factor from "../components/factor";
-
-import SearchBar from "./searchBar";
 import styles from "./Step.module.scss";
 
 export default function Step2({
