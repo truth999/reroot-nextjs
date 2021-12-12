@@ -34,18 +34,18 @@ model Language {
   id          Int       @id @default(autoincrement())
   name        String    @unique
   native      String    @unique
-  a3          String    @unique @db.VarChar(3)
-  parameterId Int
-  parameter   Parameter @relation(fields: [parameterId], references: [id])
+  a3          String?   @unique @db.VarChar(3)
+  paramter    Parameter @relation(fields: [parameterId], references: [id])
+  parameterId Int       @unique
 }
 
 model Country {
   id          Int       @id @default(autoincrement())
   name        String    @unique
-  native      String    @unique
-  a2          String    @unique @db.VarChar(2)
-  parameterId Int
-  parameter   Parameter @relation(fields: [parameterId], references: [id])
+  text        String    @unique
+  a2          String?   @unique @db.VarChar(2)
+  paramter    Parameter @relation(fields: [parameterId], references: [id])
+  parameterId Int       @unique
 }
 
 model County {
@@ -60,10 +60,10 @@ model County {
 }
 
 model Category {
-  id     Int      @id @default(autoincrement())
-  name   String   @unique
-  text   String   @unique
-  factor Factor[]
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  text    String   @unique
+  factors Factor[]
 }
 
 model Factor {
@@ -72,16 +72,14 @@ model Factor {
   text       String      @unique
   categoryId Int
   category   Category    @relation(fields: [categoryId], references: [id])
-  Parameter  Parameter[]
+  parameters Parameter[]
 }
 
 model Parameter {
   id        Int        @id @default(autoincrement())
   name      String     @unique
-  text      String     @unique
   factor    Factor     @relation(fields: [factorId], references: [id])
   factorId  Int
-  variable  String     @unique
   languages Language[]
   countries Country[]
 }
