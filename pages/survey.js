@@ -7,11 +7,24 @@ import Step2 from "../components/Step2";
 import NextButton from "../components/nextButton";
 import Container from "react-bootstrap/Container";
 import styles from "../styles/Survey.module.scss";
+import prisma from "../lib/prisma.ts";
 
-export default function Survey({ factorsData }) {
+export default function Survey({
+  factorsData,
+  categories1,
+  factors1,
+  parameters1,
+  languages,
+  countries,
+}) {
+  console.log("====================================");
+  console.log(factors1);
+  console.log(countries);
+  console.log(languages);
+  console.log("====================================");
+
   // Constants
   const ON = "2";
-
   const { data, setData } = useContext(AppContext);
   const router = useRouter();
   const factors = factorsData.factors;
@@ -29,8 +42,8 @@ export default function Survey({ factorsData }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedFactors, setFactors] = useState([]);
   const [selectedParams, setSelectedParams] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [countries, setCountries] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState([]);
   const [isLastStep, setIsLastStep] = useState(false);
 
   const handleStep1 = (event) => {
@@ -64,12 +77,12 @@ export default function Survey({ factorsData }) {
     const checkedLanguages = Array.from(
       document.querySelectorAll("input[name=language]:checked")
     ).map((_) => _.value);
-    setLanguages(checkedLanguages);
+    setSelectedLanguages(checkedLanguages);
 
     const checkedCountries = Array.from(
       document.querySelectorAll("input[name=country]:checked")
     ).map((_) => _.value);
-    setCountries(checkedCountries);
+    setSelectedCountries(checkedCountries);
 
     setIsLastStep(
       // Language only
@@ -106,14 +119,14 @@ export default function Survey({ factorsData }) {
 
     const newSelectedParams = selectedParams.map((_) => _);
 
-    // Update params
-    countries.forEach((country) => {
+    // TODO Update params
+    selectedCountries.forEach((country) => {
       newSelectedParams.push(
         data.countries.filter((c) => c.name == country).map((c) => c.param)[0]
       );
     });
 
-    languages.forEach((language) => {
+    selectedLanguages.forEach((language) => {
       newSelectedParams.push(
         data.languages.filter((l) => l.name == language).map((l) => l.param)[0]
       );
@@ -128,8 +141,8 @@ export default function Survey({ factorsData }) {
 
     const newData = Object.assign(data, {
       factors: newFactors,
-      selectedCountries: countries,
-      selectedLanguages: languages,
+      selectedCountries: selectedCountries,
+      selectedLanguages: selectedLanguages,
     });
     setData(newData);
     // console.log(newData);
@@ -168,8 +181,8 @@ export default function Survey({ factorsData }) {
           <Step2
             handleClick={handleStep2}
             currentStep={currentStep}
-            languages={data.languages}
-            countries={data.countries}
+            languages={languages}
+            countries={countries}
             askLanguage={selectedFactors.includes("language")}
             askCountry={selectedFactors.includes("origin")}
           />
@@ -193,7 +206,20 @@ export async function getStaticProps(context) {
     };
   }
 
+  const categories1 = await prisma.category.findMany();
+  const factors1 = await prisma.factor.findMany();
+  const parameters1 = await prisma.parameter.findMany();
+  const languages = await prisma.language.findMany();
+  const countries = await prisma.country.findMany();
+
   return {
-    props: { factorsData }, // will be passed to the page component as props
+    props: {
+      factorsData,
+      categories1,
+      factors1,
+      parameters1,
+      languages,
+      countries,
+    }, // will be passed to the page component as props
   };
 }

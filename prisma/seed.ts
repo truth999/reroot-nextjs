@@ -33,7 +33,6 @@ async function main() {
   // console.dir(allLanguages, { depth: null });
   // await prisma.country.createMany({
   //   data: countries,
-  //   skipDuplicates: true, // Skip 'Bobo'
   // });
   // const allCountries = await prisma.country.findMany();
   // console.dir(allCountries, { depth: null });

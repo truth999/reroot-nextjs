@@ -34,7 +34,7 @@ model Language {
   id          Int       @id @default(autoincrement())
   name        String    @unique
   native      String    @unique
-  a3          String?   @unique @db.VarChar(3)
+  a3          String?   @db.VarChar(3)
   paramter    Parameter @relation(fields: [parameterId], references: [id])
   parameterId Int       @unique
 }
@@ -43,7 +43,7 @@ model Country {
   id          Int       @id @default(autoincrement())
   name        String    @unique
   text        String    @unique
-  a2          String?   @unique @db.VarChar(2)
+  a2          String?   @db.VarChar(2)
   paramter    Parameter @relation(fields: [parameterId], references: [id])
   parameterId Int       @unique
 }

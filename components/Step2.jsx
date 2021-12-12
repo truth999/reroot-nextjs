@@ -11,6 +11,11 @@ export default function Step2({
   askLanguage,
   askCountry,
 }) {
+  console.log("====================================");
+  console.log(languages);
+  console.log(countries);
+  console.log("====================================");
+
   // Language
   const [queryLanguage, setQueryLanguage] = useState("");
   // Country
@@ -24,8 +29,6 @@ export default function Step2({
   const updateQueryLanguage = (query) => {
     setQueryLanguage(query);
   };
-
-  console.log();
 
   const showingLanguages =
     queryLanguage.trim() == ""
@@ -65,17 +68,17 @@ export default function Step2({
           <div className="search-results">
             <div className="row pt-3">
               {showingLanguages.map((lang) => {
-                const id = `language-${lang.name}`;
+                const id = `language-${lang.id}`;
                 return (
                   <Factor
                     key={id}
-                    id={id}
+                    id={lang.id}
                     value={lang.name}
-                    param={lang.param}
+                    parameter={lang.parameterId}
                     name="language"
                     onClick={handleClick}
                   >
-                    {lang.text}
+                    {lang.native}
                   </Factor>
                 );
               })}
@@ -101,14 +104,15 @@ export default function Step2({
           <div className="search-results">
             <div className="row pt-3">
               {showingCountries.map((country) => {
-                const id = `country-${country.name}`;
+                const id = `country-${country.id}`;
                 return (
                   <Factor
                     key={id}
-                    id={id}
+                    id={country.id}
                     value={country.name}
                     name="country"
-                    param={country.param}
+                    country={country}
+                    parameter={country.parameterId}
                     onClick={handleClick}
                   >
                     {country.text}
