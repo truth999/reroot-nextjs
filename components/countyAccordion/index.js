@@ -19,7 +19,7 @@ export default function CountyAccordion({
   loadMoreBtn,
   parameters,
   onSelectCounty,
-getParamText,
+  getParamText,
   getParameter,
 }) {
   const [displayCounty, setDisplayCounty] = useState({});
@@ -40,14 +40,14 @@ getParamText,
         <p className={`${styles.emptyText}`}>{emptyText}</p>
       )}
       <Accordion
-        bsPrefix={`${styles.accordion} overflow-auto `}
+        className={`${styles.accordion} overflow-auto `}
         defaultActiveKey="0"
       >
         {counties.map((county, index) => (
           <Accordion.Item
             key={index}
             eventKey={index}
-            bsPrefix={`${styles.item} px-3 mb-5 `}
+            className={`${styles.item} px-3`}
           >
             <div className={`${styles.top}`}>
               <Row>
@@ -70,12 +70,10 @@ getParamText,
                 </Col>
                 <Col md={1}>{actionBtn && actionBtn(county)}</Col>
               </Row>
-              <Row bsPrefix={`${styles.bar}`}>
-                <hr />
-              </Row>
+              <Row className={`${styles.bar}`}></Row>
             </div>
             <Accordion.Header
-              bsPrefix={`${styles.header} `}
+              className={`${styles.header} `}
               onClick={(e) => {
                 e.preventDefault();
                 onSelectCounty(county);
@@ -89,7 +87,7 @@ getParamText,
                   parameters={parameters}
                 />
               </Col>
-              <Col md={2} bsPrefix={`${styles.toggle} `}>
+              <Col md={2} className={`${styles.toggle} `}>
                 Key rank
               </Col>
             </Accordion.Header>
