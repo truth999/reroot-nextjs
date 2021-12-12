@@ -7,22 +7,26 @@ import ComboBox from "../../components/comboBox";
 import AppContext from "../../contexts/AppContext";
 import styles from "./preference.module.scss";
 
-export default function Preference({ updateScores, selectedParams }) {
+export default function Preference({
+  updateScores,
+  selectedParams,
+  categories,
+  factors,
+  parameters,
+  countries,
+  languages,
+  getParameter,
+  getCategory,
+  getParamText,
+}) {
   const ON = 2;
-  const {
-    factors,
-    selectedLanguages,
-    selectedCountries,
-    parameters,
-    countries,
-    languages,
-  } = useContext(AppContext).data;
+  const { selectedLanguages, selectedCountries } = useContext(AppContext).data;
 
   const initialCountries = countries.filter((country) =>
-    selectedCountries.find((c) => c.name === country)
+    selectedCountries.find((c) => c === country.id)
   );
   const initialLanguages = languages.filter((language) =>
-    selectedLanguages.find((l) => l.name === language)
+    selectedLanguages.find((l) => l === language.id)
   );
 
   const [countriesPref, setCountriesPref] = useState(initialCountries);
@@ -31,39 +35,48 @@ export default function Preference({ updateScores, selectedParams }) {
   const appendCountry = async (country) => {
     console.log("append country called");
     // Update Scores
-    await updateScores(country.param, ON);
-    const newCountries = countriesPref.map((_) => _);
-    if (!newCountries.includes(country)) newCountries.push(country);
-    setCountriesPref(newCountries);
-    console.log(country);
+    await updateScores(getParameter(country, "c").name, ON);
+
+    const newCountriesPref = countriesPref.map((_) => _);
+    if (!newCountriesPref.includes(country)) newCountriesPref.push(country);
+    setCountriesPref(newCountriesPref);
   };
 
-  const removeCountry = async (country) => {
+  const removeCountry = async (countryParam) => {
     console.log("remove country called");
     // Update Scores
-    await updateScores(country.param, 0);
-    setCountriesPref(countriesPref.filter((c) => c !== country));
+    await updateScores(countryParam.name, "0");
+
+    setCountriesPref(
+      countriesPref.filter((c) => c.parameterId !== countryParam.id)
+    );
   };
 
   const appendLanguage = async (language) => {
     // Update Scores
     console.log("append language called");
-    await updateScores(language.param, ON);
-    const newLanguages = languagesPref.map((_) => _);
-    if (!newLanguages.includes(language)) newLanguages.push(language);
-    setLanguagesPref(newLanguages);
+    await updateScores(getParameter(language, "l").name, ON);
+
+    const newLanguagesPref = languagesPref.map((_) => _);
+    if (!newLanguagesPref.includes(language)) newLanguagesPref.push(language);
+    setLanguagesPref(newLanguagesPref);
   };
 
-  const removeLanguage = async (language) => {
+  const removeLanguage = async (languageParam) => {
     console.log("remove language called");
+
     // Update Scores
-    await updateScores(language.param, 0);
-    setLanguagesPref(languagesPref.filter((l) => l !== language));
+    await updateScores(languageParam.name, "0");
+
+    setLanguagesPref(
+      languagesPref.filter((l) => l.parameterId !== languageParam.id)
+    );
   };
 
-  const selectedFactors = Object.entries(selectedParams).map(
-    ([param, _]) => parameters[param].category_name
-  );
+  const selectedCategories = Object.keys(selectedParams).map((p) => {
+    const parameter = getParameter(p);
+    return getCategory(parameter);
+  });
 
   return (
     <div className="flex-shrink-0 p-1" style={{ width: "100%" }}>
@@ -76,85 +89,92 @@ export default function Preference({ updateScores, selectedParams }) {
         </div>
       </div>
       <ul className="list-unstyled ps-0">
-        {factors.map((factor, i) => {
+        {categories.map((category) => {
           return (
-            <li className="mb-1" key={i}>
+            <li className="mb-1" key={category.id}>
               <button
                 className={`${styles.factor} btn btn-toggle align-items-center border-bottom collapsed pt-4`}
                 data-bs-toggle="collapse"
-                data-bs-target={`#${factor.name}-collapse`}
+                data-bs-target={`#${category.name}-collapse`}
                 aria-expanded="true"
               >
                 <p>
-                  {factor.text}
-                  <span id={`${factor.name}`}>▼</span>
+                  {category.text}
+                  <span id={`${category.id}`}>▼</span>
                 </p>
               </button>
               <div
                 className={`collapse ${
-                  selectedFactors.includes(factor.text) ? "show" : ""
+                  selectedCategories.includes(category.id) ? "show" : ""
                 }`}
-                id={`${factor.name}-collapse`}
+                id={`${category.name}-collapse`}
               >
                 <ul className="btn-toggle-nav list-unstyled pb-1">
-                  {factor.sub.map((sub, i) => (
-                    <li key={`${sub.name}-${i}`} className="py-2">
-                      {!["origin", "language"].includes(sub.name) && (
-                        <ImportanceSlider
-                          key={`${sub.name}-${i}-slider`}
-                          sub={sub}
-                          defaultValue={
-                            parseInt(selectedParams[sub.param]) || 0
-                          }
-                          updateScores={updateScores}
-                        />
-                      )}
-                      {sub.name === "origin" && (
-                        <div className="pt-3">
-                          <ComboBox
-                            items={sub.sub}
-                            label={sub.text}
-                            appendSlider={appendCountry}
+                  {factors
+                    .filter((f) => f.categoryId === category.id)
+                    .map((factor) => (
+                      <li key={`${factor.name}-${factor.id}`} className="py-2">
+                        {!["origin", "language"].includes(factor.name) && (
+                          <ImportanceSlider
+                            key={`${factor.name}-${factor.id}-slider`}
+                            parameter={getParameter(factor, "f")}
+                            defaultValue={
+                              parseInt(
+                                selectedParams[getParameter(factor, "f").name]
+                              ) || 0
+                            }
+                            updateScores={updateScores}
+                            getParamText={getParamText}
                           />
-                          <ul className="list-unstyled pb-2">
-                            {countriesPref.map((country, i) => (
-                              <li key={`${country.name}-${i}`}>
-                                <ImportanceSlider
-                                  key={`${sub.name}-${i}-slider`}
-                                  sub={country}
-                                  defaultValue={ON}
-                                  updateScores={updateScores}
-                                  onRemove={removeCountry}
-                                />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {sub.name === "language" && (
-                        <div className="pt-3">
-                          <ComboBox
-                            items={sub.sub}
-                            label={sub.text}
-                            appendSlider={appendLanguage}
-                          />
-                          <ul className="list-unstyled pb-2">
-                            {languagesPref.map((language, i) => (
-                              <li key={`${language.name}-${i}`}>
-                                <ImportanceSlider
-                                  key={`${sub.name}-${i}-slider`}
-                                  sub={language}
-                                  defaultValue={ON}
-                                  updateScores={updateScores}
-                                  onRemove={removeLanguage}
-                                />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </li>
-                  ))}
+                        )}
+                        {factor.name === "origin" && (
+                          <div className="pt-3">
+                            <ComboBox
+                              items={countries}
+                              label={factor.text}
+                              appendSlider={appendCountry}
+                            />
+                            <ul className="list-unstyled pb-2">
+                              {countriesPref.map((country) => (
+                                <li key={`${country.name}-${country.id}`}>
+                                  <ImportanceSlider
+                                    key={`${factor.name}-${country.id}-slider`}
+                                    parameter={getParameter(country, "c")}
+                                    defaultValue={ON}
+                                    updateScores={updateScores}
+                                    onRemove={removeCountry}
+                                    getParamText={getParamText}
+                                  />
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {factor.name === "language" && (
+                          <div className="pt-3">
+                            <ComboBox
+                              items={languages}
+                              label={factor.text}
+                              appendSlider={appendLanguage}
+                            />
+                            <ul className="list-unstyled pb-2">
+                              {languagesPref.map((language) => (
+                                <li key={`${language.name}-${language.id}`}>
+                                  <ImportanceSlider
+                                    key={`${factor.name}-${language.id}-slider`}
+                                    parameter={getParameter(language, "l")}
+                                    defaultValue={ON}
+                                    updateScores={updateScores}
+                                    onRemove={removeLanguage}
+                                    getParamText={getParamText}
+                                  />
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </li>

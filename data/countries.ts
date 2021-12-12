@@ -148,14 +148,14 @@ export const countries = [
   },
   {
     id: 22,
-    a2: "",
+    a2: null,
     name: "caribbean",
     text: "Caribbean",
     parameterId: 66,
   },
   {
     id: 23,
-    a2: "",
+    a2: null,
     name: "central_america",
     text: "Central America",
     parameterId: 67,
@@ -652,7 +652,7 @@ export const countries = [
   },
   {
     id: 94,
-    a2: "",
+    a2: null,
     name: "south_america",
     text: "South America",
     parameterId: 140,
@@ -785,7 +785,7 @@ export const countries = [
   },
   {
     id: 113,
-    a2: "",
+    a2: null,
     name: "west_indies",
     text: "West Indies",
     parameterId: 158,
@@ -806,7 +806,7 @@ export const countries = [
   },
   {
     id: 116,
-    a2: "",
+    a2: null,
     name: "other",
     text: "Other",
     parameterId: 124,

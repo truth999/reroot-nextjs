@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import Factor from "../components/factor";
 import styles from "./Step.module.scss";
+import Row from "react-bootstrap/Row";
 
 export default function Step2({
   handleClick,
@@ -60,25 +61,23 @@ export default function Step2({
               onChange={(event) => updateQueryLanguage(event.target.value)}
             />
           </div>
-          <div className="search-results">
-            <div className="row pt-3">
-              {showingLanguages.map((lang) => {
-                const id = `language-${lang.id}`;
-                return (
-                  <Factor
-                    key={id}
-                    id={id}
-                    value={lang.name}
-                    parameter={lang.parameterId}
-                    name="language"
-                    onClick={handleClick}
-                  >
-                    {lang.native}
-                  </Factor>
-                );
-              })}
-            </div>
-          </div>
+          <Row className={`${styles.searchResults} py-3`}>
+            {showingLanguages.map((lang) => {
+              const id = `language-${lang.id}`;
+              return (
+                <Factor
+                  key={id}
+                  id={id}
+                  value={lang.id}
+                  parameter={lang.parameterId}
+                  name="language"
+                  onClick={handleClick}
+                >
+                  {lang.text}
+                </Factor>
+              );
+            })}
+          </Row>
         </section>
       )}
       {askCountry && (
@@ -96,26 +95,24 @@ export default function Step2({
               onChange={(event) => updateQueryCountry(event.target.value)}
             />
           </div>
-          <div className="search-results">
-            <div className="row pt-3">
-              {showingCountries.map((country) => {
-                const id = `country-${country.id}`;
-                return (
-                  <Factor
-                    key={id}
-                    id={id}
-                    value={country.name}
-                    name="country"
-                    country={country}
-                    parameter={country.parameterId}
-                    onClick={handleClick}
-                  >
-                    {country.text}
-                  </Factor>
-                );
-              })}
-            </div>
-          </div>
+          <Row className={`${styles.searchResults} py-3`}>
+            {showingCountries.map((country) => {
+              const id = `country-${country.id}`;
+              return (
+                <Factor
+                  key={id}
+                  id={id}
+                  value={country.id}
+                  name="country"
+                  country={country}
+                  parameter={country.parameterId}
+                  onClick={handleClick}
+                >
+                  {country.text}
+                </Factor>
+              );
+            })}
+          </Row>
         </section>
       )}
     </section>

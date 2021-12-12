@@ -17,6 +17,7 @@ import CountyPopup from "../components/countyPopup";
 import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
 import Link from "next/link";
 import Map from "../components/map";
+import prisma from "../lib/prisma.ts";
 
 // Third Party
 // import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -29,7 +30,7 @@ import CountyGrid from "../components/countyGrid";
 
 const baseURL = "https://reroot-data-app.herokuapp.com/";
 
-function Results({ parameters, factorsData }) {
+function Results({ categories, factors, parameters, languages, countries }) {
   const { data, setData } = useContext(AppContext);
   const router = useRouter();
   const [params, setParams] = useState(router.query);
@@ -38,16 +39,41 @@ function Results({ parameters, factorsData }) {
   const [loading, setLoading] = useState(false);
   const [counties, setCounties] = useState([]);
 
+  const parametersLookup = Object.fromEntries(
+    parameters.map((p) => [p.name, p])
+  );
+
+  const getParameter = (item, type = "p") => {
+    switch (type) {
+      case "p":
+        return parametersLookup[item];
+      case "f":
+        return parameters.find((p) => p.factorId === item.id);
+      case "l":
+        const y = parameters.find((p) => p.id === item.parameterId);
+        console.log("item: ", item);
+        console.log("find: ", y);
+        return y;
+      case "c":
+        const x = parameters.find((p) => p.id === item.parameterId);
+        console.log("item: ", item);
+        console.log("find: ", x);
+        return x;
+      default:
+        return null;
+    }
+  };
+  const getCategory = (parameter) => {
+    const factor = factors.find((f) => f.id === parameter.factorId);
+    return categories.find((c) => c.id === factor.categoryId).id;
+  };
+
   // Handle Favorited Counties
   const [favCounties, setFavCounties] = useState({});
-
-  const newFactors =
-    data.factors.length === 0 ? factorsData.factors : data.factors;
 
   setData(
     Object.assign(data, {
       parameters: parameters,
-      factors: newFactors,
     })
   );
 
@@ -79,6 +105,16 @@ function Results({ parameters, factorsData }) {
     [router]
   );
 
+  const getParamText = (param) => {
+    if (param.languageId) {
+      return languages.find((l) => l.id == param.languageId).text;
+    } else if (param.countryId) {
+      return countries.find((c) => c.id == param.countryId).text;
+    } else {
+      return factors.find((f) => f.id == param.factorId).text;
+    }
+  };
+
   // Handle direct GET requests
   useEffect(() => {
     getScores(router.query);
@@ -97,12 +133,22 @@ function Results({ parameters, factorsData }) {
   }, []);
 
   const updateScores = async (newParam, newValue) => {
+    // TODO Make sure update scores remove value
+    // Country name remove mismatch
+
     const newParams = { ...params };
-    if (newValue == 0) {
+    if (newValue == "0") {
+      console.log("deleting", newParam);
       delete newParams[newParam];
     } else {
       newParams[newParam] = newValue;
     }
+
+    console.log("====================================");
+    console.log(newParam);
+    console.log(newValue);
+    console.log(newParams);
+    console.log("====================================");
 
     getScores(newParams);
   };
@@ -183,9 +229,16 @@ function Results({ parameters, factorsData }) {
               className={`${styles.sidebar} list-group border-0 rounded-0 min-vh-100 px-4`}
             >
               <Preference
-                factors={data.factors}
                 selectedParams={params}
                 updateScores={updateScores}
+                categories={categories}
+                factors={factors}
+                parameters={parameters}
+                countries={countries}
+                languages={languages}
+                getParameter={getParameter}
+                getCategory={getCategory}
+                getParamText={getParamText}
               ></Preference>
             </div>
           </div>
@@ -266,6 +319,12 @@ function Results({ parameters, factorsData }) {
                 <Loading />
               ) : (
                 <CountyAccordion
+                  getParameter={getParameter}
+                  getParamText={getParamText}
+                  factors={factors}
+                  parameters={parameters}
+                  countries={countries}
+                  languages={languages}
                   onSelectCounty={onSelectCounty}
                   counties={showingCounties}
                   emptyText="Adjust preference bars to compare."
@@ -309,36 +368,20 @@ function Results({ parameters, factorsData }) {
 }
 
 export async function getStaticProps(context) {
-  const resParameters = await fetch(baseURL + "parameters");
-  const parameters = await resParameters.json();
-
-  if (!parameters) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-      parametersNotFound: true,
-    };
-  }
-
-  const resFactors = await fetch(
-    `https://reroot-data-app.herokuapp.com/factors`
-  );
-  const factorsData = await resFactors.json();
-
-  if (!factorsData) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-      notFound: true,
-    };
-  }
+  const categories = await prisma.category.findMany();
+  const factors = await prisma.factor.findMany();
+  const parameters = await prisma.parameter.findMany();
+  const languages = await prisma.language.findMany();
+  const countries = await prisma.country.findMany();
 
   return {
-    props: { parameters, factorsData }, // will be passed to the page component as props
+    props: {
+      categories,
+      factors,
+      parameters,
+      languages,
+      countries,
+    }, // will be passed to the page component as props
   };
 }
 

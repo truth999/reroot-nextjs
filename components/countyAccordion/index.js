@@ -10,7 +10,6 @@ import DetailsModal from "../../components/detailsModal";
 import ProgressRing from "../../components/progressRing";
 
 import to2digits from "../../utils";
-import AppContext from "../../contexts/AppContext";
 
 import styles from "./countyAccordion.module.scss";
 export default function CountyAccordion({
@@ -18,10 +17,11 @@ export default function CountyAccordion({
   emptyText,
   actionBtn,
   loadMoreBtn,
+  parameters,
   onSelectCounty,
+getParamText,
+  getParameter,
 }) {
-  const { data } = useContext(AppContext);
-  const { parameters } = data;
   const [displayCounty, setDisplayCounty] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -82,7 +82,12 @@ export default function CountyAccordion({
               }}
             >
               <Col md={10}>
-                <Breakdown breakdown={county.breakdown} />
+                <Breakdown
+                  breakdown={county.breakdown}
+                  getParamText={getParamText}
+                  getParameter={getParameter}
+                  parameters={parameters}
+                />
               </Col>
               <Col md={2} bsPrefix={`${styles.toggle} `}>
                 Key rank
@@ -90,13 +95,13 @@ export default function CountyAccordion({
             </Accordion.Header>
             <Accordion.Body>
               {Object.entries(county.ranks).map(([param, value], i) => {
-                const parameter = parameters[param];
-                const paramLabel = parameter.option
-                  ? parameter.option_name
-                  : parameter.parameter_name;
+                const parameter = getParameter(param);
                 return (
                   <span className="stat p-2" key={i}>
-                    <ProgressRing value={value} label={paramLabel} />
+                    <ProgressRing
+                      value={value}
+                      label={getParamText(parameter)}
+                    />
                   </span>
                 );
               })}

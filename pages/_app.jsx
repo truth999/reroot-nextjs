@@ -26,10 +26,6 @@ function MyApp({ Component, pageProps }) {
   });
 
   const [data, setData] = useState({
-    factors: [],
-    countries: [],
-    languages: [],
-    parameters: {},
     selectedCountries: [],
     selectedLanguages: [],
     theme: theme,

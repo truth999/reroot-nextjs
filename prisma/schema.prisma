@@ -31,21 +31,21 @@ model Profile {
 }
 
 model Language {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  native      String    @unique
-  a3          String?   @db.VarChar(3)
-  paramter    Parameter @relation(fields: [parameterId], references: [id])
-  parameterId Int       @unique
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  text        String     @unique
+  a3          String?    @db.VarChar(3)
+  parameter   Parameter?
+  parameterId Int
 }
 
 model Country {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  text        String    @unique
-  a2          String?   @db.VarChar(2)
-  paramter    Parameter @relation(fields: [parameterId], references: [id])
-  parameterId Int       @unique
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  text        String     @unique
+  a2          String?    @db.VarChar(2)
+  parameter   Parameter?
+  parameterId Int
 }
 
 model County {
@@ -76,12 +76,14 @@ model Factor {
 }
 
 model Parameter {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  factor    Factor     @relation(fields: [factorId], references: [id])
-  factorId  Int
-  languages Language[]
-  countries Country[]
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  factor     Factor    @relation(fields: [factorId], references: [id])
+  factorId   Int
+  language   Language? @relation(fields: [languageId], references: [id])
+  languageId Int?      @unique
+  country    Country?  @relation(fields: [countryId], references: [id])
+  countryId  Int?      @unique
 }
 
 model Submission {

@@ -9,17 +9,18 @@ import styles from "./breakdown.module.scss";
 import { contrastColor } from "contrast-color";
 import colorSteps from "color-steps";
 
-import AppContext from "../../contexts/AppContext";
-
-export default function Breakdown({ breakdown }) {
-  const { data } = useContext(AppContext);
-  const { parameters } = data;
-
+export default function Breakdown({
+  breakdown,
+  parameters,
+  getParamText,
+  getParameter,
+}) {
   const lightest = "#F2E4E2";
   const darkest = "#BA4D3A";
   const scores = Object.entries(breakdown);
   const bgColors = colorSteps(lightest, darkest, scores.length);
   const fgColors = bgColors.map((color) => contrastColor({ bgColor: color }));
+
   return (
     <Stack
       direction="row"
@@ -29,17 +30,16 @@ export default function Breakdown({ breakdown }) {
         backgroundColor: "#D8D8D8",
       }}
     >
-      {scores.map(([param, score], index) => {
-        const parameter = parameters[param];
+      {scores.map(([p, score], index) => {
+        const parameter = getParameter(p);
+
         return (
           <OverlayTrigger
-            key={index}
+            key={parameter.id}
             placement="top"
             overlay={
               <Tooltip id={`${index}-tooltip`}>
-                {parameter.option
-                  ? parameter.option_name
-                  : parameter.parameter_name}
+                {getParamText(parameter)}
               </Tooltip>
             }
           >

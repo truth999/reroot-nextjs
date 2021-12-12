@@ -5,7 +5,6 @@ import Col from "react-bootstrap/Col";
 export default function Factor({
   name,
   id,
-  parameter,
   value,
   onClick,
   children,
@@ -25,7 +24,6 @@ export default function Factor({
         name={name}
         id={id}
         value={value}
-        parameter={parameter}
         onClick={onClick}
         autoComplete="off"
       />

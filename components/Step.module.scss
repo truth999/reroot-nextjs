@@ -19,6 +19,12 @@
   font-weight: 600;
 }
 
+.searchResults {
+  min-height: 8rem;
+  max-height: 20vh;
+  overflow-y: scroll;
+}
+
 .search {
   width: 100%;
   padding: 20px 20px 20px 60px;

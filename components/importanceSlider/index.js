@@ -8,16 +8,17 @@ import theme from "../../styles/theme.js";
 import styles from "./importanceSlider.module.scss";
 
 export default function ImportanceSlider({
-  sub,
+  parameter,
   defaultValue,
   updateScores,
   onRemove,
+  getParamText,
 }) {
   const [value, setValue] = useState(defaultValue);
   const handleSliderChange = (event, newValue) => {
     event.preventDefault();
     setValue(newValue);
-    if (sub.param) updateScores(sub.param, newValue);
+    updateScores(parameter.name, newValue);
   };
 
   const getValueText = (value) => {
@@ -38,16 +39,16 @@ export default function ImportanceSlider({
   return (
     <div className="slider ps-1">
       <label
-        htmlFor={`${sub.name}-slider`}
+        htmlFor={`${parameter.name}-slider`}
         className={`${styles.sidebarParam} form-label`}
       >
         <div className={styles.title}>
-          {sub.text}
+          {getParamText(parameter)}
           {onRemove && (
             <div
               className="float-end"
               onClick={() => {
-                onRemove(sub);
+                onRemove(parameter);
               }}
             >
               X
@@ -70,7 +71,7 @@ export default function ImportanceSlider({
             onChange={handleSliderChange}
             color="primary"
             sx={{ width: "90%" }}
-            id={`${sub.name}-slider`}
+            id={`${parameter.name}-slider`}
           />
         </ThemeProvider>
       </div>

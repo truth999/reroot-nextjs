@@ -2,7 +2,12 @@ import Factor from "../components/factor";
 
 import styles from "./Step.module.scss";
 
-export default function Step1({ factors, currentStep, handleClick }) {
+export default function Step1({
+  categories,
+  factors,
+  currentStep,
+  handleClick,
+}) {
   if (currentStep !== 1) {
     // Prop: The current step
     return null;
@@ -23,29 +28,29 @@ export default function Step1({ factors, currentStep, handleClick }) {
       </div>
 
       <div className="option-group">
-        {factors.map((factor) => (
-          <div key={factor.name} className="row">
-            <div className={`${styles.factor} col-lg-3 pb-2`}>
-              {factor.text}
+        {categories.map((category) => (
+          <div key={category.name} className="row mx-0">
+            <div className={`${styles.factor} col-lg-3 pb-2 text-center`}>
+              {category.text}
             </div>
-            <div className="col-9 ps-2">
-              <div className="row">
-                {factor.sub.map((sub) => {
-                  const id = `toggle-${sub.name}`;
-                  return (
-                    <Factor
-                      type="factor"
-                      value={sub.name}
-                      name="factor"
-                      param={sub.param}
-                      key={id}
-                      id={id}
-                      onClick={handleClick}
-                    >
-                      {sub.text}
-                    </Factor>
-                  );
-                })}
+            <div className="col-9">
+              <div className="row mx-0">
+                {factors
+                  .filter((f) => f.categoryId === category.id)
+                  .map((factor) => {
+                    const id = `toggle-${factor.name}`;
+                    return (
+                      <Factor
+                        value={factor.id}
+                        name="factor"
+                        key={id}
+                        id={id}
+                        onClick={handleClick}
+                      >
+                        {factor.text}
+                      </Factor>
+                    );
+                  })}
               </div>
             </div>
           </div>
