@@ -1,21 +1,23 @@
 import styles from "./factor.module.scss";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Col from "react-bootstrap/Col";
 
-export function Factor(props) {
+export default function Factor({ name, id, param, value, onClick, children }) {
   return (
-    <div className={`${styles.factor} col-xs-6 col-md-5 col-xl-3 pb-4`}>
+    <Col xs={6} md={5} lg={4} xl={3} className={`${styles.factor} pb-4`}>
       <input
         type="checkbox"
         className="btn-check"
+        name={name}
+        id={id}
+        value={value}
+        param={param}
+        onClick={onClick}
         autoComplete="off"
-        name="factor"
-        id={props.id}
-        value={props.name}
-        param={props.param}
-        onClick={props.onClick}
       />
-      <label className={`btn btn-outline-dark ${styles.factor}`} htmlFor={props.id}>
-        {props.text}
+      <label className={`btn btn-test`} htmlFor={id}>
+        {children}
       </label>
-    </div>
+    </Col>
   );
 }

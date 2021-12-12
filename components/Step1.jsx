@@ -1,4 +1,5 @@
-import { Factor } from "./factor";
+import Factor from "../components/factor";
+
 import styles from "./Step.module.scss";
 
 export default function Step1({ factors, currentStep, handleClick }) {
@@ -33,13 +34,16 @@ export default function Step1({ factors, currentStep, handleClick }) {
                   const id = `toggle-${sub.name}`;
                   return (
                     <Factor
-                      name={sub.name}
+                      type="factor"
+                      value={sub.name}
+                      name="factor"
                       param={sub.param}
                       key={id}
                       id={id}
-                      text={sub.text}
                       onClick={handleClick}
-                    ></Factor>
+                    >
+                      {sub.text}
+                    </Factor>
                   );
                 })}
               </div>

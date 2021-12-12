@@ -1,7 +1,8 @@
 @import "../styles/variables";
-@import "../styles/fonts.scss";
+@import "../styles/fonts";
 
 .header {
+  background-color: $theme-light;
   padding: 1rem;
   display: flex;
   flex-direction: column;

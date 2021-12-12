@@ -1,10 +1,14 @@
 @import "../../styles/variables";
+@import "../../styles/fonts";
 
 .factor {
   font-size: 1.2rem;
-  font-family: "Marmelad", sans-serif;
+  font-family: $marmelad;
   border-width: 2px;
   label {
     width: 100%;
+    background-color: transparent;
+    border: 2px solid#b4b4b4;
+    color: #3e3e3e;
   }
 }

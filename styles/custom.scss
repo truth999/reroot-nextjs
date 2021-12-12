@@ -2,7 +2,17 @@
 @import "~bootstrap/scss/bootstrap";
 
 .btn-test {
-  @include button-outline-variant(black, red, black, red, black);
+  @include button-variant(
+    transparent,
+    #b4b4b4,
+    #3e3e3e,
+    #f29c70,
+    transparent,
+    #fef9f7,
+    #db3c21,
+    #fff7ec,
+    #fef9f7
+  );
 }
 
 /* import bootstrap to set changes */

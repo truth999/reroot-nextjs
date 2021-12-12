@@ -1,8 +1,14 @@
 @import "../styles/variables";
+@import "../styles/fonts";
 
 .container {
+  background-color: $theme-light;
   max-width: 36rem;
   padding: 0 1rem;
+}
+
+.main {
+  background-color: $theme-light;
 }
 
 .footer {
@@ -15,7 +21,7 @@
 }
 
 .footerTitle {
-  font-family: "Playfair Display", serif;
+  font-family: $playfair-display;
   font-size: 1.25rem;
   font-weight: bold;
 }

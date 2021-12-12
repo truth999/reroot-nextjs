@@ -1,5 +1,5 @@
 @import "./variables";
-@import "./fonts.scss";
+@import "./fonts";
 
 html,
 body {
@@ -32,12 +32,12 @@ a {
     max-height: 33vh;
     width: 15vw;
     overflow-y: scroll;
-    // background-color: black;
     ul {
       list-style: none;
     }
   }
 }
+
 .accordion-button:not(.collapsed) {
   color: black !important;
   background-color: transparent !important;

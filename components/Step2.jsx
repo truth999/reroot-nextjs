@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 import SubFactor from "./SubFactor";
+import Factor from "../components/factor";
+
 import SearchBar from "./searchBar";
 import styles from "./Step.module.scss";
 
@@ -30,7 +32,7 @@ export default function Step2({
 
   const showingLanguages =
     queryLanguage.trim() == ""
-      ? languages.slice(0, 6)
+      ? []
       : languages.filter((lang) =>
           lang.name.toLowerCase().includes(queryLanguage.toLowerCase())
         );
@@ -41,7 +43,7 @@ export default function Step2({
 
   const showingCountries =
     queryCountry.trim() === ""
-      ? countries.slice(0, 6)
+      ? []
       : countries.filter((country) =>
           country.name.toLowerCase().includes(queryCountry.toLowerCase())
         );
@@ -68,17 +70,16 @@ export default function Step2({
               {showingLanguages.map((lang) => {
                 const id = `language-${lang.name}`;
                 return (
-                  <div className="col-sm-6 col-md-4 col-lg-2 py-2" key={id}>
-                    <SubFactor
-                      id={id}
-                      value={lang.name}
-                      param={lang.param}
-                      name="language"
-                      onClick={handleClick}
-                    >
-                      {lang.text}
-                    </SubFactor>
-                  </div>
+                  <Factor
+                    key={id}
+                    id={id}
+                    value={lang.name}
+                    param={lang.param}
+                    name="language"
+                    onClick={handleClick}
+                  >
+                    {lang.text}
+                  </Factor>
                 );
               })}
             </div>
@@ -105,17 +106,16 @@ export default function Step2({
               {showingCountries.map((country) => {
                 const id = `country-${country.name}`;
                 return (
-                  <div className="col-sm-6 col-md-4 col-lg-2 py-2" key={id}>
-                    <SubFactor
-                      id={id}
-                      value={country.name}
-                      param={country.param}
-                      name="country"
-                      onClick={handleClick}
-                    >
-                      {country.text}
-                    </SubFactor>
-                  </div>
+                  <Factor
+                    key={id}
+                    id={id}
+                    value={country.name}
+                    name="country"
+                    param={country.param}
+                    onClick={handleClick}
+                  >
+                    {country.text}
+                  </Factor>
                 );
               })}
             </div>

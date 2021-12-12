@@ -5,6 +5,8 @@ import Layout from "../components/Layout";
 import Step1 from "../components/Step1";
 import Step2 from "../components/Step2";
 import NextButton from "../components/nextButton";
+import Container from "react-bootstrap/Container";
+import styles from "../styles/Survey.module.scss";
 
 export default function Survey({ factorsData }) {
   // Constants
@@ -156,7 +158,7 @@ export default function Survey({ factorsData }) {
 
   return (
     <Layout survey>
-      <div className="container">
+      <Container className={styles.container}>
         <form onSubmit={handleSubmit}>
           <Step1
             factors={data.factors}
@@ -173,7 +175,7 @@ export default function Survey({ factorsData }) {
           />
           <div className="survey-button text-center py-3">{showButton()}</div>
         </form>
-      </div>
+      </Container>
     </Layout>
   );
 }

@@ -92,9 +92,9 @@ export default function Landing() {
                 </Menu>
               </Box>
             ) : (
-              <Nav.Link href="/api/auth/login">
+              <Link href="/api/auth/login">
                 <a className={`${styles.sec1Link}`}>REGISTER / LOGIN</a>
-              </Nav.Link>
+              </Link>
             )}
           </Row>
           <Row bsPrefix="w-100">
@@ -102,7 +102,7 @@ export default function Landing() {
             <div className={styles.sec1Subtitle}>Where to live?</div>
           </Row>
           <Row className={`${styles.sec1Button} mt-auto`}>
-            <StartButton to="/prep">Start Survey</StartButton>
+            <StartButton to="/survey">Start Survey</StartButton>
           </Row>
         </Row>
 
@@ -218,27 +218,27 @@ export default function Landing() {
               <Col sm={4}>
                 <Card src="/img/landing-step1.svg">
                   <p className={styles.sec3TopText}>1</p>
-                  <p className={styles.sec3BottomText}>
+                  <div className={styles.sec3BottomText}>
                     <p> Take 30 seconds survey</p> Tell us what you need
-                  </p>
+                  </div>
                 </Card>
               </Col>
               <Col sm={4}>
                 <Card src="/img/landing-step2.svg">
                   <p className={styles.sec3TopText}>2</p>
-                  <p className={styles.sec3BottomText}>
+                  <div className={styles.sec3BottomText}>
                     <p>We search for places</p>
                     Using U.S. census data
-                  </p>
+                  </div>
                 </Card>
               </Col>
               <Col sm={4}>
                 <Card src="/img/landing-step3.svg">
                   <p className={styles.sec3TopText}>3</p>
-                  <p className={styles.sec3BottomText}>
+                  <div className={styles.sec3BottomText}>
                     <p>Get custom results</p>
                     Matching you to places
-                  </p>
+                  </div>
                 </Card>
               </Col>
               <div className={`${styles.sec3SubTitle} py-3`}>
@@ -263,7 +263,7 @@ export default function Landing() {
 
         <Row className={styles.secAction}>
           <div className="text-center pb-5 pt-3">
-            <StartButton to="/prep">Start Survey</StartButton>
+            <StartButton to="/survey">Start Survey</StartButton>
           </div>
         </Row>
       </Container>

@@ -3,6 +3,7 @@ import styles from "./Layout.module.scss";
 import Head from "next/head";
 import Image from "next/image";
 import Footer from "./footer";
+import Container from "react-bootstrap/Container";
 
 import Header from "./Header";
 export const siteTitle = "reRoot";
@@ -25,7 +26,9 @@ export default function Layout({ children, survey, landing }) {
 
       {!landing && <Header></Header>}
 
-      <div className="container-fluid">{children}</div>
+      <Container fluid className={styles.main}>
+        {children}
+      </Container>
 
       {!survey && <Footer></Footer>}
     </section>

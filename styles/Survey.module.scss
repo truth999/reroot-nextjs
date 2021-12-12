@@ -1,6 +1,8 @@
 @import "../styles/variables";
+@import "../styles/fonts";
 
 .container {
+  background-color: $theme-light;
   height: 80vh;
 }
 
@@ -8,17 +10,17 @@
   padding-top: 25vh;
   font-weight: bold;
   font-size: 4rem;
-  font-family: "Playfair Display", serif;
+  font-family: $playfair-display;
 }
 
 .subtitle {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: $nunito-sans;
   font-weight: bold;
   font-size: 1.5rem;
 }
 
 .text {
-  font-family: "Gloria Hallelujah", cursive;
+  font-family: $gloria-hallelujah;
   font-size: 1.5rem;
   padding: 0 20%;
 }

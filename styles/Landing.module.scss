@@ -20,16 +20,18 @@
   letter-spacing: 0em;
   text-align: center;
   color: $secondary;
+  z-index: 9999;
 }
 
 .sec1Title {
   width: 100%;
   padding-left: 50%;
   color: $secondary;
-  font-size: calc(5rem + 5vw);
+  font-size: calc(5rem + 3vw);
   text-shadow: 1px 1px 1px #3c5c5e;
   font-family: $macondo-swash-caps;
   line-height: 8rem;
+  z-index: 1;
 }
 
 .sec1Subtitle {
@@ -194,11 +196,4 @@
   position: relative;
   min-height: 600px;
   width: 100%;
-}
-
-.actionSpecial {
-  font-size: 5rem;
-  font-family: $lemonada;
-  color: $text-special;
-  text-align: center;
 }

@@ -123,9 +123,9 @@ const Header = () => {
                   </Menu>
                 </Box>
               ) : (
-                <Nav.Link href="/api/auth/login">
+                <Link href="/api/auth/login">
                   <a className={`${styles.link}`}>REGISTER / LOGIN</a>
-                </Nav.Link>
+                </Link>
               )}
             </Nav>
           </Navbar.Collapse>
@@ -135,16 +135,3 @@ const Header = () => {
   );
 };
 export default Header;
-
-/* <NavDropdown
-                  title={`${user.name}`}
-                  id="collasible-nav-dropdown"
-                  bsPrefix={`${styles.dropdown} `}
-                >
-                  <NavDropdown.Item href="/profile">
-                    <a>Profile</a>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/api/auth/logout">
-                    <a>Logout</a>
-                  </NavDropdown.Item>
-                </NavDropdown> */
