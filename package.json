@@ -6,7 +6,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'"
+    "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'",
+    "vercel-build": "prisma generate && npm run migrate:deploy && next build",
+    "migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.6.1",

@@ -17,6 +17,7 @@ import CountyPopup from "../components/countyPopup";
 import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
 import Link from "next/link";
 import Map from "../components/map";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import prisma from "../lib/prisma.ts";
 
 // Third Party
@@ -137,7 +138,7 @@ function Results({ categories, factors, parameters, languages, countries }) {
     // Country name remove mismatch
 
     const newParams = { ...params };
-    if (newValue == "0") {
+    if (newValue == 0) {
       console.log("deleting", newParam);
       delete newParams[newParam];
     } else {
@@ -273,11 +274,13 @@ function Results({ categories, factors, parameters, languages, countries }) {
             <div className={`${styles.favorite} col-12 mb-4`}>
               <div className={`${styles.mainTitle}`}>
                 FAVORITE COUNTIES
-                <Link href="/favorite" passHref>
-                  <IconButton aria-label="launch">
-                    <LaunchIcon />
-                  </IconButton>
-                </Link>
+                {Object.values(favCounties).length > 0 && (
+                  <Link href="/favorite" passHref>
+                    <IconButton aria-label="launch">
+                      <LaunchIcon />
+                    </IconButton>
+                  </Link>
+                )}
               </div>
               <CountyGrid
                 counties={Object.values(favCounties)}

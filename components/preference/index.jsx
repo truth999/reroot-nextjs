@@ -45,7 +45,7 @@ export default function Preference({
   const removeCountry = async (countryParam) => {
     console.log("remove country called");
     // Update Scores
-    await updateScores(countryParam.name, "0");
+    await updateScores(countryParam.name, 0);
 
     setCountriesPref(
       countriesPref.filter((c) => c.parameterId !== countryParam.id)
@@ -66,7 +66,7 @@ export default function Preference({
     console.log("remove language called");
 
     // Update Scores
-    await updateScores(languageParam.name, "0");
+    await updateScores(languageParam.name, 0);
 
     setLanguagesPref(
       languagesPref.filter((l) => l.parameterId !== languageParam.id)

@@ -20,9 +20,14 @@
 }
 
 .searchResults {
-  min-height: 8rem;
+  min-height: 10rem;
   max-height: 20vh;
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .search {

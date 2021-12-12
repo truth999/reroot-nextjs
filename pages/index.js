@@ -76,24 +76,26 @@ export default function Landing() {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem key={"profile"} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">
-                      <Link href="/profile">
+                    <Link href="/profile" passHref>
+                      <Typography textAlign="center">
                         <a>Profile</a>
-                      </Link>
-                    </Typography>
+                      </Typography>
+                    </Link>
                   </MenuItem>
                   <MenuItem key={"logout"} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">
-                      <Link href="/api/auth/logout">
+                    <Link href="/api/auth/logout" passHref>
+                      <Typography textAlign="center">
                         <a>Logout</a>
-                      </Link>
-                    </Typography>
+                      </Typography>
+                    </Link>
                   </MenuItem>
                 </Menu>
               </Box>
             ) : (
-              <Link href="/api/auth/login">
-                <a className={`${styles.sec1Link}`}>REGISTER / LOGIN</a>
+              <Link href="/api/auth/login" passHref>
+                <Nav.Link>
+                  <span className={`${styles.sec1Link}`}>REGISTER / LOGIN</span>
+                </Nav.Link>
               </Link>
             )}
           </Row>

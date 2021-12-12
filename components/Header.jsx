@@ -70,18 +70,18 @@ const Header = () => {
             <Nav className="me-auto"></Nav>
             <Nav>
               {["/results", "/profile"].includes(router.pathname) && (
-                <Nav.Link>
-                  <Link href="/favorite">
-                    <a className={`${styles.link}`}>FAVORITE</a>
-                  </Link>
-                </Nav.Link>
+                <Link href="/favorite" passHref>
+                  <Nav.Link>
+                    <span className={`${styles.link}`}>FAVORITE</span>
+                  </Nav.Link>
+                </Link>
               )}
               {["/favorite", "/profile"].includes(router.pathname) && (
-                <Nav.Link>
-                  <Link href="/results">
-                    <a className={`${styles.link}`}>RESULTS</a>
-                  </Link>
-                </Nav.Link>
+                <Link href="/results" passHref>
+                  <Nav.Link>
+                    <span className={`${styles.link}`}>RESULTS</span>
+                  </Nav.Link>
+                </Link>
               )}
               {user ? (
                 <Box sx={{ flexGrow: 0 }}>
@@ -107,24 +107,26 @@ const Header = () => {
                     onClose={handleCloseUserMenu}
                   >
                     <MenuItem key={"profile"} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">
-                        <Link href="/profile">
+                      <Link href="/profile" passHref>
+                        <Typography textAlign="center">
                           <a>Profile</a>
-                        </Link>
-                      </Typography>
+                        </Typography>
+                      </Link>
                     </MenuItem>
                     <MenuItem key={"logout"} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">
-                        <Link href="/api/auth/logout">
+                      <Link href="/api/auth/logout" passHref>
+                        <Typography textAlign="center">
                           <a>Logout</a>
-                        </Link>
-                      </Typography>
+                        </Typography>
+                      </Link>
                     </MenuItem>
                   </Menu>
                 </Box>
               ) : (
-                <Link href="/api/auth/login">
-                  <a className={`${styles.link}`}>REGISTER / LOGIN</a>
+                <Link href="/api/auth/login" passHref>
+                  <Nav.Link>
+                    <span className={`${styles.link}`}>REGISTER / LOGIN</span>
+                  </Nav.Link>
                 </Link>
               )}
             </Nav>
