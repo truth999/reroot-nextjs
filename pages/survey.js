@@ -17,11 +17,11 @@ export default function Survey({
   languages,
   countries,
 }) {
-  console.log("====================================");
-  console.log(factors1);
-  console.log(countries);
-  console.log(languages);
-  console.log("====================================");
+  // console.log("====================================");
+  // console.log(factors1);
+  // console.log(countries);
+  // console.log(languages);
+  // console.log("====================================");
 
   // Constants
   const ON = "2";
@@ -62,7 +62,7 @@ export default function Survey({
         !selectedFactors.some((f) => f == "language" || f == "origin")
       );
 
-    // Update params
+    // TODO Update params
     const newSelectedParams = checkedFactors
       .filter((f) => f.getAttribute("param"))
       .map((f) => f.getAttribute("param"));
@@ -132,6 +132,11 @@ export default function Survey({
       );
     });
 
+    console.log("====================================");
+    console.log(selectedCountries);
+    console.log(selectedLanguages);
+    console.log("====================================");
+
     const newParams = Object.fromEntries(
       newSelectedParams.map((p) => [[`${p}`], ON])
     );
@@ -145,9 +150,9 @@ export default function Survey({
       selectedLanguages: selectedLanguages,
     });
     setData(newData);
-    // console.log(newData);
+    console.log(newData);
 
-    router.push({ pathname: "/results", query: newParams });
+    // router.push({ pathname: "/results", query: newParams });
   };
 
   const showButton = () => {
@@ -168,6 +173,7 @@ export default function Survey({
       }
     }
   };
+  <div className=""></div>;
 
   return (
     <Layout survey>

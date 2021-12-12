@@ -11,11 +11,6 @@ export default function Step2({
   askLanguage,
   askCountry,
 }) {
-  console.log("====================================");
-  console.log(languages);
-  console.log(countries);
-  console.log("====================================");
-
   // Language
   const [queryLanguage, setQueryLanguage] = useState("");
   // Country
@@ -72,7 +67,7 @@ export default function Step2({
                 return (
                   <Factor
                     key={id}
-                    id={lang.id}
+                    id={id}
                     value={lang.name}
                     parameter={lang.parameterId}
                     name="language"
@@ -108,7 +103,7 @@ export default function Step2({
                 return (
                   <Factor
                     key={id}
-                    id={country.id}
+                    id={id}
                     value={country.name}
                     name="country"
                     country={country}
