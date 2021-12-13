@@ -198,7 +198,7 @@ function Results({ categories, factors, parameters, languages, countries }) {
         ...viewport,
         longitude,
         latitude,
-        zoom: 11,
+        zoom: 10,
         transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
         transitionDuration: "auto",
       });

@@ -34,9 +34,10 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
   const router = useRouter();
   const [params, setParams] = useState({});
   const [queryCounty, setQueryCounty] = useState("");
-  const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
   const [counties, setCounties] = useState([]);
+
+  console.log(counties);
 
   setData(
     Object.assign(data, {
@@ -56,13 +57,13 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
         return parameters.find((p) => p.factorId === item.id);
       case "l":
         const y = parameters.find((p) => p.id === item.parameterId);
-        console.log("item: ", item);
-        console.log("find: ", y);
+        // console.log("item: ", item);
+        // console.log("find: ", y);
         return y;
       case "c":
         const x = parameters.find((p) => p.id === item.parameterId);
-        console.log("item: ", item);
-        console.log("find: ", x);
+        // console.log("item: ", item);
+        // console.log("find: ", x);
         return x;
       default:
         return null;
@@ -268,6 +269,8 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
                           (c) => c.index != county.index
                         );
                         setCounties(newCounties);
+                        // TODO For user
+
                         if (window) {
                           localStorage.setItem(
                             "favorites",

@@ -67,7 +67,7 @@ export default function Map({
       <AttributionControl
         compact={false}
         style={attributionStyle}
-        customAttribution={["designed by Thomas Zhang"]}
+        customAttribution={["designed by reRoot"]}
       />
       <FullscreenControl style={fullscreenControlStyle} />
       <GeolocateControl

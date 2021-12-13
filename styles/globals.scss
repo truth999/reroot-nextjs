@@ -1,9 +1,6 @@
 @import "./variables";
 @import "./fonts";
 
-$flag-icon-css-path: "~flag-icon-css/flags";
-@import "~flag-icon-css/sass/flag-icons";
-
 html,
 body {
   background-color: $theme-light;

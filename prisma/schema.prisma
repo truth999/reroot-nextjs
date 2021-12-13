@@ -6,9 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  shadowDatabaseUrl =env("SHADOW_DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -17,11 +17,21 @@ model User {
   email       String?      @unique
   createdAt   DateTime     @default(now()) @map(name: "created_at")
   updatedAt   DateTime     @updatedAt @map(name: "updated_at")
-  favorites   County[]
   submissions Submission[]
   profile     Profile?
+  favorites   County[]
 
   @@map(name: "users")
+}
+
+model County {
+  id        Int     @id @default(autoincrement())
+  code      String  @unique
+  name      String
+  text      String?
+  longitude Float
+  latitude  Float
+  fans      User[]
 }
 
 model Profile {
@@ -47,17 +57,6 @@ model Country {
   a2          String?    @db.VarChar(2)
   parameter   Parameter?
   parameterId Int
-}
-
-model County {
-  id        Int     @id @default(autoincrement())
-  code      String? @unique
-  name      String
-  text      String?
-  longitude Float
-  latitude  Float
-  user      User?   @relation(fields: [userId], references: [id])
-  userId    Int?
 }
 
 model Category {

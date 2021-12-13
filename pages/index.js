@@ -46,7 +46,7 @@ export default function Landing() {
         <title>{siteTitle}</title>
       </Head>
 
-      <Container>
+      <Container fluid={`xxl`}>
         {/* Section 1 */}
         <Row
           bsPrefix={`${styles.sec1Cover} d-flex align-items-center flex-column`}

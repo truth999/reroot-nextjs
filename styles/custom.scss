@@ -17,3 +17,5 @@
 
 /* import bootstrap to set changes */
 @import "~bootstrap/scss/bootstrap";
+$flag-icon-css-path: "~flag-icon-css/flags";
+@import "~flag-icon-css/sass/flag-icons";
