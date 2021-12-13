@@ -219,6 +219,10 @@ function Results({ categories, factors, parameters, languages, countries }) {
     if (query.length >= 3) {
       getScores(params, (query = query));
     }
+
+    if (query.length === 0) {
+      getScores(params);
+    }
   }, [queryCounty, params, getScores]);
 
   return (
