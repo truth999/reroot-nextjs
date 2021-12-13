@@ -7,7 +7,6 @@ export default function Card(props) {
       <Image
         className="card-img-top"
         src={props.src}
-        layout="fixed"
         objectFit="fill"
         width={138}
         height={150}

@@ -113,55 +113,49 @@ export default function Landing() {
           <Col sm={3}></Col>
           <Col sm={6}>
             <Stack gap={0} bsPrefix={`${styles.sec2Content} text-center`}>
-              <div className={`${styles.sec2Title} py-3`}>
+              <div className={`${styles.sec2Title}`}>
                 Where in the United States you live is <b>important</b>.
               </div>
-              <div className={`${styles.sec2Subtitle} py-3`}>
+              <div className={`${styles.sec2Subtitle}`}>
                 Where you live can decide your...
               </div>
               <Row direction="horizontal">
-                <Col sm={1}></Col>
-                <Col>
+                <Col sm={3}>
                   <Image
                     src="/img/landing-health.svg"
                     alt="health"
-                    width="90"
-                    height="90"
-                    layout="fixed"
+                    width={90}
+                    height={90}
                   />
                   <p className={`${styles.sec2Text}`}>health & wellbeing</p>
                 </Col>
-                <Col>
+                <Col sm={3}>
                   <Image
                     src="/img/landing-money.svg"
                     alt="money"
-                    width="90"
-                    height="90"
-                    layout="fixed"
+                    width={90}
+                    height={90}
                   />
                   <p className={`${styles.sec2Text}`}>money & education</p>
                 </Col>
-                <Col>
+                <Col sm={3}>
                   <Image
                     src="/img/landing-friends.svg"
                     alt="friends"
-                    width="90"
-                    height="90"
-                    layout="fixed"
+                    width={90}
+                    height={90}
                   />
                   <p className={`${styles.sec2Text}`}>friends & community</p>
                 </Col>
-                <Col>
+                <Col sm={3}>
                   <Image
                     src="/img/landing-rights.svg"
                     alt="rights"
-                    width="90"
-                    height="90"
-                    layout="fixed"
+                    width={90}
+                    height={90}
                   />
                   <p className={`${styles.sec2Text}`}>rights & power</p>
                 </Col>
-                <Col sm={1}></Col>
               </Row>
               <div className={`${styles.sec2BottomText}`}>
                 <span>reRoot</span> is a <b>FREE</b> tool to check which places
@@ -178,33 +172,29 @@ export default function Landing() {
             <div className={`${styles.sec3Text} py-3`}>
               Made in collaboration with...
             </div>
-            <div className={`px-5 py-3`}>
+            <div className={`px-5 py-2`}>
               <Stack gap={4} direction="horizontal">
                 <Image
                   src="/img/org-census.png"
                   alt="census"
-                  layout="fixed"
                   height={100}
                   width={300}
                 />
                 <Image
                   src="/img/org-top.png"
                   alt="top"
-                  layout="fixed"
                   height={100}
                   width={570}
                 />
                 <Image
                   src="/img/org-harvard.png"
                   alt="harvard"
-                  layout="fixed"
                   height={100}
                   width={360}
                 />
                 <Image
                   src="/img/org-meta.png"
                   alt="meta-lab"
-                  layout="fixed"
                   height={100}
                   width={100}
                 />
@@ -212,7 +202,7 @@ export default function Landing() {
             </div>
           </div>
 
-          <div>
+          <Col>
             <div className={`${styles.sec3Title} pb-3`}>
               How reRoot Works...
             </div>
@@ -243,16 +233,16 @@ export default function Landing() {
                   </div>
                 </Card>
               </Col>
-              <div className={`${styles.sec3SubTitle} py-3`}>
+              <Col className={`${styles.sec3SubTitle} py-3`}>
                 Fast. Simple. Free.
-              </div>
+              </Col>
             </Row>
-          </div>
+          </Col>
         </Row>
 
         {/* Section 4 */}
-        <Row className={`${styles.sec4Cover} mx-0 text-right`}>
-          <Row className={styles.sec4Text}>
+        <Row className={`${styles.sec4Cover} mx-0`}>
+          <Col sm={{ offset: 4, span: 8 }} className={styles.sec4Text}>
             <p className={`${styles.sec4Title} text-center`}>
               A diverse country means diverse needs.
             </p>
@@ -260,12 +250,18 @@ export default function Landing() {
               <span>reRoot</span> puts America&apos;s underserved first and make
               sure their needs are met too.
             </p>
-          </Row>
-          <Row className={styles.sec4Diagram}></Row>
+            <Image
+              className={`${styles.sec4Diagram}`}
+              src="/img/landing-diagram.svg"
+              alt="diagram"
+              height={621}
+              width={946}
+            />
+          </Col>
         </Row>
 
         <Row className={styles.secAction}>
-          <div className="text-center pb-5 pt-3">
+          <div className="text-center py-4">
             <StartButton to="/survey">Start Survey</StartButton>
           </div>
         </Row>
