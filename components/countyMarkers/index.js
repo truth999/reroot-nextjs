@@ -19,7 +19,11 @@ export default function CountyMarkers({ counties, onClick }) {
     return counties.map((county) => {
       const [lng, lat] = county.lng_lat;
       return (
-        <Marker key={`marker-${county.index}`} longitude={lng} latitude={lat}>
+        <Marker
+          key={`marker-${county.code}}`}
+          longitude={lng}
+          latitude={lat}
+        >
           <svg
             height={HEIGHT}
             width={WIDTH}

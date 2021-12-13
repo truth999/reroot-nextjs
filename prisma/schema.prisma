@@ -12,14 +12,13 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  name        String?
-  email       String?      @unique
-  createdAt   DateTime     @default(now()) @map(name: "created_at")
-  updatedAt   DateTime     @updatedAt @map(name: "updated_at")
-  submissions Submission[]
-  profile     Profile?
-  favorites   County[]
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  profile   Profile?
+  favorites County[]
 
   @@map(name: "users")
 }
@@ -84,10 +83,4 @@ model Parameter {
   languageId Int?      @unique
   country    Country?  @relation(fields: [countryId], references: [id])
   countryId  Int?      @unique
-}
-
-model Submission {
-  id      Int   @id @default(autoincrement())
-  owner   User? @relation(fields: [ownerId], references: [id])
-  ownerId Int?
 }

@@ -112,7 +112,8 @@
 
 .sec3Banner {
   width: 100%;
-  height: 12rem;
+  min-height: 12rem;
+  height: 13rem;
   max-height: 33vh;
   background-color: $primary;
 }

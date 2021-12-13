@@ -51,7 +51,7 @@ export default function CountyAccordion({
           >
             <div className={`${styles.top}`}>
               <Row>
-                <Col md={5}>{`#${county.ranking} ${county.name}`}</Col>
+                <Col md={5}>{`#${county.ranking || ""} ${county.name}`}</Col>
                 <Col md={4}>{`Overall Score: ${to2digits(county.score)}`}</Col>
                 <Col md={2}>
                   <PrimaryButton

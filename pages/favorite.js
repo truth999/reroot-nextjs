@@ -3,7 +3,7 @@ import Head from "next/head";
 import ReactDOMServer from "react-dom/server";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
-
+import fetch from "unfetch";
 import AdjustButton from "../components/adjustButton";
 import NextButton from "../components/nextButton";
 import LikeButton from "../components/likeButton";
@@ -12,13 +12,13 @@ import Preference from "../components/preference";
 import SearchBar from "../components/searchBar";
 import Loading from "../components/loading";
 import CountyAccordion from "../components/countyAccordion";
-import CountyPopup from "../components/countyPopup";
 import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
 import Link from "next/link";
 import prisma from "../lib/prisma.ts";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Map from "../components/map";
-
+import { useUser } from "@auth0/nextjs-auth0";
+import useSWR from "swr";
 // Third Party
 // import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -36,8 +36,7 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
   const [queryCounty, setQueryCounty] = useState("");
   const [loading, setLoading] = useState(false);
   const [counties, setCounties] = useState([]);
-
-  console.log(counties);
+  const { user, error, isLoading } = useUser();
 
   setData(
     Object.assign(data, {
@@ -96,7 +95,7 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
         const scoresData = await resScores.json();
 
         const newCounties = scoresData.scores.filter((c) =>
-          counties.some((county) => county.index === c.index)
+          counties.some((county) => county.code === c.code)
         );
 
         setCounties(newCounties);
@@ -110,18 +109,58 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
     },
     [router, counties]
   );
-
-  // Handle direct GET requests
-  useEffect(() => {
-    if (window) {
-      const favsRaw = localStorage.getItem("favorites");
-      const favs = JSON.parse(favsRaw);
-      setCounties(favs);
+  const delFav = async (county) => {
+    try {
+      console.log("===del fav===", county);
+      await fetch("/api/del-fav", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, county }),
+      });
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  // Load favorites
+  useEffect(() => {
+    if (user) {
+      const loadFavsFromDB = async () => {
+        try {
+          console.log("===get favs===");
+          const res = await fetch("/api/get-favs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user }),
+          });
+          const userData = await res.json();
+          const favs = userData.favorites;
+          setCounties(
+            favs.map((c) => {
+              c.lng_lat = [c.longitude, c.latitude];
+              c.ranks = [];
+              c.breakdown = [];
+              return c;
+            })
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      loadFavsFromDB();
+    } else {
+      if (window) {
+        const favsRaw = localStorage.getItem("favorites");
+        const favs = JSON.parse(favsRaw);
+        setCounties(favs);
+      }
+    }
+
     return () => {
       setCounties([]);
     };
-  }, []);
+  }, [user]);
 
   const updateScores = async (newParam, newValue) => {
     const newParams = { ...params };
@@ -266,11 +305,11 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
                       county={county}
                       handleClick={(county) => {
                         const newCounties = counties.filter(
-                          (c) => c.index != county.index
+                          (c) => c.code != county.code
                         );
+                        // Update for logged in
+                        user && delFav(county);
                         setCounties(newCounties);
-                        // TODO For user
-
                         if (window) {
                           localStorage.setItem(
                             "favorites",

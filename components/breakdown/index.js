@@ -13,8 +13,10 @@ export default function Breakdown({ breakdown, getParamText, getParameter }) {
   const lightest = "#F2E4E2";
   const darkest = "#BA4D3A";
   const scores = Object.entries(breakdown);
-  const bgColors = colorSteps(lightest, darkest, scores.length);
-  const fgColors = bgColors.map((color) => contrastColor({ bgColor: color }));
+  const bgColors =
+    scores.length > 0
+      ? colorSteps(lightest, darkest, scores.length)
+      : ["D8D8D8"];
 
   return (
     <Stack

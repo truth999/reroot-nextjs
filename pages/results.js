@@ -37,6 +37,7 @@ function Results({ categories, factors, parameters, languages, countries }) {
   const [queryCounty, setQueryCounty] = useState("");
   const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
   const [counties, setCounties] = useState([]);
 
   const parametersLookup = Object.fromEntries(
@@ -127,14 +128,44 @@ function Results({ categories, factors, parameters, languages, countries }) {
   }, [router.query, getScores]);
 
   useEffect(() => {
-    if (window) {
-      const newFavCountiesArray = JSON.parse(localStorage.getItem("favorites"));
-      const newFavCounties = Object.fromEntries(
-        newFavCountiesArray?.map((c) => [c.index, c]) ?? []
-      );
-      setFavCounties(newFavCounties);
-      console.log("from local storage:");
-      console.log(newFavCounties);
+    if (user) {
+      const loadFavsFromDB = async () => {
+        try {
+          console.log("===get favs===");
+          const res = await fetch("/api/get-favs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user }),
+          });
+          const userData = await res.json();
+          const favs = userData.favorites;
+
+          const newFavCountiesArray = favs.map((c) => {
+            c.lng_lat = [c.longitude, c.latitude];
+            c.ranks = [];
+            c.breakdown = [];
+            return c;
+          });
+          const newFavCounties = Object.fromEntries(
+            newFavCountiesArray?.map((c) => [c.index, c]) ?? []
+          );
+          setFavCounties(newFavCounties);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      loadFavsFromDB();
+    } else {
+      if (window) {
+        const newFavCountiesArray = JSON.parse(
+          localStorage.getItem("favorites")
+        );
+        const newFavCounties = Object.fromEntries(
+          newFavCountiesArray?.map((c) => [c.index, c]) ?? []
+        );
+        setFavCounties(newFavCounties);
+      }
     }
   }, []);
 
@@ -216,14 +247,44 @@ function Results({ categories, factors, parameters, languages, countries }) {
   // Support server pull
   useEffect(() => {
     const query = queryCounty.trim();
-    if (query.length >= 3) {
-      getScores(params, (query = query));
-    }
+    const delayDebounceFn = setTimeout(() => {
+      if (query.length >= 3) {
+        setTyping(true);
+        getScores(params, (query = query));
+      }
+    }, 1000);
 
-    if (query.length === 0) {
+    if (typing && query.length === 0) {
       getScores(params);
+      setTyping(false);
     }
-  }, [queryCounty, params, getScores]);
+    return () => clearTimeout(delayDebounceFn);
+  }, [queryCounty, getScores, params, typing]);
+
+  const addFav = async (county) => {
+    try {
+      console.log("===add fav===", county);
+      await fetch("/api/add-fav", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, county }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const delFav = async (county) => {
+    try {
+      console.log("===del fav===", county);
+      await fetch("/api/del-fav", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, county }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Layout results>
@@ -310,6 +371,8 @@ function Results({ categories, factors, parameters, languages, countries }) {
                       const newFavCounties = { ...favCounties };
                       newFavCounties[county.index].faved = false;
                       delete newFavCounties[county.index];
+                      // Update for logged in
+                      user && delFav(county);
                       setFavCounties(newFavCounties);
                       if (window) {
                         localStorage.setItem(
@@ -364,23 +427,22 @@ function Results({ categories, factors, parameters, languages, countries }) {
                           // delete
                           county.faved = false;
                           delete newFavCounties[county.index];
+                          // Update for logged in
+                          user && delFav(county);
                         } else {
                           // create
                           county.faved = true;
                           newFavCounties[county.index] = county;
+                          // Update for logged in
+                          user && addFav(county);
                         }
                         setFavCounties(newFavCounties);
-
-                        // TODO implement fav with user
 
                         if (window) {
                           localStorage.setItem(
                             "favorites",
                             JSON.stringify(Object.values(newFavCounties))
                           );
-
-                          console.log("local storage on Like");
-                          console.log(Object.values(newFavCounties));
                         }
                       }}
                       checked={county.index in favCounties}
