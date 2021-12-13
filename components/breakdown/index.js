@@ -16,8 +16,6 @@ export default function Breakdown({ breakdown, getParamText, getParameter }) {
   const bgColors = colorSteps(lightest, darkest, scores.length);
   const fgColors = bgColors.map((color) => contrastColor({ bgColor: color }));
 
-  breakdown = null;
-
   return (
     <Stack
       direction="row"

@@ -51,15 +51,7 @@ export default function CountyAccordion({
           >
             <div className={`${styles.top}`}>
               <Row>
-                <Col md={5}>
-                  <a
-                    href={`https://en.wikipedia.org/wiki/${county.name}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {`#${county.ranking} ${county.name}`}
-                  </a>
-                </Col>
+                <Col md={5}>{`#${county.ranking} ${county.name}`}</Col>
                 <Col md={4}>{`Overall Score: ${to2digits(county.score)}`}</Col>
                 <Col md={2}>
                   <PrimaryButton
