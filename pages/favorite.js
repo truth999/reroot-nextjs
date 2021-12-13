@@ -16,7 +16,7 @@ import CountyPopup from "../components/countyPopup";
 import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
 import Link from "next/link";
 import prisma from "../lib/prisma.ts";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Map from "../components/map";
 
 // Third Party
@@ -233,6 +233,11 @@ function Favorite({ categories, factors, parameters, languages, countries }) {
               <div className="d-flex justify-content-between">
                 <div className={`${styles.mainTitle} pe-3`}>
                   FAVORITE COUNTIES
+                  {counties.length === 0 && (
+                    <Link href="/results" passHref>
+                      <ArrowBackIcon className="ms-2 mb-1" />
+                    </Link>
+                  )}
                 </div>
                 <SearchBar
                   value={queryCounty}
