@@ -48,8 +48,8 @@ export default function Landing() {
 
       <Container fluid="xxl">
         {/* Section 1 */}
-        <Row
-          bsPrefix={`${styles.sec1Cover} d-flex align-items-center flex-column`}
+        <div
+          className={`${styles.sec1Cover} d-flex align-items-center flex-column`}
         >
           <Row className="text-end w-100 p-3">
             {user ? (
@@ -99,17 +99,17 @@ export default function Landing() {
               </Link>
             )}
           </Row>
-          <Row className="w-100">
-            <div className={styles.sec1Title}>reRoot</div>
-            <div className={styles.sec1Subtitle}>Where to live?</div>
+          <Row className={`${styles.sec1Title} mx-0 w-100`}>reRoot</Row>
+          <Row className={`${styles.sec1Subtitle} mx-0 w-100`}>
+            Where to live?
           </Row>
           <Row className={`${styles.sec1Button} mt-auto`}>
             <StartButton to="/survey">Start Survey</StartButton>
           </Row>
-        </Row>
+        </div>
 
         {/* Section 2 */}
-        <Row bsPrefix={`${styles.sec2Cover} d-flex justify-content-center`}>
+        <Row className={`${styles.sec2Cover} d-flex justify-content-center`}>
           <Col sm={3}></Col>
           <Col sm={6}>
             <Stack gap={0} bsPrefix={`${styles.sec2Content} text-center`}>

@@ -1,14 +1,22 @@
 import styles from "./nextButton.module.scss";
+import Button from "react-bootstrap/Button";
 
-export default function nextButton(props) {
+export default function nextButton({
+  name = "next",
+  children,
+  disabled,
+  handleClick,
+}) {
   return (
-    <input
-      className={`${styles.button} btn btn-dark`}
+    <Button
+      variant="dark"
+      className={`${styles.button}`}
       type="button"
-      value={props.children}
-      name="next"
-      disabled={props.disabled}
-      onClick={props.handleClick}
-    />
+      name={name}
+      disabled={disabled}
+      onClick={handleClick}
+    >
+      {children}
+    </Button>
   );
 }
