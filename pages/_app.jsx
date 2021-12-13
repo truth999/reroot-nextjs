@@ -1,11 +1,10 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import "../styles/custom.scss";
-import "../styles/globals.scss";
-
 import { useEffect, useState } from "react";
 import AppContext from "../contexts/AppContext";
 import { UserProvider } from "@auth0/nextjs-auth0";
+
+import "../styles/globals.scss";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {

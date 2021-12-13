@@ -1,6 +1,6 @@
 // pages/api/fav/index.ts
 import { useUser } from "@auth0/nextjs-auth0";
-import prisma from "../../../lib/prisma";
+import prisma from "../../../lib/prisma.ts";
 
 // POST /api/post
 // Required fields in body: title

@@ -62,14 +62,14 @@
 
 .sec2Content {
   z-index: 1;
-  padding-top: 25%;
-  padding-bottom: 25%;
+  padding-top: 15%;
+  padding-bottom: 15%;
 }
 
 .sec2Title {
   padding: 0px 13%;
   color: $blank;
-  font-size: calc(0.8rem + 1vw);
+  font-size: calc(1rem + 0.5vw);
   font-family: $lemonada;
   font-weight: 400;
   b {
@@ -80,13 +80,13 @@
 .sec2Subtitle {
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(0.5rem + 0.5vw);
+  font-size: calc(0.6rem + 0.4vw);
 }
 .sec2Text {
   padding: 0 1rem;
   color: $blank;
   font-family: $roboto;
-  font-size: calc(0.5rem + 0.5vw);
+  font-size: calc(0.5rem + 0.3vw);
 }
 .sec2BottomText {
   padding: 10% 25% 0 25%;
@@ -127,14 +127,14 @@
 .sec3Title {
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(1.5rem + 1vw);
+  font-size: calc(1.5rem + 0.6vw);
   text-align: center;
 }
 
 .sec3SubTitle {
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(1.8rem + 1vw);
+  font-size: calc(2rem + 0.7vw);
   text-align: center;
 }
 

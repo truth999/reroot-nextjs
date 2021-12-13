@@ -1,5 +1,54 @@
+/* The following line can be included in a src/App.scss */
+@import "~bootstrap/scss/bootstrap";
+
+.btn-test {
+  @include button-variant(
+    transparent,
+    #b4b4b4,
+    #3e3e3e,
+    #f29c70,
+    transparent,
+    #fef9f7,
+    #db3c21,
+    #fff7ec,
+    #fef9f7
+  );
+}
+
+/* import bootstrap to set changes */
+@import "~bootstrap/scss/bootstrap";
+
+$flag-icon-css-path: "~flag-icon-css/flags";
+@import "~flag-icon-css/sass/flag-icons";
 @import "./variables";
 @import "./fonts";
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  // color: #0070f3;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
 
 html,
 body {
