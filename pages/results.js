@@ -30,6 +30,10 @@ import CountyGrid from "../components/countyGrid";
 const baseURL = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ categories, factors, parameters, languages, countries }) {
+  console.log("====================================");
+  console.log(categories, factors, parameters, languages);
+  console.log("====================================");
+
   const { data, setData } = useContext(AppContext);
   const { user, error, isLoading } = useUser();
   const router = useRouter();
