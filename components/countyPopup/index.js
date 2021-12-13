@@ -12,6 +12,8 @@ export default function CountyPopup({ county, onClose }) {
       longitude={lng}
       closeButton={true}
       closeOnClick={true}
+      captureScroll={true}
+      capturePointerMove={true}
       onClose={onClose}
     >
       <CountyStats county={county} />

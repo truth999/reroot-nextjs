@@ -46,7 +46,6 @@ export default function CountyMarkers({ counties, onClick }) {
               fill="#924430"
             />
             <circle cx="10.0119" cy="9.93569" r="7.02554" fill="#FFF7EC" />
-
             {county.faved && HEART}
           </svg>
         </Marker>
