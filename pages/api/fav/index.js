@@ -6,8 +6,8 @@ import prisma from "../../../lib/prisma.ts";
 // Required fields in body: title
 // Optional fields in body: content
 export default async function handle(req, res) {
-  // const { county } = req.body;
-  const county = {
+  const { user } = req.body;
+  const county1 = {
     code: "06051",
     name: "Mono County, CA",
     longitude: -188.9,
@@ -21,10 +21,10 @@ export default async function handle(req, res) {
     latitude: 45,
   };
 
-  const session = await getSession({ req });
+  // const session = await getSession({ req });
   const result = await prisma.user.create({
     data: {
-      email: "zhj930924@gmail.com",
+      email: user.email,
       favorites: {
         create: [county1, county2],
       },

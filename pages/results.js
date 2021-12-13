@@ -30,10 +30,6 @@ import CountyGrid from "../components/countyGrid";
 const baseURL = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ categories, factors, parameters, languages, countries }) {
-  console.log("====================================");
-  console.log(categories, factors, parameters, languages);
-  console.log("====================================");
-
   const { data, setData } = useContext(AppContext);
   const { user, error, isLoading } = useUser();
   const router = useRouter();
@@ -82,17 +78,20 @@ function Results({ categories, factors, parameters, languages, countries }) {
   );
 
   const getScores = useCallback(
-    async (newParams) => {
+    async (newParams, query = "", page = "1") => {
       if (Object.keys(newParams).length === 0) {
         setCounties([]);
         return;
       }
 
+      const pageParam = `&page=${page}`;
+      const queryParam = query ? `&query=${query}` : "";
+
       const queryParams = new URLSearchParams(newParams);
       try {
         setLoading(true);
         const resScores = await fetch(
-          baseURL + "scores?" + queryParams + "&page=1"
+          baseURL + "scores?" + queryParams + queryParam + pageParam
         );
         const scoresData = await resScores.json();
 
@@ -213,6 +212,14 @@ function Results({ categories, factors, parameters, languages, countries }) {
       : counties.filter((county) =>
           county.name.toLowerCase().includes(queryCounty.toLowerCase())
         );
+
+  // Support server pull
+  useEffect(() => {
+    const query = queryCounty.trim();
+    if (query.length >= 3) {
+      getScores(params, (query = query));
+    }
+  }, [queryCounty, params, getScores]);
 
   return (
     <Layout results>
@@ -350,9 +357,11 @@ function Results({ categories, factors, parameters, languages, countries }) {
                       handleChange={(county) => {
                         const newFavCounties = { ...favCounties };
                         if (county.index in newFavCounties) {
+                          // delete
                           county.faved = false;
                           delete newFavCounties[county.index];
                         } else {
+                          // create
                           county.faved = true;
                           newFavCounties[county.index] = county;
                         }

@@ -75,11 +75,13 @@ a {
   left: 1rem;
 
   .mapboxgl-popup-content {
-    min-width: 20rem;
+    z-index: 9999;
     min-height: 20rem;
     height: 100%;
-    max-height: 33vh;
-    width: 15vw;
+    max-height: 40vh;
+    min-width: 20rem;
+    width: 20vw;
+    max-width: 50%;
     overflow-y: scroll;
     ul {
       list-style: none;

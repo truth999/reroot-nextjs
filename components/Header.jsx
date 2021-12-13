@@ -46,7 +46,7 @@ const Header = () => {
   return (
     <header className={`${styles.header}`}>
       <Navbar collapseOnSelect expand="lg" bg="transparent">
-        <Container>
+        <Container fluid="xxl">
           <Navbar.Brand>
             {["/prep", "/survey"].includes(router.pathname) && (
               <Image

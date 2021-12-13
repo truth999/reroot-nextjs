@@ -58,6 +58,8 @@ export default function CountyStats({ county }) {
     return () => setStats([]);
   }, [county.code]);
 
+  console.log(stats);
+
   return loading ? (
     <Loading />
   ) : (

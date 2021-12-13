@@ -26,6 +26,8 @@ export default function Survey({
   );
 
   // Constants
+
+  
   const ON = 2;
 
   // States
@@ -157,7 +159,7 @@ export default function Survey({
 
   return (
     <Layout survey>
-      <Container className={styles.container}>
+      <Container fluid="xxl" className={styles.container}>
         <form onSubmit={handleSubmit}>
           <Step1
             categories={categories}
