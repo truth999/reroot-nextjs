@@ -104,7 +104,9 @@ export default function Landing() {
             Where to live?
           </Row>
           <Row className={`${styles.sec1Button} mt-auto`}>
-            <StartButton to="/survey">Start Survey</StartButton>
+            <StartButton to="/survey" outline>
+              Start Survey
+            </StartButton>
           </Row>
         </div>
 

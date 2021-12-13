@@ -14,12 +14,22 @@ function MyApp({ Component, pageProps }) {
   const theme = createTheme({
     palette: {
       primary: {
-        // Purple and green play nicely together.
-        main: "#E7654B",
+        light: "#f29c70",
+        main: "#db3c21",
+        dark: "#e7654b",
+        contrastText: "#fff7ec",
       },
       secondary: {
-        // This is green.A700 as hex.
-        main: "#11cb5f",
+        main: "#ba4d3a",
+        light: "#0141b3",
+        dark: "#fff7ec",
+        contrastText: "#fff7ec",
+      },
+      blank: {
+        main: "#0f1c4d",
+        light: "#898383",
+        dark: "#c4c4c4",
+        contrastText: "#e5e5e5",
       },
     },
   });
