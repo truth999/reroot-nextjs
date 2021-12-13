@@ -21,9 +21,6 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 import prisma from "../lib/prisma.ts";
 
-// Third Party
-// import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
-
 // Internal
 import Layout from "../components/Layout";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -54,13 +51,13 @@ function Results({ categories, factors, parameters, languages, countries }) {
         return parameters.find((p) => p.factorId === item.id);
       case "l":
         const y = parameters.find((p) => p.id === item.parameterId);
-        console.log("item: ", item);
-        console.log("find: ", y);
+        // console.log("item: ", item);
+        // console.log("find: ", y);
         return y;
       case "c":
         const x = parameters.find((p) => p.id === item.parameterId);
-        console.log("item: ", item);
-        console.log("find: ", x);
+        // console.log("item: ", item);
+        // console.log("find: ", x);
         return x;
       default:
         return null;

@@ -46,12 +46,12 @@ export default function Landing() {
         <title>{siteTitle}</title>
       </Head>
 
-      <Container fluid={`xxl`}>
+      <Container fluid="xxl">
         {/* Section 1 */}
         <Row
           bsPrefix={`${styles.sec1Cover} d-flex align-items-center flex-column`}
         >
-          <Row bsPrefix="text-end w-100 p-3">
+          <Row className="text-end w-100 p-3">
             {user ? (
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
@@ -99,7 +99,7 @@ export default function Landing() {
               </Link>
             )}
           </Row>
-          <Row bsPrefix="w-100">
+          <Row className="w-100">
             <div className={styles.sec1Title}>reRoot</div>
             <div className={styles.sec1Subtitle}>Where to live?</div>
           </Row>

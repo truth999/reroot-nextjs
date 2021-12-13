@@ -80,19 +80,19 @@
 .sec2Subtitle {
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(0.6rem + 0.4vw);
+  font-size: calc(0.7rem + 0.4vw);
 }
 .sec2Text {
   padding: 0 1rem;
   color: $blank;
   font-family: $roboto;
-  font-size: calc(0.5rem + 0.3vw);
+  font-size: calc(0.6rem + 0.4vw);
 }
 .sec2BottomText {
   padding: 10% 25% 0 25%;
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(0.5rem + 0.5vw);
+  font-size: calc(0.8rem + 0.4vw);
   span {
     font-size: calc(1rem + 0.5vw);
     color: $secondary;
@@ -114,9 +114,8 @@
 
 .sec3Banner {
   width: 100%;
-  min-height: 150px;
-  height: 18vh;
-  max-height: 300px;
+  height: 12rem;
+  max-height: 33vh;
   background-color: $primary;
 }
 .sec3Text {

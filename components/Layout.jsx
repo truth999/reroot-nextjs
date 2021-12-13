@@ -10,7 +10,7 @@ export const siteTitle = "reRoot";
 
 export default function Layout({ children, survey, landing }) {
   return (
-    <section>
+    <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="reRoot" />
@@ -31,6 +31,6 @@ export default function Layout({ children, survey, landing }) {
       </Container>
 
       {!survey && <Footer></Footer>}
-    </section>
+    </>
   );
 }
