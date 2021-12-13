@@ -131,7 +131,7 @@ function Results({ categories, factors, parameters, languages, countries }) {
     if (window) {
       const newFavCountiesArray = JSON.parse(localStorage.getItem("favorites"));
       const newFavCounties = Object.fromEntries(
-        newFavCountiesArray.map((c) => [c.index, c])
+        newFavCountiesArray?.map((c) => [c.index, c]) ?? []
       );
       setFavCounties(newFavCounties);
       console.log("from local storage:");
