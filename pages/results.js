@@ -17,7 +17,8 @@ import CountyPopup from "../components/countyPopup";
 import ReactMapGL, { FlyToInterpolator } from "react-map-gl";
 import Link from "next/link";
 import Map from "../components/map";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useUser } from "@auth0/nextjs-auth0";
+
 import prisma from "../lib/prisma.ts";
 
 // Third Party
@@ -33,6 +34,7 @@ const baseURL = "https://reroot-data-app.herokuapp.com/";
 
 function Results({ categories, factors, parameters, languages, countries }) {
   const { data, setData } = useContext(AppContext);
+  const { user, error, isLoading } = useUser();
   const router = useRouter();
   const [params, setParams] = useState(router.query);
   const [queryCounty, setQueryCounty] = useState("");
@@ -126,10 +128,13 @@ function Results({ categories, factors, parameters, languages, countries }) {
 
   useEffect(() => {
     if (window) {
-      // const favCounties = localStorage.setItem(
-      //   "favorites",
-      //   JSON.stringify(Object.values(newFavCounties))
-      // );
+      const newFavCountiesArray = JSON.parse(localStorage.getItem("favorites"));
+      const newFavCounties = Object.fromEntries(
+        newFavCountiesArray.map((c) => [c.index, c])
+      );
+      setFavCounties(newFavCounties);
+      console.log("from local storage:");
+      console.log(newFavCounties);
     }
   }, []);
 
@@ -145,11 +150,11 @@ function Results({ categories, factors, parameters, languages, countries }) {
       newParams[newParam] = newValue;
     }
 
-    console.log("====================================");
-    console.log(newParam);
-    console.log(newValue);
-    console.log(newParams);
-    console.log("====================================");
+    // console.log("====================================");
+    // console.log(newParam);
+    // console.log(newValue);
+    // console.log(newParams);
+    // console.log("====================================");
 
     getScores(newParams);
   };
@@ -299,6 +304,8 @@ function Results({ categories, factors, parameters, languages, countries }) {
                           "favorites",
                           JSON.stringify(Object.values(newFavCounties))
                         );
+                        console.log("local storage on remove");
+                        console.log(Object.values(newFavCounties));
                       }
                     }}
                   />
@@ -350,11 +357,16 @@ function Results({ categories, factors, parameters, languages, countries }) {
                         }
                         setFavCounties(newFavCounties);
 
+                        // TODO implement fav with user
+
                         if (window) {
                           localStorage.setItem(
                             "favorites",
                             JSON.stringify(Object.values(newFavCounties))
                           );
+
+                          console.log("local storage on Like");
+                          console.log(Object.values(newFavCounties));
                         }
                       }}
                       checked={county.index in favCounties}

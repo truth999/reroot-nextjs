@@ -29,7 +29,7 @@ export default function CountyMarkers({ counties, onClick }) {
             style={{
               cursor: "pointer",
               stroke: "black",
-              transform: `translate(${-HEIGHT / 2}px,${-WIDTH}px)`,
+              transform: `translate(${-WIDTH / 2}px,${-HEIGHT}px)`,
             }}
             onClick={() => onClick(county)}
           >

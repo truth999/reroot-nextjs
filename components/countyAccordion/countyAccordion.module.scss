@@ -1,8 +1,9 @@
 @import "../../styles/variables";
+@import "../../styles/fonts";
 
 .accordion {
-  min-height: 20rem;
-  max-height: 80vh;
+  min-height: 30rem;
+  max-height: 76vh;
 }
 
 .item {
@@ -10,18 +11,15 @@
   background-color: transparent;
   border-radius: 0.5rem;
   border: 1px solid $blank4 !important;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
 }
 
 .top {
-  width: 100%;
-  font-family: "Playfair Display", serif;
+  font-family: $playfair-display;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: calc(1rem + 0.4vw);
   color: $title-light;
   line-height: 3rem;
-  padding-top: 1.5rem;
+  padding-top: calc(1rem + 0.2vh);
 }
 
 .bar {
@@ -37,6 +35,10 @@
   button {
     background-color: transparent;
   }
+  :focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
+  }
 }
 
 .emptyText {
@@ -45,7 +47,6 @@
 }
 
 .toggle {
-  width: 100%;
   text-align: center;
   font-family: "Karla", serif;
   font-size: 1.2rem;

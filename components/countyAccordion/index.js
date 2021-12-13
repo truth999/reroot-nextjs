@@ -47,7 +47,7 @@ export default function CountyAccordion({
           <Accordion.Item
             key={index}
             eventKey={index}
-            className={`${styles.item} px-3`}
+            className={`${styles.item} px-3 my-4`}
           >
             <div className={`${styles.top}`}>
               <Row>
