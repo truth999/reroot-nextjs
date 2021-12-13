@@ -35,7 +35,7 @@ export default function Breakdown({ breakdown, getParamText, getParameter }) {
               placement="top"
               overlay={
                 <Tooltip id={`${index}-tooltip`}>
-                  {getParamText(parameter)}
+                  {`${getParamText(parameter)}: ${score}`}
                 </Tooltip>
               }
             >
@@ -52,11 +52,7 @@ export default function Breakdown({ breakdown, getParamText, getParameter }) {
                     opacity: [0.9, 0.8, 0.7],
                   },
                 }}
-              >
-                <p className={styles.paramText} sx={{ color: fgColors[index] }}>
-                  {score}
-                </p>
-              </Box>
+              ></Box>
             </OverlayTrigger>
           );
         })
