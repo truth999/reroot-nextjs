@@ -167,7 +167,7 @@ function Results({ categories, factors, parameters, languages, countries }) {
         setFavCounties(newFavCounties);
       }
     }
-  }, []);
+  }, [user]);
 
   const updateScores = async (newParam, newValue) => {
     // TODO Make sure update scores remove value
