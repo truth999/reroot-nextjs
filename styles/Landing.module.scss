@@ -158,15 +158,23 @@
   height: 75vw;
   max-height: 810px;
   z-index: 0;
-  background-image: url("/img/landing-people-bottom.svg"),
-    url("/img/landing-diagram.svg");
-  background-position: left center, right bottom;
-  background-repeat: no-repeat, no-repeat;
-  background-size: 33.33%, 66.66%;
+  background-image: url("/img/landing-people-bottom.svg");
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 33.33%;
+}
+
+.sec4Text {
+  position: relative;
+  margin-left: 33.33%;
+  max-width: 66.6%;
+  top: 0;
+  right: 0;
+  height: 20%;
+  margin-top: 5%;
 }
 
 .sec4Title {
-  padding: 10% 15% 0 15%;
   color: $blank;
   font-family: $lemonada;
   font-weight: bold;
@@ -183,6 +191,21 @@
     font-family: $macondo-swash-caps;
     font-weight: bold;
   }
+}
+
+.sec4Diagram {
+  position: relative;
+  margin-left: 33.33%;
+  max-width: 66.6%;
+  min-height: 500px;
+  height: 75%;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
+  background-image: url("/img/landing-diagram.svg");
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 // Action Section

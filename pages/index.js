@@ -251,8 +251,8 @@ export default function Landing() {
         </Row>
 
         {/* Section 4 */}
-        <Row className={`${styles.sec4Cover} mx-0`}>
-          <Col sm={{ span: 8, offset: 4 }}>
+        <Row className={`${styles.sec4Cover} mx-0 text-right`}>
+          <Row className={styles.sec4Text}>
             <p className={`${styles.sec4Title} text-center`}>
               A diverse country means diverse needs.
             </p>
@@ -260,7 +260,8 @@ export default function Landing() {
               <span>reRoot</span> puts America&apos;s underserved first and make
               sure their needs are met too.
             </p>
-          </Col>
+          </Row>
+          <Row className={styles.sec4Diagram}></Row>
         </Row>
 
         <Row className={styles.secAction}>
