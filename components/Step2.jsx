@@ -1,30 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import Factor from "../components/factor";
 import styles from "./Step.module.scss";
 import Row from "react-bootstrap/Row";
+import debounce from "lodash.debounce";
 
 export default function Step2({
-  handleClick,
+  handleChange,
   currentStep,
   languages,
   countries,
   askLanguage,
   askCountry,
+  selectedLanguages,
+  setSelectedLanguages,
+  selectedCountries,
+  setSelectedCountries,
 }) {
   // Language
   const [queryLanguage, setQueryLanguage] = useState("");
-  // Country
-  const [queryCountry, setQueryCountry] = useState("");
-
-  if (currentStep !== 2) {
-    // Prop: The current step
-    return null;
-  }
-
-  const updateQueryLanguage = (query) => {
-    setQueryLanguage(query);
-  };
+  const languageChangeHandler = (event) => setQueryLanguage(event.target.value);
+  const debouncedLanguageChangeHandler = useCallback(() => {
+    debounce(languageChangeHandler, 300);
+  }, []);
 
   const showingLanguages =
     queryLanguage.trim() == ""
@@ -33,6 +31,8 @@ export default function Step2({
           lang.name.toLowerCase().includes(queryLanguage.toLowerCase())
         );
 
+  // Country
+  const [queryCountry, setQueryCountry] = useState("");
   const updateQueryCountry = (query) => {
     setQueryCountry(query);
   };
@@ -44,6 +44,11 @@ export default function Step2({
           country.name.toLowerCase().includes(queryCountry.toLowerCase())
         );
 
+  if (currentStep !== 2) {
+    // Prop: The current step
+    return null;
+  }
+
   return (
     <section className="step-2">
       {askLanguage && (
@@ -54,11 +59,11 @@ export default function Step2({
           </div>
           <div className="search-bar">
             <input
+              onChange={languageChangeHandler}
               type="text"
               className={styles.search}
               placeholder="Search Language"
               value={queryLanguage}
-              onChange={(event) => updateQueryLanguage(event.target.value)}
             />
           </div>
           <Row className={`${styles.searchResults} py-3`}>
@@ -71,7 +76,10 @@ export default function Step2({
                   value={lang.id}
                   parameter={lang.parameterId}
                   name="language"
-                  onClick={handleClick}
+                  selectedFactors={selectedLanguages}
+                  setSelectedFactors={setSelectedLanguages}
+                  handleChange={handleChange}
+                  asks={{ askLanguage, askCountry }}
                 >
                   {lang.text}
                 </Factor>
@@ -106,7 +114,10 @@ export default function Step2({
                   name="country"
                   country={country}
                   parameter={country.parameterId}
-                  onClick={handleClick}
+                  selectedFactors={selectedCountries}
+                  setSelectedFactors={setSelectedCountries}
+                  handleChange={handleChange}
+                  asks={{ askLanguage, askCountry }}
                 >
                   {country.text}
                 </Factor>

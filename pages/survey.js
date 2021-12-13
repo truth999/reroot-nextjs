@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import AppContext from "../contexts/AppContext";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
@@ -27,7 +27,6 @@ export default function Survey({
 
   // Constants
 
-  
   const ON = 2;
 
   // States
@@ -38,59 +37,48 @@ export default function Survey({
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [isLastStep, setIsLastStep] = useState(false);
 
-  const handleStep1 = (event) => {
-    let checkedFactors = Array.from(
-      document.querySelectorAll("input[name=factor]:checked")
-    );
+  const handleStep1 = useCallback(
+    (newSelectedFactors) => {
+      // Update last step
+      if (newSelectedFactors.length === 0) {
+        setIsLastStep(false);
+      } else
+        setIsLastStep(
+          !(
+            newSelectedFactors.includes(languageId) ||
+            newSelectedFactors.includes(originId)
+          )
+        );
 
-    // Update factors
-    const newSelectedFactors = checkedFactors.map((f) => parseInt(f.value));
-    setSelectedFactors(newSelectedFactors);
-
-    if (newSelectedFactors.length === 0) {
-      setIsLastStep(false);
-    } else
-      setIsLastStep(
-        !(
-          newSelectedFactors.includes(languageId) ||
-          newSelectedFactors.includes(originId)
-        )
+      // Update params
+      const newSelectedParams = parameters1.filter((p) =>
+        newSelectedFactors.includes(p.factorId)
       );
 
-    // Update params
-    const newSelectedParams = parameters1.filter((p) =>
-      newSelectedFactors.includes(p.factorId)
-    );
+      setSelectedParams(newSelectedParams);
+    },
+    [languageId, originId, parameters1]
+  );
 
-    setSelectedParams(newSelectedParams);
-  };
+  const handleStep2 = (newSelectedFactors, name, asks) => {
+    let newIsLastStep = false;
+    console.log(asks);
+    const { askLanguage, askCountry } = asks;
+    const languageOnly = askLanguage && !askCountry;
+    const countryOnly = !askLanguage && askCountry;
+    const both = askLanguage && askCountry;
+    const newSelectOthers =
+      name === "language" ? selectedCountries : selectedLanguages;
 
-  const handleStep2 = (event) => {
-    const checkedLanguages = Array.from(
-      document.querySelectorAll("input[name=language]:checked")
-    ).map((_) => parseInt(_.value));
-    setSelectedLanguages(checkedLanguages);
-
-    const checkedCountries = Array.from(
-      document.querySelectorAll("input[name=country]:checked")
-    ).map((_) => parseInt(_.value));
-    setSelectedCountries(checkedCountries);
-
-    setIsLastStep(
+    newIsLastStep =
       // Language only
-      (selectedFactors.includes(languageId) &&
-        !selectedFactors.includes(originId) &&
-        checkedLanguages.length > 0) ||
-        // Country only
-        (selectedFactors.includes(originId) &&
-          !selectedFactors.includes(languageId) &&
-          checkedCountries.length > 0) ||
-        // Both
-        (selectedFactors.includes(languageId) &&
-          selectedFactors.includes(originId) &&
-          checkedLanguages.length > 0 &&
-          checkedCountries.length > 0)
-    );
+      (languageOnly && newSelectedFactors.length > 0) ||
+      // Country only
+      (countryOnly && newSelectedFactors.length > 0) ||
+      // Both
+      (both && newSelectedFactors.length > 0 && newSelectOthers.length > 0);
+
+    setIsLastStep(newIsLastStep);
   };
 
   const handleNext = () => {
@@ -164,16 +152,22 @@ export default function Survey({
           <Step1
             categories={categories}
             factors={factors}
-            handleClick={handleStep1}
+            handleChange={handleStep1}
             currentStep={currentStep}
+            selectedFactors={selectedFactors}
+            setSelectedFactors={setSelectedFactors}
           />
           <Step2
-            handleClick={handleStep2}
+            handleChange={handleStep2}
             currentStep={currentStep}
             languages={languages}
             countries={countries}
             askLanguage={selectedFactors.includes(languageId)}
             askCountry={selectedFactors.includes(originId)}
+            selectedLanguages={selectedLanguages}
+            setSelectedLanguages={setSelectedLanguages}
+            selectedCountries={selectedCountries}
+            setSelectedCountries={setSelectedCountries}
           />
           <div className="survey-button text-center py-3">{showButton()}</div>
         </form>

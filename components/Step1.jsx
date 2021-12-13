@@ -6,7 +6,9 @@ export default function Step1({
   categories,
   factors,
   currentStep,
-  handleClick,
+  handleChange,
+  selectedFactors,
+  setSelectedFactors,
 }) {
   if (currentStep !== 1) {
     // Prop: The current step
@@ -41,11 +43,13 @@ export default function Step1({
                     const id = `toggle-${factor.name}`;
                     return (
                       <Factor
+                        key={id}
                         value={factor.id}
                         name="factor"
-                        key={id}
                         id={id}
-                        onClick={handleClick}
+                        handleChange={handleChange}
+                        selectedFactors={selectedFactors}
+                        setSelectedFactors={setSelectedFactors}
                       >
                         {factor.text}
                       </Factor>

@@ -11,4 +11,10 @@
     border: 2px solid#b4b4b4;
     color: #3e3e3e;
   }
+
+  &.MuiToggleButton-root {
+    &.Mui-selected {
+      background-color: black !important;
+    }
+  }
 }
