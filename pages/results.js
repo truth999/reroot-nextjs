@@ -286,6 +286,48 @@ function Results({ categories, factors, parameters, languages, countries }) {
     }
   };
 
+  const handleLikeChange = (county) => {
+    const newFavCounties = { ...favCounties };
+    if (county.index in newFavCounties) {
+      // delete
+      county.faved = false;
+      delete newFavCounties[county.index];
+      // Update for logged in
+      user && delFav(county);
+    } else {
+      // create
+      county.faved = true;
+      newFavCounties[county.index] = county;
+      // Update for logged in
+      user && addFav(county);
+    }
+    setFavCounties(newFavCounties);
+
+    if (window) {
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(Object.values(newFavCounties))
+      );
+    }
+  };
+
+  const handleRemoveClick = (county) => {
+    const newFavCounties = { ...favCounties };
+    newFavCounties[county.index].faved = false;
+    delete newFavCounties[county.index];
+    // Update for logged in
+    user && delFav(county);
+    setFavCounties(newFavCounties);
+    if (window) {
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(Object.values(newFavCounties))
+      );
+      console.log("local storage on remove");
+      console.log(Object.values(newFavCounties));
+    }
+  };
+
   return (
     <Layout results>
       <Head>
@@ -367,22 +409,7 @@ function Results({ categories, factors, parameters, languages, countries }) {
                 actionBtn={(county) => (
                   <RemoveButton
                     county={county}
-                    handleClick={(county) => {
-                      const newFavCounties = { ...favCounties };
-                      newFavCounties[county.index].faved = false;
-                      delete newFavCounties[county.index];
-                      // Update for logged in
-                      user && delFav(county);
-                      setFavCounties(newFavCounties);
-                      if (window) {
-                        localStorage.setItem(
-                          "favorites",
-                          JSON.stringify(Object.values(newFavCounties))
-                        );
-                        console.log("local storage on remove");
-                        console.log(Object.values(newFavCounties));
-                      }
-                    }}
+                    handleClick={handleRemoveClick}
                   />
                 )}
               ></CountyGrid>
@@ -414,37 +441,16 @@ function Results({ categories, factors, parameters, languages, countries }) {
                   counties={showingCounties}
                   emptyText="Adjust preference bars to compare."
                   loadMoreBtn={
-                    <NextButton handleClick={handleLoadMore}>
-                      Load More
-                    </NextButton>
+                    <div className="pb-5">
+                      <NextButton handleClick={handleLoadMore}>
+                        Load More
+                      </NextButton>
+                    </div>
                   }
                   actionBtn={(county) => (
                     <LikeButton
                       county={county}
-                      handleChange={(county) => {
-                        const newFavCounties = { ...favCounties };
-                        if (county.index in newFavCounties) {
-                          // delete
-                          county.faved = false;
-                          delete newFavCounties[county.index];
-                          // Update for logged in
-                          user && delFav(county);
-                        } else {
-                          // create
-                          county.faved = true;
-                          newFavCounties[county.index] = county;
-                          // Update for logged in
-                          user && addFav(county);
-                        }
-                        setFavCounties(newFavCounties);
-
-                        if (window) {
-                          localStorage.setItem(
-                            "favorites",
-                            JSON.stringify(Object.values(newFavCounties))
-                          );
-                        }
-                      }}
+                      handleChange={handleLikeChange}
                       checked={county.index in favCounties}
                     />
                   )}
