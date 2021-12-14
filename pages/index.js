@@ -263,9 +263,9 @@ export default function Landing() {
         </Row>
 
         <Row className={styles.secAction}>
-          <div className="text-center py-4">
+          <Col className="text-center py-4">
             <StartButton to="/survey">Start Survey</StartButton>
-          </div>
+          </Col>
         </Row>
       </Container>
     </Layout>

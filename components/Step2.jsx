@@ -20,9 +20,6 @@ export default function Step2({
   // Language
   const [queryLanguage, setQueryLanguage] = useState("");
   const languageChangeHandler = (event) => setQueryLanguage(event.target.value);
-  const debouncedLanguageChangeHandler = useCallback(() => {
-    debounce(languageChangeHandler, 300);
-  }, []);
 
   const showingLanguages =
     queryLanguage.trim() == ""

@@ -50,10 +50,7 @@
 // Section 2
 .sec2Cover {
   width: 100%;
-  min-height: 33.33vw;
-  height: 66.66vh;
 
-  max-height: 75vh;
   z-index: 0;
   background-image: url("/img/map-background.svg"),
     url("/img/landing-people.svg");
@@ -71,7 +68,7 @@
 .sec2Title {
   padding: 6% 10%;
   color: $blank;
-  font-size: calc(0.8rem + 0.4vw);
+  font-size: calc(1rem + 0.4vw);
   font-family: $lemonada;
   font-weight: 400;
   b {
@@ -81,16 +78,15 @@
 
 .sec2Subtitle {
   padding: 5% 0;
-
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(0.7rem + 0.4vw);
+  font-size: calc(0.8rem + 0.4vw);
 }
 .sec2Text {
   padding: 0 1rem;
   color: $blank;
   font-family: $roboto;
-  font-size: calc(0.6rem + 0.4vw);
+  font-size: calc(0.7rem + 0.4vw);
 }
 .sec2BottomText {
   padding: 0 calc(10% + 0.3vw);
@@ -111,19 +107,13 @@
 // Section 3
 .sec3Cover {
   width: 100%;
-  min-height: 33.33vw;
-  height: 66.66vh;
-
-  max-height: 75vh;
   z-index: 0;
 }
 
 .sec3Banner {
   width: 100%;
-  min-height: 15vh;
-  height: 10rem;
-  max-height: 33vh;
   background-color: $primary;
+  padding-bottom: 2%;
 }
 .sec3Text {
   color: white;
@@ -131,6 +121,8 @@
 }
 
 .sec3Title {
+  padding-top: calc(1rem + 2%);
+  padding-bottom: 4%;
   color: $blank;
   font-family: $lemonada;
   font-size: calc(1.5rem + 0.6vw);
@@ -163,10 +155,6 @@
 // Section 4
 .sec4Cover {
   width: 100%;
-  min-height: 33.33vw;
-  height: 66.66vh;
-
-  max-height: 75vh;
   z-index: 0;
   background-image: url("/img/landing-people-bottom.svg");
   background-position: left center;
@@ -190,7 +178,7 @@
   padding: 0 10%;
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(0.8rem + 0.2vw);
+  font-size: calc(0.8rem + 0.3vw);
   span {
     font-size: calc(1rem + 0.4vw);
     color: $secondary;
@@ -205,12 +193,7 @@
 
 // Action Section
 .secAction {
+  position: relative;
   width: 100%;
   padding-bottom: 5vmax;
-}
-
-.actionImage {
-  position: relative;
-  min-height: 600px;
-  width: 100%;
 }
