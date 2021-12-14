@@ -20,7 +20,7 @@ export const factors = [
   {
     id: 4,
     name: "population",
-    text: "More People",
+    text: "Denser population",
     categoryId: 2,
   },
   {

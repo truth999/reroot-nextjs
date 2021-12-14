@@ -119,7 +119,7 @@ export default function Landing() {
                 Where in the United States you live is <b>important</b>.
               </div>
               <div className={`${styles.sec2Subtitle}`}>
-                Where you live can decide your...
+                Where you live can determine your...
               </div>
               <Row direction="horizontal">
                 <Col sm={3}>
@@ -160,8 +160,8 @@ export default function Landing() {
                 </Col>
               </Row>
               <div className={`${styles.sec2BottomText}`}>
-                <span>reRoot</span> is a <b>FREE</b> tool to check which places
-                will be good for you.
+                <span>reRoot</span> is a <b>FREE</b> tool to explore which
+                places will be good for you.
               </div>
             </Stack>
           </Col>
@@ -213,7 +213,7 @@ export default function Landing() {
                 <Card src="/img/landing-step1.svg">
                   <p className={styles.sec3TopText}>1</p>
                   <div className={styles.sec3BottomText}>
-                    <p> Take 30 seconds survey</p> Tell us what you need
+                    <p> Take a 30-second survey</p> Telling us what you need
                   </div>
                 </Card>
               </Col>
@@ -244,13 +244,17 @@ export default function Landing() {
 
         {/* Section 4 */}
         <Row className={`${styles.sec4Cover} mx-0`}>
-          <Col sm={{ offset: 4, span: 8 }} className={styles.sec4Text}>
+          <Col sm={{ offset: 4, span: 8 }} xs={12} className={styles.sec4Text}>
             <p className={`${styles.sec4Title} text-center`}>
               A diverse country means diverse needs.
             </p>
             <p className={`${styles.sec4Subtitle} text-center`}>
               <span>reRoot</span> puts America&apos;s underserved first and make
               sure their needs are met too.
+            </p>
+            <p className={`${styles.sec4Subtitle} text-center`}>
+              <span>reRoot</span> optimizes search results based on four factors
+              — DIAGRAM — and with support for more factors coming soon.
             </p>
             <Image
               className={`${styles.sec4Diagram}`}

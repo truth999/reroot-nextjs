@@ -57,7 +57,7 @@ export default function CountyAccordion({
                   <PrimaryButton
                     onClick={(event) => handleDetailClick(event, county)}
                   >
-                    View details
+                    Learn More
                   </PrimaryButton>
                 </Col>
                 <Col md={1}>{actionBtn && actionBtn(county)}</Col>
@@ -80,7 +80,7 @@ export default function CountyAccordion({
                 />
               </Col>
               <Col md={2} className={`${styles.toggle} `}>
-                Key rank
+                Key facts
               </Col>
             </Accordion.Header>
             <Accordion.Body>

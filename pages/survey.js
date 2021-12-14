@@ -133,7 +133,18 @@ export default function Survey({
           return <NextButton handleClick={handleNext}>Next</NextButton>;
         else return <NextButton handleClick={handleSubmit}>Submit</NextButton>;
       }
-      return <NextButton disabled={true}>Next</NextButton>;
+      return (
+        <>
+          <p
+            sx={{
+              color: "rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            Select at least one to continue + disabled submit button
+          </p>
+          <NextButton disabled={true}>Next</NextButton>
+        </>
+      );
     }
 
     if (currentStep == 2) {
@@ -169,7 +180,7 @@ export default function Survey({
             selectedCountries={selectedCountries}
             setSelectedCountries={setSelectedCountries}
           />
-          <div className="survey-button text-center py-3">{showButton()}</div>
+          <div className="text-center py-4">{showButton()}</div>
         </form>
       </Container>
     </Layout>

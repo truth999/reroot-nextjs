@@ -3,13 +3,16 @@
 
 .sec1Cover {
   width: 100%;
-  min-height: 33.33vw;
-  height: 66.66vh;
-  max-height: 75vh;
   z-index: 0;
-  background-image: url("/img/landing-cover.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
+  @media (min-width: 576px) {
+    max-height: 75vh;
+    min-height: 33.33vw;
+    height: 66.66vh;
+    width: 100%;
+    background-image: url("/img/landing-cover.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }
 
 .sec1Link {
@@ -25,7 +28,9 @@
 }
 
 .sec1Title {
-  padding-left: 50%;
+  @media (min-width: 576px) {
+    padding-left: 50%;
+  }
   color: $secondary;
   font-size: calc(5rem + 3vw);
   text-shadow: 1px 1px 1px #3c5c5e;
@@ -35,7 +40,10 @@
 }
 
 .sec1Subtitle {
-  padding-left: 72%;
+  @media (min-width: 576px) {
+    padding-left: 72%;
+  }
+  padding-bottom: 5%;
   color: $subtitle;
   font-size: calc(1.2rem + 0.5vw);
   font-family: $lemonada;
@@ -114,6 +122,9 @@
   width: 100%;
   background-color: $primary;
   padding-bottom: 2%;
+  @media (max-width: 575px) {
+    display: none;
+  }
 }
 .sec3Text {
   color: white;
@@ -156,16 +167,23 @@
 .sec4Cover {
   width: 100%;
   z-index: 0;
-  background-image: url("/img/landing-people-bottom.svg");
-  background-position: left center;
-  background-repeat: no-repeat;
-  background-size: 33.33%;
+
+  @media (min-width: 576px) {
+    background-image: url("/img/landing-people-bottom.svg");
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 33.33%;
+  }
 }
 
 .sec4Text {
-  padding-top: calc(5% + 2vw);
+  @media (max-width: 575px) {
+    width: 100%;
+  }
+  @media (min-width: 576px) {
+    max-width: 66.6%;
+  }
   padding-bottom: calc(5% + 2vw);
-  max-width: 66.6%;
 }
 
 .sec4Title {
@@ -175,10 +193,11 @@
   font-size: calc(0.8rem + 0.3vw);
 }
 .sec4Subtitle {
-  padding: 0 10%;
+  padding: 0 calc(3rem + 4%);
+  padding-bottom: calc(1rem + 2%);
   color: $blank;
   font-family: $lemonada;
-  font-size: calc(0.8rem + 0.3vw);
+  font-size: calc(0.7rem + 0.2vw);
   span {
     font-size: calc(1rem + 0.4vw);
     color: $secondary;

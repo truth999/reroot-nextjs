@@ -20,12 +20,12 @@ export default function Step1({
     <section className="select-factors">
       <div className="question-text text-center pb-4">
         <div className={`${styles.title} pb-4`}>
-          What&apos;s important to you?
+          Tell us what factors are most important to you.
         </div>
         <div className={`${styles.subtitle} pb-3`}>
-          Click as many as you like.
+          Select as many as you like.
           <br />
-          You can edit and fine-tune your preferences later.
+          You will be able to edit and refine your choices later.
         </div>
       </div>
 
